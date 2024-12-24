@@ -66,6 +66,93 @@ In essence, an AI agent can be thought of as an intelligent “problem-solver”
 
 In summary, this scenario depicts an autonomous agent operating inside or via an LLM that not only understands a user’s instruction but also independently executes a multi-step process—connecting to external APIs, making decisions, filtering, and reporting results—without needing continuous user intervention.
 
+## What Is and What is Not an AI Agent
+
+![not_ai_agent](not_agent.jpeg)
+
+Below is a plain-English explanation of what an AI Agent is, how it differs from a simple query bot, and why that distinction matters. 
+
+---
+
+## 1. **What a “Simple Query Bot” Is (the left side of the diagram)**
+
+- **Single-step request/response:** A user asks a question (e.g., *“Find me the nearest coffee shop”*) and the system responds with a straightforward answer (*“The nearest coffee shop is 0.5 miles away.”*).
+  
+- **Minimal “intelligence”:** While it may use a Large Language Model (LLM) in the background, most of the “AI” is simply classifying or matching your request to a predetermined category—like a **map search** or a **weather lookup**—and then returning the result.
+
+- **Tool usage is narrow:** The LLM calls **one** fixed tool (in this example, a map service API). There’s no further reasoning or decision-making. If the result isn’t acceptable, the bot doesn’t iterate, remember your feedback, or explore alternative solutions. 
+
+In short, this kind of bot is basically a *task-specific interface*: you ask, it fetches from a single source, and it returns an answer.
+
+---
+
+## 2. **What an AI Agent Is (the right side of the diagram)**
+
+An AI Agent is more than a one-shot assistant. It combines multiple capabilities—**reasoning**, **tool usage**, **memory**, and **decision-making**—to carry out more complex, multi-step tasks.
+
+### 2.1 **Multi-Step Reasoning**
+- A user might say: *“Plan a 3-day trip to Paris with a budget under \$1000.”* 
+- Instead of mapping this to a single “Paris travel” category, the AI Agent breaks down the request into multiple sub-tasks:
+  1. Find flights to Paris.
+  2. Search for hotels or accommodations.
+  3. Consider activities (museums, tours, etc.).
+  4. Check if the total cost fits under \$1000.
+
+### 2.2 **Tool Usage (Beyond a Single API)**
+- The AI Agent may call a **flight search API** to find affordable flights.
+- Then it might call a **hotel search API** to check room availability and prices.
+- It can even use a **currency converter** or **itinerary planner** tool.
+- Each time it makes these calls, it integrates the results and re-checks constraints (e.g., the budget).
+
+### 2.3 **Memory**
+- The agent keeps track of intermediate steps:
+  - For instance, it “remembers” which hotels and flights it found.
+  - It can factor in personal preferences (e.g., if the user previously said they prefer 3-star hotels near city centers or have specific dietary restrictions).
+  
+### 2.4 **Iterative Decision-Making**
+- If the AI Agent finds that flights plus hotel exceed the budget, it adjusts:
+  - It may look for cheaper flights on different dates, suggest cheaper accommodations, or propose alternate day-trip ideas to reduce cost.
+- It loops through these decisions until it meets the user’s constraints (time, budget, personal preferences).
+
+### 2.5 **Final Answer/Plan**
+- Only after evaluating all components (flight, hotel, activities, budgeting) does it present a cohesive itinerary.
+- If at any point the user modifies requirements (e.g., “Actually, I’d like 4-star hotels.”), the AI Agent repeats the process, reevaluates the constraints, and updates the final plan accordingly.
+
+---
+
+## 3. **Key Distinguishing Features of an AI Agent**
+
+1. **Autonomous Reasoning**  
+   AI Agents don’t rely on a single “query-in, answer-out” step. They can reason about the question and decide which steps to take next.
+
+2. **Dynamic Tool Selection**  
+   Instead of using one preselected tool, an AI Agent can pick from multiple APIs, databases, or plugins—whatever is most relevant.
+
+3. **Memory & Context**  
+   Agents maintain a record of prior steps and user preferences. This memory allows the agent to refine plans or recall what worked (or didn’t) in previous iterations.
+
+4. **Iterative Approach**  
+   If constraints are not met (e.g., budget, date availability, user preference), an agent can loop back, adjust variables, and propose alternatives until it finds a suitable solution.
+
+---
+
+## 4. **Why This Matters**
+
+- **Personalized** and **adaptive** experiences: An AI Agent can shape its response specifically to you, learn from your feedback, and refine the outcome accordingly.
+- **Handles complexity**: Instead of returning a single “best guess,” AI Agents can solve complex, multi-step tasks that require multiple resources and repeated decision-making.
+- **More “human-like”** problem solving: By iterating, remembering context, and comparing options, AI Agents mimic aspects of how a human approaches a problem.
+
+---
+
+### In Summary
+An **AI Agent** goes well beyond a simple question-answer bot. It leverages:
+1. **Reasoning**: breaking down tasks into steps, 
+2. **Tool usage**: calling multiple APIs or services,
+3. **Memory**: storing partial results and user preferences,
+4. **Decision-making**: iterating until constraints (like budget) are satisfied.
+
+This makes AI Agents powerful for tasks such as travel planning, event organization, project management, and more—where a single-step query just isn’t enough.
+
 ## Are Humanoid machines, Autonomous Cars, and Robots also AI Agents?
 
 Whether humanoid machines, autonomous cars, and robots are considered AI agents depends on how they are defined and the capabilities they possess.
