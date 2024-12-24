@@ -1,5 +1,7 @@
 # AI Agents will Transform SaaS
 
+[Agents Will Replace ALL Software](https://www.youtube.com/watch?v=uGOLYz2pgr8)
+
 [AI agents will transform SaaS](https://www.linkedin.com/posts/ivanlandabaso_ai-llms-startups-ugcPost-7275207646041812992-HQrb)
 
 AI agents are poised to usher in a profound shift in how Software-as-a-Service (SaaS) platforms are built, delivered, and experienced. This transformation arises from the convergence of several trends: increasingly sophisticated models that can understand and generate human-like text, the democratization of advanced AI capabilities through APIs and development frameworks, and the growing demand for intelligent automation that reduces manual effort and cognitive load for users. Below are several key dimensions along which AI agents will reshape SaaS offerings:

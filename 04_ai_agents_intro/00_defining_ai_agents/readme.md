@@ -66,7 +66,7 @@ In essence, an AI agent can be thought of as an intelligent “problem-solver”
 
 In summary, this scenario depicts an autonomous agent operating inside or via an LLM that not only understands a user’s instruction but also independently executes a multi-step process—connecting to external APIs, making decisions, filtering, and reporting results—without needing continuous user intervention.
 
-## What Is and What is Not an AI Agent
+## What Is and What is Not an AI Agent?
 
 ![not_ai_agent](not_agent.jpeg)
 
