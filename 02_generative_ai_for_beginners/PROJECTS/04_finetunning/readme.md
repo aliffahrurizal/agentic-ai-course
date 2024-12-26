@@ -12,7 +12,7 @@
 
 [Gemini Fine-tuning tutorial](https://ai.google.dev/gemini-api/docs/model-tuning/tutorial?lang=python)
 
-
+[A Step-by-Step Guide to Fine-Tuning Gemini for Question Answering](https://medium.com/google-cloud/a-step-by-step-guide-to-fine-tuning-gemini-for-question-answering-8b3fb117dbbf)
 
 
 ## GPT-4o mini model
