@@ -2,15 +2,18 @@
 
 ## Google Gemini Flash
 
+[Watch: Fine-tuning Gemini with Google AI Studio Tutorial - Customize a model for your application](https://www.youtube.com/watch?v=VwpDvvNjN2I)
+
 [Watch: Google Gemini Finetuning: How to Teach Your AI EASILY?](https://www.youtube.com/watch?v=iSw9AipEm0Q)
+
+[Finetuning Gemini](https://aistudio.google.com/app/tune)
 
 [Fine-tuning with the Gemini API](https://ai.google.dev/gemini-api/docs/model-tuning)
 
 [Gemini Fine-tuning tutorial](https://ai.google.dev/gemini-api/docs/model-tuning/tutorial?lang=python)
 
-[Finetuning a Gemini](https://aistudio.google.com/app/tune)
 
-[Watch: Fine-tuning Gemini with Google AI Studio Tutorial - Customize a model for your application](https://www.youtube.com/watch?v=VwpDvvNjN2I)
+
 
 ## GPT-4o mini model
 
