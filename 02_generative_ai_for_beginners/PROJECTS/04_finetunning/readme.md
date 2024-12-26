@@ -1,6 +1,8 @@
 # Finetuning
 
-[Comparative study of fine-tuning GPT-4o-mini, Gemini Flash 1.5 and Llama-3.1-8B](https://www.patched.codes/blog/a-comparative-study-of-fine-tuning-gpt-4o-mini-gemini-flash-1-5-and-llama-3-1-8b)
+## Google Gemini Flash
+
+[Watch: Google Gemini Finetuning: How to Teach Your AI EASILY?](https://www.youtube.com/watch?v=iSw9AipEm0Q)
 
 [Fine-tuning with the Gemini API](https://ai.google.dev/gemini-api/docs/model-tuning)
 
@@ -8,8 +10,12 @@
 
 [Finetuning a Gemini](https://aistudio.google.com/app/tune)
 
-[Fine-tuning Gemini with Google AI Studio Tutorial - Customize a model for your application](https://www.youtube.com/watch?v=VwpDvvNjN2I)
+[Watch: Fine-tuning Gemini with Google AI Studio Tutorial - Customize a model for your application](https://www.youtube.com/watch?v=VwpDvvNjN2I)
 
-[Google Gemini Finetuning: How to Teach Your AI EASILY?](https://www.youtube.com/watch?v=iSw9AipEm0Q)
+## GPT-4o mini model
 
 [OpenAI announces free fine-tuning for GPT-4o mini model](https://www.infoworld.com/article/3477228/openai-announces-free-fine-tuning-for-gpt-4o-mini-model.html)
+
+## Comparitive Study
+
+[Comparative study of fine-tuning GPT-4o-mini, Gemini Flash 1.5 and Llama-3.1-8B](https://www.patched.codes/blog/a-comparative-study-of-fine-tuning-gpt-4o-mini-gemini-flash-1-5-and-llama-3-1-8b)
