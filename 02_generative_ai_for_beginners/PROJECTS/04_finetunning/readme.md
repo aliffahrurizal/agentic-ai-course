@@ -10,4 +10,6 @@
 
 [Fine-tuning Gemini with Google AI Studio Tutorial - Customize a model for your application](https://www.youtube.com/watch?v=VwpDvvNjN2I)
 
+[Google Gemini Finetuning: How to Teach Your AI EASILY?](https://www.youtube.com/watch?v=iSw9AipEm0Q)
+
 [OpenAI announces free fine-tuning for GPT-4o mini model](https://www.infoworld.com/article/3477228/openai-announces-free-fine-tuning-for-gpt-4o-mini-model.html)
