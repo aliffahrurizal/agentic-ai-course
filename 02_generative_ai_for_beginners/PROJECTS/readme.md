@@ -1,5 +1,7 @@
 # LangChain Projects
 
+[LangChain Explained in 13 Minutes | QuickStart Tutorial for Beginners](https://www.youtube.com/watch?v=aywZrzNaKjs)
+
 ### What is LangChain?
 
 LangChain is an open-source framework designed for building **applications powered by Large Language Models (LLMs)**. It provides tools and abstractions to handle various components of generative AI applications, such as:
