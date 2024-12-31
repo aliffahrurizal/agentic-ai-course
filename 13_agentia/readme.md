@@ -2,7 +2,7 @@
 
 Imagine a world where **everything** is an AI agent, from your coffee machine to your car, from businesses to entire cities. This world, which we’ll call *Agentia*, functions as a seamless ecosystem of autonomous agents communicating, negotiating, and collaborating without traditional REST APIs. Instead of invoking endpoints, these agents engage in intelligent dialogues, powered by advanced LLMs and agentic frameworks.
 
-Together we will build this new world here:
+Together we will build this new world:
 
 https://agentia.world/
 
