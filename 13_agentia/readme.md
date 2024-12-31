@@ -1,6 +1,10 @@
-# Welcome to "Agentia: Agentic Web and The World of Autonomous AI"
+# Welcome to "Agentia: The World of Autonomous AI and Agentic Web"
 
 Imagine a world where **everything** is an AI agent, from your coffee machine to your car, from businesses to entire cities. This world, which we’ll call *Agentia*, functions as a seamless ecosystem of autonomous agents communicating, negotiating, and collaborating without traditional REST APIs. Instead of invoking endpoints, these agents engage in intelligent dialogues, powered by advanced LLMs and agentic frameworks.
+
+Together we will build this new world here:
+
+https://agentia.world/
 
 ---
 
@@ -92,6 +96,8 @@ Imagine a world where **everything** is an AI agent, from your coffee machine to
 *Agentia* is a world where the boundaries between the physical and digital blur. It's a harmonious dance of autonomous agents working together to enhance human lives, empower businesses, and sustain the planet. In this world, the only limit is the imagination of what agents can do—and how well they can collaborate.
 
 Are you ready to step into Agentia?
+
+https://agentia.world/
 
 ---
 
