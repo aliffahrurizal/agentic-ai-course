@@ -10,7 +10,9 @@
 
 [AG2 Repo](https://github.com/ag2ai/ag2)
 
-[Chi Wang](https://www.linkedin.com/in/chi-wang-autogen/)
+[Chi Wang, The Founder](https://www.linkedin.com/in/chi-wang-autogen/)
+
+[Blogs](https://dev.to/ag2ai/)
 
 [Introducing RealtimeAgent Capabilities in AG2](https://dev.to/ag2ai/introducing-realtimeagent-capabilities-in-ag2-n8d)
 
