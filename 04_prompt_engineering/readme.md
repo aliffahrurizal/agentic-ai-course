@@ -20,6 +20,10 @@ Techniques for prompting LLMs in more sophisticated ways began to take off in 20
 5. [Reflexion](https://arxiv.org/abs/2303.11366), which enables a model to act, evaluate, reflect, and repeat.
 6. [Test-time compute](https://arxiv.org/abs/2408.03314), which increases the amount of processing power allotted to inference
 
+Reference:
+
+https://www.deeplearning.ai/the-batch/issue-281/
+
 
 ## For AI Agents
 
