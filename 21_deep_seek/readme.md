@@ -9,3 +9,5 @@
 [Docs](https://api-docs.deepseek.com/)
 
 [Function Calling](https://api-docs.deepseek.com/guides/function_calling)
+
+![Cost](cost.jpg)
