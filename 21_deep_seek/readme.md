@@ -14,6 +14,8 @@
 
 [Function Calling](https://api-docs.deepseek.com/guides/function_calling)
 
+[Issues with Function Calling](https://github.com/deepseek-ai/DeepSeek-V3/issues/15)
+
 ![Quality](quality_index.webp)
 
 ![Cost](cost.jpg)
