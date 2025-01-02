@@ -20,6 +20,10 @@ Peak Load (p99): FalkorDB delivers 136.2ms latency while Neo4j reaches 46923.8ms
 
 [Getting Started with FalkorDB](https://docs.falkordb.com/getting_started.html)
 
+[OpenCypher](https://s3.amazonaws.com/artifacts.opencypher.org/openCypher9.pdf)
+
+[OpenCypher Style Quide](https://s3.amazonaws.com/artifacts.opencypher.org/M23/docs/style-guide.pdf)
+
 [Website](https://www.falkordb.com/)
 
 [FalkorDB vs Neo4j: Graph Database Performance Benchmarks](https://www.falkordb.com/blog/graph-database-performance-benchmarks-falkordb-vs-neo4j/)
