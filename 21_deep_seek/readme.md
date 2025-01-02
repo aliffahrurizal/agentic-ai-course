@@ -10,4 +10,6 @@
 
 [Function Calling](https://api-docs.deepseek.com/guides/function_calling)
 
+![Quality](quality_index.webp)
+
 ![Cost](cost.jpg)
