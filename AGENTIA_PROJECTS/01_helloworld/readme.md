@@ -21,7 +21,7 @@ Below is a step-by-step outline for a “Hello World” project in **Agentia**, 
    - The Greeting Agent responds to simple greeting queries such as “Hello,” “Hi,” “Good morning,” or “How are you?”  
    - If a user message does not match a greeting intent, the agent can respond with a default message (e.g., “I only handle greetings right now.”).
 
-3. We have a choice of these Agents for the Agentia World in CrewAI, LangGraph, Microsoft AutoGen version 0.4 and above, and AG2. You may develop will anyone of these or develop multiple projects using all of these.
+3. You have a choice of building these Agents for the Agentia World in CrewAI, LangGraph, Microsoft AutoGen version 0.4 and above, and AG2. You may develop anyone of these or develop multiple projects using all of these.
 
 4. **Testing and Validation**  
    - Manually send a request to the Front-End Agent endpoint 
