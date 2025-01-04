@@ -1,4 +1,4 @@
-# Agentia Hello World Project
+# Agentia Hello World (Greeting Agent) Project
 
 Below is a step-by-step outline for a “Hello World” project in **Agentia**, where you will build two agents:
 
