@@ -2,11 +2,16 @@
 
 Imagine a world where **everything** is an AI agent, from your coffee machine to your car, from businesses to entire cities. This world, which we’ll call *Agentia*, functions as a seamless ecosystem of autonomous agents communicating, negotiating, and collaborating without traditional REST APIs. Instead of invoking endpoints, these agents engage in intelligent dialogues, powered by advanced LLMs and agentic frameworks.
 
+
+[Goolge AI Agents White Paper](agents_google.pdf)
+
+
 Together we will build this new world:
 
 https://agentia.world/
 
 ---
+
 
 ![Architecture](arch.jpeg)
 
@@ -14,7 +19,6 @@ Reference:
 
 https://www.linkedin.com/posts/how-do-i-use-ai_the-next-generation-of-ai-agents-is-not-just-activity-7281202955318370305-bTIR/
 
-[Goolge AI Agents White Paper](agents_google.pdf)
 
 ### The Core Pillars of Agentia
 
