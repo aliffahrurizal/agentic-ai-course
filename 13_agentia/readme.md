@@ -1,6 +1,9 @@
 # Welcome to "Agentia: The World of Autonomous AI and Agentic Web"
 
+
 Imagine a world where **everything** is an AI agent, from your coffee machine to your car, from businesses to entire cities. This world, which we’ll call *Agentia*, functions as a seamless ecosystem of autonomous agents communicating, negotiating, and collaborating without traditional REST APIs. Instead of invoking endpoints, these agents engage in intelligent dialogues, powered by advanced LLMs and agentic frameworks.
+
+[In 2025, AI agents may join the workforce, according to OpenAI's Sam Altman. Designed to operate autonomously, these agents could revolutionize productivity](https://www.livemint.com/ai/artificial-intelligence/sam-altman-s-2025-blueprint-openai-s-superintelligent-ai-agents-to-enter-the-workforce-11736155142011.html)
 
 
 [Goolge AI Agents White Paper](agents_google.pdf)
