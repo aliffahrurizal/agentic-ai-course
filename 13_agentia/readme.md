@@ -14,6 +14,8 @@ Reference:
 
 https://www.linkedin.com/posts/how-do-i-use-ai_the-next-generation-of-ai-agents-is-not-just-activity-7281202955318370305-bTIR/
 
+[Goolge AI Agents White Paper](agents_google.pdf)
+
 ### The Core Pillars of Agentia
 
 1. **Agent-Centric Infrastructure**  
