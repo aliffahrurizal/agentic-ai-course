@@ -8,6 +8,12 @@ https://agentia.world/
 
 ---
 
+![Architecture](arch.jpeg)
+
+Reference:
+
+https://www.linkedin.com/posts/how-do-i-use-ai_the-next-generation-of-ai-agents-is-not-just-activity-7281202955318370305-bTIR/
+
 ### The Core Pillars of Agentia
 
 1. **Agent-Centric Infrastructure**  
