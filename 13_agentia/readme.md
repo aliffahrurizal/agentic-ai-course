@@ -5,6 +5,8 @@ Imagine a world where **everything** is an AI agent, from your coffee machine to
 
 [Goolge AI Agents White Paper](agents_google.pdf)
 
+[Understanding AI Agents Foundations from Google's Latest Whitepaper](https://www.nb-data.com/p/understanding-ai-agents-foundations)
+
 
 Together we will build this new world:
 
