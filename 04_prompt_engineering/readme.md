@@ -4,10 +4,11 @@
 
 ## Basic Learning Path
 
-1. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
-2. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
-3. [Shot-Based Prompting](https://learnprompting.org/docs/basics/few_shot)
-4. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
+1. [Prompt Engineering](https://learnprompting.org/docs/basics/prompt_engineering)
+2. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
+3. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
+4. [Shot-Based Prompting](https://learnprompting.org/docs/basics/few_shot)
+5. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
 
 
 ## Advanced Papers
