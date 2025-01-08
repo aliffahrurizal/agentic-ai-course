@@ -11,6 +11,7 @@
 5. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
 6. [How to Create Effective Prompts: Essential Tips and Best Practices](https://learnprompting.org/docs/basics/ai_prompt_tips)
 7. [Combining Prompting Techniques](https://learnprompting.org/docs/basics/combining_techniques)
+8. [Chatbots vs. LLMs](https://learnprompting.org/docs/basics/chatbot_basics)
 
 
 ## Advanced Papers
