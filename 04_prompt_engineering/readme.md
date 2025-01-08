@@ -13,6 +13,7 @@
 7. [Combining Prompting Techniques](https://learnprompting.org/docs/basics/combining_techniques)
 8. [Chatbots vs. LLMs](https://learnprompting.org/docs/basics/chatbot_basics)
 9. [Priming Prompt](https://learnprompting.org/docs/basics/priming_prompt)
+10. [Limitations of LLMs](https://learnprompting.org/docs/basics/pitfalls)
 
 
 ## Advanced Papers
