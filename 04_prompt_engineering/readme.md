@@ -4,11 +4,12 @@
 
 [Prompt Engineering Guide Repository](https://github.com/dair-ai/Prompt-Engineering-Guide)
 
-## Learning Path
+## Basic Learning Path
 
 1. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
 2. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
 3. [Shot-Based Prompting](https://learnprompting.org/docs/basics/few_shot)
+4. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
 
 
 ## Advanced Papers
