@@ -25,12 +25,11 @@
 6. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
 7. [LLM Settings](https://learnprompting.org/docs/intermediate/configuration_hyperparameters)
 
+## Advanced Learning Path
 
-
+1. [Zero-Shot Prompting Techniques: Emotion Prompting, Re-reading (RE2), Rephrase and Respond (RaR), Role Prompting, System 2 Attention (S2A), and SimToM](https://learnprompting.org/docs/advanced/zero_shot/introduction)
 
 #### Note for Chain-of-Thought Prompting:
-
-
 
 OpenAI's o1 model represents a significant advancement in AI reasoning capabilities, particularly when compared to earlier models like GPT-4o. Here's a detailed comparison focusing on the application of Chain-of-Thought (CoT) prompting:
 
