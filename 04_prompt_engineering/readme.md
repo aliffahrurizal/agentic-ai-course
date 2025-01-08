@@ -7,6 +7,7 @@
 ## Learning Path
 
 1. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
+2. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
 
 
 ## Advanced Papers
