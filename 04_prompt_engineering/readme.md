@@ -23,6 +23,7 @@
 4. [Generated Knowledge](https://learnprompting.org/docs/intermediate/generated_knowledge)
 5. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
 6. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
+7. [LLM Settings](https://learnprompting.org/docs/intermediate/configuration_hyperparameters)
 
 
 
