@@ -15,6 +15,11 @@
 9. [Priming Prompt](https://learnprompting.org/docs/basics/priming_prompt)
 10. [Limitations of LLMs](https://learnprompting.org/docs/basics/pitfalls)
 
+## Intermediate Learning Path
+
+1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought)
+
+
 
 ## Advanced Papers
 
