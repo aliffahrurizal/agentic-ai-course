@@ -22,6 +22,7 @@
 3. [Self-Consistency](https://learnprompting.org/docs/intermediate/self_consistency)
 4. [Generated Knowledge](https://learnprompting.org/docs/intermediate/generated_knowledge)
 5. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
+6. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
 
 
 
