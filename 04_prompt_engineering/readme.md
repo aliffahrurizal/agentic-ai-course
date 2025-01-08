@@ -20,7 +20,7 @@
 1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought)
 
 
-### Note for Chain-of-Thought Prompting
+#### Note for Chain-of-Thought Prompting
 
 OpenAI's o1 model represents a significant advancement in AI reasoning capabilities by integrating internal chain-of-thought (CoT) processing directly into its architecture. This design enables o1 to autonomously decompose complex problems into sequential steps, enhancing its performance in tasks requiring intricate reasoning, such as mathematics, science, and coding. 
 
