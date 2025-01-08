@@ -2,8 +2,6 @@
 
 **We will start with [Learn Prompting](https://learnprompting.org/docs/introduction) and then moving to the [Prompt Engineering Guide](https://www.promptingguide.ai/) as your skills and knowledge evolve.**
 
-[Prompt Engineering Guide Repository](https://github.com/dair-ai/Prompt-Engineering-Guide)
-
 ## Basic Learning Path
 
 1. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
