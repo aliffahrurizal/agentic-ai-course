@@ -9,6 +9,7 @@
 3. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
 4. [Shot-Based Prompting](https://learnprompting.org/docs/basics/few_shot)
 5. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
+6. [How to Create Effective Prompts: Essential Tips and Best Practices](https://learnprompting.org/docs/basics/ai_prompt_tips)
 
 
 ## Advanced Papers
