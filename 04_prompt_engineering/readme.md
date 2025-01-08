@@ -18,6 +18,7 @@
 ## Intermediate Learning Path
 
 1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought)
+2. [Zero-Shot Chain-of-Thought](https://learnprompting.org/docs/intermediate/zero_shot_cot)
 
 
 #### Note for Chain-of-Thought Prompting:
