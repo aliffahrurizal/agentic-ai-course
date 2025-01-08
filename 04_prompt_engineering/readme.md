@@ -19,6 +19,9 @@
 
 1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought)
 2. [Zero-Shot Chain-of-Thought](https://learnprompting.org/docs/intermediate/zero_shot_cot)
+3. [Self-Consistency](https://learnprompting.org/docs/intermediate/self_consistency)
+
+
 
 
 #### Note for Chain-of-Thought Prompting:
