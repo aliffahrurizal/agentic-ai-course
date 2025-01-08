@@ -27,7 +27,7 @@
 
 ## Advanced Learning Path
 
-1. [Zero-Shot Prompting Techniques: Emotion Prompting, Re-reading (RE2), Rephrase and Respond (RaR), Role Prompting, System 2 Attention (S2A), and SimToM](https://learnprompting.org/docs/advanced/zero_shot/introduction)
+1. [Zero-Shot Prompting Techniques](https://learnprompting.org/docs/advanced/zero_shot/introduction): [Emotion Prompting](https://learnprompting.org/docs/advanced/zero_shot/emotion_prompting), [Re-reading (RE2)](https://learnprompting.org/docs/advanced/zero_shot/re_reading), [Rephrase and Respond (RaR)](https://learnprompting.org/docs/advanced/zero_shot/re_reading), [Role Prompting](https://learnprompting.org/docs/advanced/zero_shot/role_prompting), [System 2 Attention (S2A)](https://learnprompting.org/docs/advanced/zero_shot/s2a), and [SimToM](https://learnprompting.org/docs/advanced/zero_shot/simtom)
 
 #### Note for Chain-of-Thought Prompting:
 
