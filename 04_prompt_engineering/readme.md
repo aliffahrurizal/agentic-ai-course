@@ -21,6 +21,7 @@
 2. [Zero-Shot Chain-of-Thought](https://learnprompting.org/docs/intermediate/zero_shot_cot)
 3. [Self-Consistency](https://learnprompting.org/docs/intermediate/self_consistency)
 4. [Generated Knowledge](https://learnprompting.org/docs/intermediate/generated_knowledge)
+5. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
 
 
 
