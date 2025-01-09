@@ -30,7 +30,7 @@
 7. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
 8. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
 9. [LLM Settings](https://learnprompting.org/docs/intermediate/configuration_hyperparameters)
-10. [Retrieval Augmented Generation (RAG)](https://www.promptingguide.ai/techniques/rag)
+10. [Retrieval Augmented Generation (RAG)](https://www.promptingguide.ai/techniques/rag) and [RAG Reseach Findings](https://www.promptingguide.ai/research/rag)
 
 ## Advanced Learning Path
 
@@ -69,12 +69,13 @@
 ## Agents Learning Path
 
 1. [What is prompt engineering and why it matters for AI Agents](https://medium.com/@alvaro_72265/what-is-prompt-engineering-and-why-it-matters-for-ai-agents-0c1537d64b14)
-2. [Agents Introduction](https://learnprompting.org/docs/agents/introduction)
-3. [LLMs Using Tools](https://learnprompting.org/docs/agents/mrkl)
-4. [LLMs that Reason and Act (ReAct)](https://learnprompting.org/docs/agents/react) and [In Depth](https://www.promptingguide.ai/techniques/react)
-5. [Code as Reasoning](https://learnprompting.org/docs/agents/pal)
-6. [Function Calling with LLMs](https://www.promptingguide.ai/applications/function_calling)
-7. [Fine-Tuning with GPT-4o Models](https://www.promptingguide.ai/applications/finetuning-gpt4o)
+2. [Research Findings: LLM Agents](https://www.promptingguide.ai/research/llm-agents)
+3. [Agents Introduction](https://learnprompting.org/docs/agents/introduction)
+4. [LLMs Using Tools](https://learnprompting.org/docs/agents/mrkl)
+5. [LLMs that Reason and Act (ReAct)](https://learnprompting.org/docs/agents/react) and [In Depth](https://www.promptingguide.ai/techniques/react)
+6. [Code as Reasoning](https://learnprompting.org/docs/agents/pal)
+7. [Function Calling with LLMs](https://www.promptingguide.ai/applications/function_calling)
+8. [Fine-Tuning with GPT-4o Models](https://www.promptingguide.ai/applications/finetuning-gpt4o)
 
 
 #### Note for Chain-of-Thought Prompting:
