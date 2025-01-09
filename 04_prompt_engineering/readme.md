@@ -52,6 +52,9 @@
 6. [End-to-End DAG-Path (EEDP) Prompting](https://learnprompting.org/docs/new_techniques/end_to_end_dag_path_prompting)
 7. [Instance-adaptive Zero-Shot Chain-of-Thought Prompting (IAP)](https://learnprompting.org/docs/new_techniques/instance_adaptive_zero_shot_chain_of_thought)
 8. [Narrative-of-Thought (NoT)](https://learnprompting.org/docs/new_techniques/narrative_of_thought)
+9. [Reflexion](https://www.promptingguide.ai/techniques/reflexion)
+10. [Multimodal CoT Prompting](https://www.promptingguide.ai/techniques/multimodalcot)
+11. [GraphPrompts](https://www.promptingguide.ai/techniques/graph)
    
 ## Techniques for Vision-Language Models
 
