@@ -4,6 +4,12 @@ This repo is part of the [Panaversity Certified Agentic and Robotic AI Engineer]
 
 ![Agentic AI Top Trend](toptrend.webp)
 
+![HR](hr.jpeg)
+
+Reference:
+
+https://www.linkedin.com/posts/alexwang2911_aiagents-robotics-technology-activity-7282829390445453314-QLeS
+
 ### AI-201: Fundamentals of Agentic AI
 
 Covers Chapters from -01 to 11
