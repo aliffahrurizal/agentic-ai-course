@@ -54,6 +54,16 @@
 5. [Attention Prompting on Image](https://learnprompting.org/docs/new_techniques/for_vision_language_models/attention_prompting_on_image)
 6. [Visual Prompting for Multimodal LLMs](https://learnprompting.org/docs/new_techniques/for_multimodal_llms/visual_prompt)
 
+
+## Agents Learning Path
+
+1. [What is prompt engineering and why it matters for AI Agents](https://medium.com/@alvaro_72265/what-is-prompt-engineering-and-why-it-matters-for-ai-agents-0c1537d64b14)
+2. [Agents Introduction](https://learnprompting.org/docs/agents/introduction)
+3. [LLMs Using Tools](https://learnprompting.org/docs/agents/mrkl)
+4. [LLMs that Reason and Act (ReAct)](https://learnprompting.org/docs/agents/react)
+5. [Code as Reasoning](https://learnprompting.org/docs/agents/pal)
+
+
 #### Note for Chain-of-Thought Prompting:
 
 OpenAI's o1 model represents a significant advancement in AI reasoning capabilities, particularly when compared to earlier models like GPT-4o. Here's a detailed comparison focusing on the application of Chain-of-Thought (CoT) prompting:
@@ -107,8 +117,4 @@ Reference:
 
 https://www.deeplearning.ai/the-batch/issue-281/
 
-
-## For AI Agents
-
-[What is prompt engineering and why it matters for AI Agents](https://medium.com/@alvaro_72265/what-is-prompt-engineering-and-why-it-matters-for-ai-agents-0c1537d64b14)
 
