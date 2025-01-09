@@ -5,15 +5,19 @@
 ## Basic Learning Path
 
 1. [Prompt Engineering](https://learnprompting.org/docs/basics/prompt_engineering)
-2. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
-3. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
-4. [Shot-Based Prompting](https://learnprompting.org/docs/basics/few_shot)
-5. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
-6. [How to Create Effective Prompts: Essential Tips and Best Practices](https://learnprompting.org/docs/basics/ai_prompt_tips)
-7. [Combining Prompting Techniques](https://learnprompting.org/docs/basics/combining_techniques)
-8. [Chatbots vs. LLMs](https://learnprompting.org/docs/basics/chatbot_basics)
-9. [Priming Prompt](https://learnprompting.org/docs/basics/priming_prompt)
-10. [Limitations of LLMs](https://learnprompting.org/docs/basics/pitfalls)
+2. [Basics of Prompting](https://www.promptingguide.ai/introduction/basics)
+3. [Elements of a Prompt](https://www.promptingguide.ai/introduction/elements)
+4. [General Tips for Designing Prompts](https://www.promptingguide.ai/introduction/tips)
+5. [Examples of Prompts](https://www.promptingguide.ai/introduction/examples)
+6. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
+7. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
+8. [Shot-Based Prompting](https://learnprompting.org/docs/basics/few_shot)
+9. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
+10. [How to Create Effective Prompts: Essential Tips and Best Practices](https://learnprompting.org/docs/basics/ai_prompt_tips)
+11. [Combining Prompting Techniques](https://learnprompting.org/docs/basics/combining_techniques)
+12. [Chatbots vs. LLMs](https://learnprompting.org/docs/basics/chatbot_basics)
+13. [Priming Prompt](https://learnprompting.org/docs/basics/priming_prompt)
+14. [Limitations of LLMs](https://learnprompting.org/docs/basics/pitfalls)
 
 ## Intermediate Learning Path
 
