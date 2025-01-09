@@ -1,4 +1,4 @@
-# Prompt Engineering for AI Agents
+# Prompt Engineering In Depth
 
 **We will start with [Learn Prompting](https://learnprompting.org/docs/introduction) and then moving to the [Prompt Engineering Guide](https://www.promptingguide.ai/) as your skills and knowledge evolve.**
 
@@ -45,7 +45,14 @@
 6. [Instance-adaptive Zero-Shot Chain-of-Thought Prompting (IAP)](https://learnprompting.org/docs/new_techniques/instance_adaptive_zero_shot_chain_of_thought)
 7. [Narrative-of-Thought (NoT)](https://learnprompting.org/docs/new_techniques/narrative_of_thought)
    
+## Techniques for Vision-Language Models
 
+1. [Prompt Learning for Vision-Language Models](https://learnprompting.org/docs/new_techniques/for_vision_language_models/prompt_learning)
+2. [Context Optimization (CoOp) for Vision-Language Models](https://learnprompting.org/docs/new_techniques/for_vision_language_models/context_optimization)
+3. [Conditional Prompt Learning (CoCoOp) for Vision-Language Models](https://learnprompting.org/docs/new_techniques/for_vision_language_models/conditional_prompt_learning)
+4. [Mixture of Prompt Learning (MoCoOp) for Vision-Language Models](https://learnprompting.org/docs/new_techniques/for_vision_language_models/mixture_of_prompt_learning)
+5. [Attention Prompting on Image](https://learnprompting.org/docs/new_techniques/for_vision_language_models/attention_prompting_on_image)
+6. [Visual Prompting for Multimodal LLMs](https://learnprompting.org/docs/new_techniques/for_multimodal_llms/visual_prompt)
 
 #### Note for Chain-of-Thought Prompting:
 
