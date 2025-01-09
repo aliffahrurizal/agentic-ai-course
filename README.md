@@ -4,6 +4,8 @@ This repo is part of the [Panaversity Certified Agentic and Robotic AI Engineer]
 
 ![Agentic AI Top Trend](toptrend.webp)
 
+## Watch The NVIDIA CEO Jensen Huang Keynote at CES 2025
+
 [![HR for Agents](hr.jpeg)](https://www.youtube.com/watch?v=k82RwXqZHY8 "NVIDIA CEO Jensen Huang Keynote at CES 2025")
 
 
