@@ -30,6 +30,7 @@
 7. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
 8. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
 9. [LLM Settings](https://learnprompting.org/docs/intermediate/configuration_hyperparameters)
+10. [Retrieval Augmented Generation (RAG)](https://www.promptingguide.ai/techniques/rag)
 
 ## Advanced Learning Path
 
@@ -45,11 +46,12 @@
 
 1. [Self-Harmonized Chain-of-Thought (ECHO)](https://learnprompting.org/docs/new_techniques/self_harmonized_chain_of_thought)
 2. [Logic-of-Thought (LoT)](https://learnprompting.org/docs/new_techniques/logic_of_thought)
-3. [Code Prompting](https://learnprompting.org/docs/new_techniques/code_prompting)
-4. [Aligned Chain-of-Thought (AlignedCoT)](https://learnprompting.org/docs/new_techniques/aligned_cot)
-5. [End-to-End DAG-Path (EEDP) Prompting](https://learnprompting.org/docs/new_techniques/end_to_end_dag_path_prompting)
-6. [Instance-adaptive Zero-Shot Chain-of-Thought Prompting (IAP)](https://learnprompting.org/docs/new_techniques/instance_adaptive_zero_shot_chain_of_thought)
-7. [Narrative-of-Thought (NoT)](https://learnprompting.org/docs/new_techniques/narrative_of_thought)
+3. [Tree of Thoughts (ToT)](https://www.promptingguide.ai/techniques/tot)
+4. [Code Prompting](https://learnprompting.org/docs/new_techniques/code_prompting)
+5. [Aligned Chain-of-Thought (AlignedCoT)](https://learnprompting.org/docs/new_techniques/aligned_cot)
+6. [End-to-End DAG-Path (EEDP) Prompting](https://learnprompting.org/docs/new_techniques/end_to_end_dag_path_prompting)
+7. [Instance-adaptive Zero-Shot Chain-of-Thought Prompting (IAP)](https://learnprompting.org/docs/new_techniques/instance_adaptive_zero_shot_chain_of_thought)
+8. [Narrative-of-Thought (NoT)](https://learnprompting.org/docs/new_techniques/narrative_of_thought)
    
 ## Techniques for Vision-Language Models
 
@@ -66,8 +68,10 @@
 1. [What is prompt engineering and why it matters for AI Agents](https://medium.com/@alvaro_72265/what-is-prompt-engineering-and-why-it-matters-for-ai-agents-0c1537d64b14)
 2. [Agents Introduction](https://learnprompting.org/docs/agents/introduction)
 3. [LLMs Using Tools](https://learnprompting.org/docs/agents/mrkl)
-4. [LLMs that Reason and Act (ReAct)](https://learnprompting.org/docs/agents/react)
+4. [LLMs that Reason and Act (ReAct)](https://learnprompting.org/docs/agents/react) and [In Depth](https://www.promptingguide.ai/techniques/react)
 5. [Code as Reasoning](https://learnprompting.org/docs/agents/pal)
+6. [Function Calling with LLMs](https://www.promptingguide.ai/applications/function_calling)
+7. [Fine-Tuning with GPT-4o Models](https://www.promptingguide.ai/applications/finetuning-gpt4o)
 
 
 #### Note for Chain-of-Thought Prompting:
