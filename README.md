@@ -8,6 +8,8 @@ This repo is part of the [Panaversity Certified Agentic and Robotic AI Engineer]
 
 Reference:
 
+[NVIDIA CEO Jensen Huang Keynote at CES 2025](https://www.youtube.com/watch?v=k82RwXqZHY8)
+
 https://www.linkedin.com/posts/alexwang2911_aiagents-robotics-technology-activity-7282829390445453314-QLeS
 
 ### AI-201: Fundamentals of Agentic AI
