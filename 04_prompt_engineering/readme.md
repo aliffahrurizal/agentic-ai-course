@@ -23,14 +23,13 @@
 
 1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought) and [In Depth](https://www.promptingguide.ai/techniques/cot)
 2. [Zero-Shot Chain-of-Thought](https://learnprompting.org/docs/intermediate/zero_shot_cot)
-3. [Meta Prompting](https://www.promptingguide.ai/techniques/meta-prompting)
-4. [Self-Consistency](https://learnprompting.org/docs/intermediate/self_consistency) and [In Depth](https://www.promptingguide.ai/techniques/consistency)
-5. [Generated Knowledge](https://learnprompting.org/docs/intermediate/generated_knowledge)
-6. [Prompt Chaining](https://www.promptingguide.ai/techniques/prompt_chaining)
-7. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
-8. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
-9. [LLM Settings](https://learnprompting.org/docs/intermediate/configuration_hyperparameters)
-10. [Retrieval Augmented Generation (RAG)](https://www.promptingguide.ai/techniques/rag) and [RAG Reseach Findings](https://www.promptingguide.ai/research/rag)
+3. [Self-Consistency](https://learnprompting.org/docs/intermediate/self_consistency) and [In Depth](https://www.promptingguide.ai/techniques/consistency)
+4. [Generated Knowledge](https://learnprompting.org/docs/intermediate/generated_knowledge)
+5. [Prompt Chaining](https://www.promptingguide.ai/techniques/prompt_chaining)
+6. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
+7. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
+8. [LLM Settings](https://learnprompting.org/docs/intermediate/configuration_hyperparameters)
+9. [Retrieval Augmented Generation (RAG)](https://www.promptingguide.ai/techniques/rag) and [RAG Reseach Findings](https://www.promptingguide.ai/research/rag)
 
 ## Advanced Learning Path
 
