@@ -21,7 +21,7 @@
 
 ## Intermediate Learning Path
 
-1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought) and [In Depth](https://www.promptingguide.ai/techniques/cot))
+1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought) and [In Depth](https://www.promptingguide.ai/techniques/cot)
 2. [Zero-Shot Chain-of-Thought](https://learnprompting.org/docs/intermediate/zero_shot_cot)
 3. [Meta Prompting](https://www.promptingguide.ai/techniques/meta-prompting)
 4. [Self-Consistency](https://learnprompting.org/docs/intermediate/self_consistency) and [In Depth](https://www.promptingguide.ai/techniques/consistency)
