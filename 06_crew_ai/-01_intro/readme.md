@@ -67,3 +67,11 @@ By integrating these components, CrewAI enables the development of sophisticated
 ## Installation
 
 https://docs.crewai.com/installation
+
+### CLI
+
+https://docs.crewai.com/concepts/cli
+
+    crewai create flow my_new_flow
+
+    uv run kickoff
