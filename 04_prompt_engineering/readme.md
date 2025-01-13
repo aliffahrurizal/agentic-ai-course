@@ -5,25 +5,31 @@
 ## Basic Learning Path
 
 1. [Prompt Engineering](https://learnprompting.org/docs/basics/prompt_engineering)
-2. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
-3. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
-4. [Shot-Based Prompting](https://learnprompting.org/docs/basics/few_shot)
-5. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
-6. [How to Create Effective Prompts: Essential Tips and Best Practices](https://learnprompting.org/docs/basics/ai_prompt_tips)
-7. [Combining Prompting Techniques](https://learnprompting.org/docs/basics/combining_techniques)
-8. [Chatbots vs. LLMs](https://learnprompting.org/docs/basics/chatbot_basics)
-9. [Priming Prompt](https://learnprompting.org/docs/basics/priming_prompt)
-10. [Limitations of LLMs](https://learnprompting.org/docs/basics/pitfalls)
+2. [Basics of Prompting](https://www.promptingguide.ai/introduction/basics)
+3. [Elements of a Prompt](https://www.promptingguide.ai/introduction/elements)
+4. [General Tips for Designing Prompts](https://www.promptingguide.ai/introduction/tips)
+5. [Examples of Prompts](https://www.promptingguide.ai/introduction/examples)
+6. [Instruction prompting](https://learnprompting.org/docs/basics/instructions)
+7. [Assigning Roles](https://learnprompting.org/docs/basics/roles)
+8. [Shot-Based Prompting](https://learnprompting.org/docs/basics/few_shot)
+9. [Parts of a Prompt: Understanding the Key Elements](https://learnprompting.org/docs/basics/prompt_structure)
+10. [How to Create Effective Prompts: Essential Tips and Best Practices](https://learnprompting.org/docs/basics/ai_prompt_tips)
+11. [Combining Prompting Techniques](https://learnprompting.org/docs/basics/combining_techniques)
+12. [Chatbots vs. LLMs](https://learnprompting.org/docs/basics/chatbot_basics)
+13. [Priming Prompt](https://learnprompting.org/docs/basics/priming_prompt)
+14. [Limitations of LLMs](https://learnprompting.org/docs/basics/pitfalls)
 
 ## Intermediate Learning Path
 
-1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought)
+1. [Chain-of-Thought Prompting](https://learnprompting.org/docs/intermediate/chain_of_thought) and [In Depth](https://www.promptingguide.ai/techniques/cot)
 2. [Zero-Shot Chain-of-Thought](https://learnprompting.org/docs/intermediate/zero_shot_cot)
-3. [Self-Consistency](https://learnprompting.org/docs/intermediate/self_consistency)
+3. [Self-Consistency](https://learnprompting.org/docs/intermediate/self_consistency) and [In Depth](https://www.promptingguide.ai/techniques/consistency)
 4. [Generated Knowledge](https://learnprompting.org/docs/intermediate/generated_knowledge)
-5. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
-6. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
-7. [LLM Settings](https://learnprompting.org/docs/intermediate/configuration_hyperparameters)
+5. [Prompt Chaining](https://www.promptingguide.ai/techniques/prompt_chaining)
+6. [Least-to-Most Prompting](https://learnprompting.org/docs/intermediate/least_to_most)
+7. [Revisiting Roles](https://learnprompting.org/docs/intermediate/revisiting_roles)
+8. [LLM Settings](https://learnprompting.org/docs/intermediate/configuration_hyperparameters)
+9. [Retrieval Augmented Generation (RAG)](https://www.promptingguide.ai/techniques/rag) and [RAG Reseach Findings](https://www.promptingguide.ai/research/rag)
 
 ## Advanced Learning Path
 
@@ -31,19 +37,23 @@
 2. [Few-Shot Prompting Techniques](https://learnprompting.org/docs/advanced/few_shot/introduction): [Self-Ask Prompting](https://learnprompting.org/docs/advanced/few_shot/self_ask), [Self-Generated In-Context Learning (SG-ICL)](https://learnprompting.org/docs/advanced/few_shot/self_generated_icl), [K-Nearest Neighbor (KNN) Prompting](https://learnprompting.org/docs/advanced/few_shot/k_nearest_neighbor_knn), [Vote-K Prompting](https://learnprompting.org/docs/advanced/few_shot/vote-k), [Prompt Mining](https://learnprompting.org/docs/advanced/few_shot/prompt_mining)
 3. [Thought Generation Techniques](https://learnprompting.org/docs/advanced/thought_generation/introduction): [Contrastive Chain-of-Thought (CoT) Prompting](https://learnprompting.org/docs/advanced/thought_generation/contrastive_cot), [Automatic Chain of Thought (Auto-CoT)](https://learnprompting.org/docs/advanced/thought_generation/automatic_chain_of_thought), [Tabular Chain-of-Thought (Tab-CoT)](https://learnprompting.org/docs/advanced/thought_generation/tabular_chain_of_thought_tab_cot), [Memory-of-Thought (MoT) Prompting](https://learnprompting.org/docs/advanced/thought_generation/memory_of_thought), [Active Prompting](https://learnprompting.org/docs/advanced/thought_generation/active_prompting), [Analogical Prompting](https://learnprompting.org/docs/advanced/thought_generation/analogical_prompting), [Complexity-Based Prompting](https://learnprompting.org/docs/advanced/thought_generation/complexity_based_prompting), [Step-Back Prompting](https://learnprompting.org/docs/advanced/thought_generation/step_back_prompting), [Thread of Thought (ThoT)](https://learnprompting.org/docs/advanced/thought_generation/thread_of_thought)
 4. [Ensembling Prompting Techniques](https://learnprompting.org/docs/advanced/ensembling/introduction): [Mixture of Reasoning Experts (MoRE)](https://learnprompting.org/docs/advanced/ensembling/mixture_of_reasoning_experts_more), [Consistency-based Self-adaptive Prompting (COSP)](https://learnprompting.org/docs/advanced/ensembling/consistency_based_self_adaptive_prompting), [Max Mutual Information (MMI) Method](https://learnprompting.org/docs/advanced/ensembling/max_mutual_information_method), [DiVeRSe (Diverse Verifier on Reasoning Step)](https://learnprompting.org/docs/advanced/ensembling/diverse_verifier_on_reasoning_step), [Prompt Paraphrasing](https://learnprompting.org/docs/advanced/ensembling/prompt_paraphrasing), [Universal Self-Adaptive Prompting (USP)](https://learnprompting.org/docs/advanced/ensembling/universal_self_adaptive_prompting), [Universal Self-Consistency](https://learnprompting.org/docs/advanced/ensembling/universal_self_consistency), [Multi-Chain Reasoning (MCR)](https://learnprompting.org/docs/advanced/ensembling/multi-chain-reasoning)
-5. [Self-Criticism Prompting Techniques](https://learnprompting.org/docs/advanced/self_criticism/introduction)
-6. [Decomposition Prompting Techniques](https://learnprompting.org/docs/advanced/decomposition/introduction)
+5. [Self-Criticism Prompting Techniques](https://learnprompting.org/docs/advanced/self_criticism/introduction): [Self-Calibration](https://learnprompting.org/docs/advanced/self_criticism/self_calibration), [Self-Refine](https://learnprompting.org/docs/advanced/self_criticism/self_refine), [Reversing Chain-of-Thought (RCoT)](https://learnprompting.org/docs/advanced/self_criticism/rcot), [Self-Verification](Self-Verification), [Chain-of-Verification (CoVe)](https://learnprompting.org/docs/advanced/self_criticism/chain_of_verification), [Cumulative Reasoning (CR)](https://learnprompting.org/docs/advanced/self_criticism/cumulative_reasoning)
+6. [Decomposition Prompting Techniques](https://learnprompting.org/docs/advanced/decomposition/introduction): [Decomposed (DecomP) Prompting](https://learnprompting.org/docs/advanced/decomposition/decomp), [Plan-and-Solve (PS) Prompting](https://learnprompting.org/docs/advanced/decomposition/plan_and_solve), [Program of Thoughts Prompting](https://learnprompting.org/docs/advanced/decomposition/program_of_thoughts). [Faithful Chain-of-Thought Reasoning](https://learnprompting.org/docs/advanced/decomposition/faithful_cot), [Skeleton-of-Thought Prompting](https://learnprompting.org/docs/advanced/decomposition/skeleton_of_thoughts), [Tree of Thoughts (ToT) Prompting](https://learnprompting.org/docs/advanced/decomposition/tree_of_thoughts), [Recursion of Thought Prompting](https://learnprompting.org/docs/advanced/decomposition/recursion_of_thought)
 
 
 ## New Techniques Learning Path
 
 1. [Self-Harmonized Chain-of-Thought (ECHO)](https://learnprompting.org/docs/new_techniques/self_harmonized_chain_of_thought)
 2. [Logic-of-Thought (LoT)](https://learnprompting.org/docs/new_techniques/logic_of_thought)
-3. [Code Prompting](https://learnprompting.org/docs/new_techniques/code_prompting)
-4. [Aligned Chain-of-Thought (AlignedCoT)](https://learnprompting.org/docs/new_techniques/aligned_cot)
-5. [End-to-End DAG-Path (EEDP) Prompting](https://learnprompting.org/docs/new_techniques/end_to_end_dag_path_prompting)
-6. [Instance-adaptive Zero-Shot Chain-of-Thought Prompting (IAP)](https://learnprompting.org/docs/new_techniques/instance_adaptive_zero_shot_chain_of_thought)
-7. [Narrative-of-Thought (NoT)](https://learnprompting.org/docs/new_techniques/narrative_of_thought)
+3. [Tree of Thoughts (ToT)](https://www.promptingguide.ai/techniques/tot)
+4. [Code Prompting](https://learnprompting.org/docs/new_techniques/code_prompting)
+5. [Aligned Chain-of-Thought (AlignedCoT)](https://learnprompting.org/docs/new_techniques/aligned_cot)
+6. [End-to-End DAG-Path (EEDP) Prompting](https://learnprompting.org/docs/new_techniques/end_to_end_dag_path_prompting)
+7. [Instance-adaptive Zero-Shot Chain-of-Thought Prompting (IAP)](https://learnprompting.org/docs/new_techniques/instance_adaptive_zero_shot_chain_of_thought)
+8. [Narrative-of-Thought (NoT)](https://learnprompting.org/docs/new_techniques/narrative_of_thought)
+9. [Reflexion](https://www.promptingguide.ai/techniques/reflexion)
+10. [Multimodal CoT Prompting](https://www.promptingguide.ai/techniques/multimodalcot)
+11. [GraphPrompts](https://www.promptingguide.ai/techniques/graph)
    
 ## Techniques for Vision-Language Models
 
@@ -58,10 +68,13 @@
 ## Agents Learning Path
 
 1. [What is prompt engineering and why it matters for AI Agents](https://medium.com/@alvaro_72265/what-is-prompt-engineering-and-why-it-matters-for-ai-agents-0c1537d64b14)
-2. [Agents Introduction](https://learnprompting.org/docs/agents/introduction)
-3. [LLMs Using Tools](https://learnprompting.org/docs/agents/mrkl)
-4. [LLMs that Reason and Act (ReAct)](https://learnprompting.org/docs/agents/react)
-5. [Code as Reasoning](https://learnprompting.org/docs/agents/pal)
+2. [Research Findings: LLM Agents](https://www.promptingguide.ai/research/llm-agents)
+3. [Agents Introduction](https://learnprompting.org/docs/agents/introduction)
+4. [LLMs Using Tools](https://learnprompting.org/docs/agents/mrkl)
+5. [LLMs that Reason and Act (ReAct)](https://learnprompting.org/docs/agents/react) and [In Depth](https://www.promptingguide.ai/techniques/react)
+6. [Code as Reasoning](https://learnprompting.org/docs/agents/pal)
+7. [Function Calling with LLMs](https://www.promptingguide.ai/applications/function_calling)
+8. [Fine-Tuning with GPT-4o Models](https://www.promptingguide.ai/applications/finetuning-gpt4o)
 
 
 #### Note for Chain-of-Thought Prompting:
