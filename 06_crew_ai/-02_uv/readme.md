@@ -2,6 +2,8 @@
 
 [Python UV: The Ultimate Guide to the Fastest Python Package Manager](https://www.datacamp.com/tutorial/python-uv)
 
+[Command-line interfaces](https://docs.astral.sh/uv/concepts/projects/config/#command-line-interfaces)
+
 [Official Docs](https://docs.astral.sh/uv/)
 
 [Running scripts](https://docs.astral.sh/uv/guides/scripts/)
