@@ -1,5 +1,9 @@
 ### Meta-Prompting Tutorial: How to Use ChatGPT to Create Prompts Using ChatGPT
 
+[Watch: You’ll NEVER Need Prompt Engineering Again with Meta-Prompting](https://www.youtube.com/watch?v=cgBVHj9DXXY)
+
+[Watch: Meta Prompting with o1, o1 Pro Mode, and ChatGPT Pro (Compute on Compute)](https://www.youtube.com/watch?v=yZGb9-Z9DG0)
+
 Below is a step-by-step tutorial that shows you **how to use ChatGPT to create prompts using ChatGPT** itself. This method is often referred to as “meta-prompting” because you’re using the model to help you craft better instructions (prompts) for the model.
 
 
