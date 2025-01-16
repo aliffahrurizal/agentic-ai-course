@@ -52,23 +52,3 @@ Conclusion
 
 Test-Driven Prompt Engineering offers a structured approach to developing and refining prompts for AI models, ensuring outputs are accurate, consistent, and reliable. By adopting this methodology, developers can enhance the effectiveness of AI interactions, leading to improved user satisfaction and trust in AI-driven solutions.
 
-## Tools
-
-Test-Driven Prompt Engineering (TDPE) emphasizes the creation and refinement of prompts through systematic testing to ensure AI models produce accurate and consistent outputs. Several tools have been developed to facilitate this process, each offering unique features tailored to the needs of prompt engineers. Here are some of the most utilized tools in TDPE:
-
-### Promptimize
-An open-source toolkit designed to bring test-driven development principles to prompt engineering. It allows users to define ‘prompt cases’ (akin to test cases) as code, associate them with evaluation functions, generate prompt variations dynamically, and execute and rank prompt test suites across different models and settings. ￼
-
-### Vellum’s LLM Playground
-A platform that enables users to systematically iterate and refine prompts with ease. It supports side-by-side comparisons between models from various providers, facilitating prompt testing with dynamic values. Vellum also offers collaboration tools, allowing teams to edit prompts and test models together. ￼
-
-### PromptLayer
-Designed for prompt management, collaboration, and evaluation, PromptLayer offers visual prompt management through a user-friendly interface. It provides version control, enabling users to edit and deploy prompt versions without coding, and supports testing and evaluation through A/B testing to compare models and evaluate performance. ￼
-
-### Helicone
-An AI observability platform that aids in prompt version control. It automatically records each change, allowing users to run A/B tests and compare prompt performance. Helicone supports dataset tracking and rollbacks, ensuring that prompt changes do not negatively impact production environments. ￼
-
-### LangChain
-An open-source framework for building applications powered by large language models (LLMs). It enables the seamless integration of models into workflows such as data reasoning and querying, supporting complex prompt engineering tasks that require multi-step reasoning and integration with various APIs. ￼
-
-These tools are instrumental in implementing Test-Driven Prompt Engineering, providing functionalities that streamline the creation, testing, and optimization of prompts to enhance AI model performance.
