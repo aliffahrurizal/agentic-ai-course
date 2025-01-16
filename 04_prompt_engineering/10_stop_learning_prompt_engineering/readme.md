@@ -2,6 +2,8 @@
 
 [Watch: Stop Learning Prompt Engineering... Do This Instead](https://www.youtube.com/watch?v=luGZBf057fU)
 
+[Forget Prompt Engineering: Here's How AI Can Work for You](https://www.lifewire.com/prompt-engineering-dead-8748652)
+
 Tutorial: Why Mastering Prompt Engineering is a Waste of Time in 2024 and the Skills You Should Focus On Instead
 
 Introduction

@@ -1,4 +1,6 @@
-### Meta-Prompting Tutorial: How to Use ChatGPT to Create Prompts Using ChatGPT
+### Meta-Prompting Tutorial: AI Prompts that Write Prompts
+
+[A Complete Guide to Meta Prompting](https://www.prompthub.us/blog/a-complete-guide-to-meta-prompting)
 
 [Watch: You’ll NEVER Need Prompt Engineering Again with Meta-Prompting](https://www.youtube.com/watch?v=cgBVHj9DXXY)
 
