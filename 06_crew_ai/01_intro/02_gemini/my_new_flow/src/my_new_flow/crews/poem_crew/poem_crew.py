@@ -16,7 +16,7 @@ class PoemCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
-    # If you would lik to add tools to your crew, you can learn more about it here:
+    # If you would like to add tools to your crew, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
     def poem_writer(self) -> Agent:
@@ -44,4 +44,5 @@ class PoemCrew:
             tasks=self.tasks,  # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
+        
         )
