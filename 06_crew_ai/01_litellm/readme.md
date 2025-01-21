@@ -1,5 +1,7 @@
 # LiteLLM Python SDK
 
+[Watch: LiteLLM - One Unified API for for all LLMs](https://www.youtube.com/watch?v=29_ipKNI8I0)
+
 [Repo](https://github.com/BerriAI/litellm)
 
 [Docs](https://docs.litellm.ai/docs/#litellm-python-sdk)
