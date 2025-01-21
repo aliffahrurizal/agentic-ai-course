@@ -1,8 +1,8 @@
-# LiteLLM
+# LiteLLM Python SDK
 
 [Repo](https://github.com/BerriAI/litellm)
 
-[Docs](https://docs.litellm.ai/docs/)
+[Docs](https://docs.litellm.ai/docs/#litellm-python-sdk)
 
 CrewAI has transitioned to using LiteLLM for integrating with various Large Language Models (LLMs). LiteLLM serves as an intermediary, allowing CrewAI to connect seamlessly with multiple LLM providers. This approach offers flexibility in choosing the appropriate model for specific use cases.  ￼
 
