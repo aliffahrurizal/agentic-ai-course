@@ -1,4 +1,6 @@
-# DeepSeek V3
+# DeepSeek V3 and R1
+
+[Build anything with DeepSeek R1, here’s how](https://www.youtube.com/watch?v=BdMEQzt_js0)
 
 **The DeepSeek API uses an API format compatible with OpenAI. By modifying the configuration, you can use the OpenAI SDK or softwares compatible with the OpenAI API to access the DeepSeek API.**
 
