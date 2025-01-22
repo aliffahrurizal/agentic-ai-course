@@ -102,16 +102,4 @@ The **Process** defines the workflow strategy that the crew follows, such as seq
 
 By integrating these components, CrewAI enables the development of sophisticated AI systems where autonomous agents collaborate effectively, utilizing designated tools and following structured workflows to accomplish complex tasks. 
 
-## Installation
-
-https://docs.crewai.com/installation
-
-### CLI
-
-https://docs.crewai.com/concepts/cli
-
-    crewai create flow my_new_flow
-
-    uv run kickoff
-
 
