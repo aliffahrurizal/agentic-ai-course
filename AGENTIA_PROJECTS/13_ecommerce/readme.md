@@ -1,4 +1,4 @@
-# Shopify
+# E-Commerce
 
 [How to Build AI Agents for Shopify](https://www.youtube.com/watch?v=vQCNCYwaVcE)
 
