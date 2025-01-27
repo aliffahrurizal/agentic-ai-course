@@ -1,4 +1,4 @@
-# The New Agentia World
+# The New Agentia World: AI Agents as Components
 
 In standard industry terminology, “agentia” can be understood as a multi-agent ecosystem in which autonomous software components—each with its own natural language interface—collaborate to fulfill end-user requests. Below is a detailed explanation of how this ecosystem operates and why it matters:
 

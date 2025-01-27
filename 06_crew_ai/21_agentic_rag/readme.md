@@ -14,6 +14,9 @@ Implementing an Agentic Retrieval-Augmented Generation (RAG) system in CrewAI in
 
 [Code Repo](https://github.com/AIAnytime/Agentic-RAG-using-Crew-AI)
 
+[Build an agentic RAG step by step, powered by Crew AI and a local Llama 3.2](https://www.youtube.com/watch?v=O4yBW_GTRk0)
+
+
 
 ## Additional Material 
 
