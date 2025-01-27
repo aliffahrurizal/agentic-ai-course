@@ -1,11 +1,5 @@
 # E-Commerce
 
-[How to Build AI Agents for Shopify](https://www.youtube.com/watch?v=vQCNCYwaVcE)
-
-[Sell This $3,000 Shopify AI Agent (In 7 Minutes)](https://www.youtube.com/watch?v=jI8J6bzGwCg)
-
-[Revolutionizing Shopify E-Commerce with Embedded AI Agents](https://www.youtube.com/watch?v=o-D4X1QCUv4)
-
 As of the latest available data, here is a list of prominent e-commerce platforms, including Shopify and WordPress (via WooCommerce), ranked by their global market share:
 
 	1.	WooCommerce: Approximately 39% market share.  ￼
@@ -95,4 +89,11 @@ The integration of agentic AI with e-commerce platforms like WooCommerce and Sho
 
 **Future Directions**
 Future research can explore the development of industry-specific AI agents for niche markets and the use of agentic AI to enable fully autonomous e-commerce platforms. Collaborations between AI developers and e-commerce providers will play a pivotal role in unlocking the full potential of agentic AI in online retail.
+
+[How to Build AI Agents for Shopify](https://www.youtube.com/watch?v=vQCNCYwaVcE)
+
+[Sell This $3,000 Shopify AI Agent (In 7 Minutes)](https://www.youtube.com/watch?v=jI8J6bzGwCg)
+
+[Revolutionizing Shopify E-Commerce with Embedded AI Agents](https://www.youtube.com/watch?v=o-D4X1QCUv4)
+
 
