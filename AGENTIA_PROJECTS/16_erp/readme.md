@@ -1,6 +1,7 @@
 # ERP
 
 Here’s a ranked list of prominent Enterprise Resource Planning (ERP) software solutions, based on their market share and usage which we will integrate agentia agents:
+
 	1.	Microsoft Dynamics: Holding approximately 25.74% of the ERP market share, Microsoft Dynamics offers a suite of applications for various business processes, including finance, operations, and sales.  ￼
 	2.	Workday: With a 16.15% market share, Workday specializes in human capital management and financial management applications, serving a wide range of industries.  ￼
 	3.	SAP ERP: SAP’s ERP solutions account for 9.37% of the market, providing comprehensive tools for finance, logistics, and human resources.  ￼
