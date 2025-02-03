@@ -68,6 +68,8 @@ Implementing a Basic Flow with Prompt Chaining
 
 We start by building a simple CrewAI Flow that uses prompt chaining. In this example, the flow will first generate a topic and then use that topic to generate an outline.
 
+```python
+
 from crewai.flow.flow import Flow, start, listen
 from litellm import completion  # Replace with your preferred LLM API client
 
@@ -108,6 +110,8 @@ if __name__ == "__main__":
     final_outline = flow.kickoff()
     print("Final Output:")
     print(final_outline)
+
+```
 
 In this flow, the @start() decorator marks the beginning, and the @listen() decorator makes the second method wait for the output of the first method.
 
