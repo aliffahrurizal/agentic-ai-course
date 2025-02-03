@@ -36,7 +36,7 @@ Activate with:
 
     source .venv/bin/activate
 
-# On Windows use crewenv\Scripts\activate
+    On Windows use crewenv\Scripts\activate
 
 
 	3.	API Keys and .env:
@@ -58,13 +58,18 @@ Overview of Agentic Patterns
 Before diving into code, let’s briefly review the agentic patterns we’ll implement:
 
 	•	Prompt Chaining: Decompose a task into sequential subtasks (each output feeding the next call).
+
 	•	Routing: Use output classification to direct different follow‑up processes.
+
 	•	Parallelization: Run multiple LLM calls simultaneously (using the or_ helper) and aggregate results.
+
 	•	Orchestrator-Workers: Dynamically break a task into subtasks, delegate to worker calls, and synthesize outputs.
+
 	•	Evaluator-Optimizer: Iterate on an output by having one LLM generate a response and another refine it.
+
 	•	Autonomous Agents: Combine the above in a loop where the agent uses tool feedback and halts based on stopping criteria.
 
-Implementing a Basic Flow with Prompt Chaining
+## Implementing a Basic Flow with Prompt Chaining
 
 We start by building a simple CrewAI Flow that uses prompt chaining. In this example, the flow will first generate a topic and then use that topic to generate an outline.
 
@@ -115,7 +120,7 @@ if __name__ == "__main__":
 
 In this flow, the @start() decorator marks the beginning, and the @listen() decorator makes the second method wait for the output of the first method.
 
-Adding Routing for Conditional Task Execution
+## Adding Routing for Conditional Task Execution
 
 Next, we implement conditional routing so that the flow can choose different follow‑up steps based on the generated topic’s attributes (for example, if the topic is “tech” versus “lifestyle”).
 
@@ -179,7 +184,7 @@ if __name__ == "__main__":
 
 Here the @router() decorator determines which branch to take. Based on the route label, a corresponding listener method is invoked.
 
-Parallelization and Aggregation with the or_ Decorator
+## Parallelization and Aggregation with the or_ Decorator
 
 Sometimes you want to run several subtasks in parallel and aggregate their outputs. For instance, you might ask the model for multiple outlines and then select or merge them. CrewAI provides the or_ helper to trigger a listener when any (or all, using and_) tasks finish.
 
@@ -228,7 +233,7 @@ if __name__ == "__main__":
 
 This flow starts two tasks in parallel and then uses or_ so that as soon as one finishes the aggregator runs.
 
-Orchestrator-Workers: Dynamically Delegating Subtasks
+## Orchestrator-Workers: Dynamically Delegating Subtasks
 
 For more complex problems, an orchestrator may dynamically break a task into subtasks and delegate them to “worker” flows. In CrewAI, you can simulate this by creating a flow that calls helper flows or even external Crews.
 
@@ -277,7 +282,7 @@ if __name__ == "__main__":
 
 This pattern shows how you can use sequential delegation within a Flow to refine outputs over multiple turns.
 
-Evaluator-Optimizer Pattern for Iterative Refinement
+## Evaluator-Optimizer Pattern for Iterative Refinement
 
 For tasks that benefit from iterative evaluation (for example, when human feedback is available), you can implement a loop where one task generates output and another “evaluates” it. While CrewAI Flows do not yet have a built‑in loop decorator, you can simulate iterative refinement by chaining a generation task with an evaluation task.
 
@@ -323,7 +328,7 @@ if __name__ == "__main__":
 
 This simple two-step flow represents the evaluator-optimizer pattern by “asking for feedback” and then producing a refined version.
 
-Combining Patterns in an Autonomous Agent Workflow
+## Combining Patterns in an Autonomous Agent Workflow
 
 Finally, let’s put it all together. In many real-world applications, you might want to start with a simple prompt, then dynamically choose between workflows based on the input, run some tasks in parallel, and finally refine the results. The following example combines multiple patterns to form an autonomous agent workflow for generating and refining a content piece.
 
@@ -395,9 +400,13 @@ if __name__ == "__main__":
 ```python
 
 In this workflow:
+
 	•	The initial prompt creates the idea.
+
 	•	The router selects which branch to follow based on a condition.
+
 	•	Depending on the branch, either a tech‑focused or a general outline is generated.
+
 	•	Finally, the or_ decorator aggregates the output and a final optimization step refines the outline.
 
 Conclusion and Next Steps
@@ -406,7 +415,9 @@ This tutorial has demonstrated how to implement multiple agentic patterns—prom
 
 Next Steps:
 	•	Experiment with state management using structured models (e.g., Pydantic) for larger workflows.
+
 	•	Extend these examples by integrating external tools (e.g., search APIs or databases) using CrewAI’s tools framework.
+    
 	•	Explore CrewAI’s visualization features (e.g., using the plot() method) to inspect your flow’s DAG.
 
 By iterating on these patterns and combining them as needed, you can tailor your AI agent workflows to your application’s requirements.
