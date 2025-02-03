@@ -1,6 +1,14 @@
 
 # Poem Flow
 
+## Objective
+
+1. Increase our understanding of Tasks, and EntryPoint decorators. 
+2. Understand how to run tasks synchronously and asynchronously.
+3. Entrypoint can take different arguments like checkpointer, store...
+
+## Run poemflow project
+
 After setting up environment run the following commands
 
 
@@ -15,8 +23,6 @@ uv run stream
 You can either clone this project or take the sample code from workflow.py and create your own project.
 
 After running the above commands change topic in poemflow/__init__.py to generate different poems.
-
--> Once you have run the poemflow then open given jupyter notebook in Collab and go through the code.
 
 ## How to Run Locally
 
@@ -78,13 +84,9 @@ from random import randint
 from dotenv import load_dotenv, find_dotenv
 from langgraph.func import entrypoint, task
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langgraph.checkpoint.memory import MemorySaver
 
 # Load environment variables
 _: bool = load_dotenv(find_dotenv())
-
-# Define a checkpointer for persistence
-checkpointer = MemorySaver()
 
 # Initialize the AI Model (Poem Generation)
 model = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
@@ -126,8 +128,9 @@ def stream():
     for event in run_workflow.stream(input=""):
         print(event)
 
-```
+stream()
 
+```
 ### Expected Output
 
 When you run the code, you might see something like:
