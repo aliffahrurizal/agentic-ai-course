@@ -115,6 +115,8 @@ Adding Routing for Conditional Task Execution
 
 Next, we implement conditional routing so that the flow can choose different follow‑up steps based on the generated topic’s attributes (for example, if the topic is “tech” versus “lifestyle”).
 
+```python 
+
 from crewai.flow.flow import Flow, start, listen, router
 from litellm import completion
 
@@ -168,6 +170,8 @@ if __name__ == "__main__":
     final_output = flow.kickoff()
     print("Final Output:")
     print(final_output)
+
+```
 
 Here the @router() decorator determines which branch to take. Based on the route label, a corresponding listener method is invoked.
 
