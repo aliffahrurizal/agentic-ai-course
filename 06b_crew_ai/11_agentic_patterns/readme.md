@@ -417,7 +417,7 @@ Next Steps:
 	•	Experiment with state management using structured models (e.g., Pydantic) for larger workflows.
 
 	•	Extend these examples by integrating external tools (e.g., search APIs or databases) using CrewAI’s tools framework.
-    
+
 	•	Explore CrewAI’s visualization features (e.g., using the plot() method) to inspect your flow’s DAG.
 
 By iterating on these patterns and combining them as needed, you can tailor your AI agent workflows to your application’s requirements.
@@ -425,5 +425,156 @@ By iterating on these patterns and combining them as needed, you can tailor your
 Happy coding, and enjoy building with CrewAI Flows!
 
 Sources used for this tutorial include CrewAI documentation and community tutorials on CrewAI Flows.
+
+
+## Additional Agentic Patterns
+
+Below is an extended section for the tutorial that adds two additional agentic patterns: a Meta‑Cognitive Reflection Loop and a Multi‑Agent Collaboration pattern. These patterns complement the ones already described by introducing self‑evaluation and cross‑agent communication. Each example is implemented using CrewAI Flows.
+
+1. Meta‑Cognitive Reflection Loop
+
+In many applications, it’s useful for an agent not only to generate an answer but also to reflect on its reasoning. This “meta‑cognitive” loop involves having the agent review its own response, identify potential issues, and then produce an improved version. Such self‑evaluation can lead to more robust outcomes.
+
+Below is an example CrewAI Flow that demonstrates a meta‑cognitive reflection loop. In this flow, the agent first generates a draft, then “reflects” on it, and finally produces a refined answer.
+
+```python
+
+from crewai.flow.flow import Flow, start, listen
+from litellm import completion
+
+class MetaCognitiveFlow(Flow):
+    model = "gpt-4o-mini"
+
+    @start()
+    def generate_initial_draft(self):
+        # The agent generates an initial draft on a given topic.
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": "Draft a brief summary on the benefits of renewable energy."}]
+        )
+        draft = response["choices"][0]["message"]["content"].strip()
+        print("Initial Draft:")
+        print(draft)
+        return draft
+
+    @listen(generate_initial_draft)
+    def reflect_on_draft(self, draft):
+        # The agent reflects on the draft and provides constructive feedback.
+        reflection_prompt = (
+            f"Review the following summary and point out any logical gaps, unclear points, or areas for improvement:\n\n{draft}"
+        )
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": reflection_prompt}]
+        )
+        feedback = response["choices"][0]["message"]["content"].strip()
+        print("Reflection Feedback:")
+        print(feedback)
+        # Save the feedback for the next step.
+        self.state["feedback"] = feedback
+        return feedback
+
+    @listen(reflect_on_draft)
+    def refine_draft(self, draft):
+        # The agent uses its own feedback to refine the initial draft.
+        feedback = self.state.get("feedback", "")
+        refine_prompt = (
+            f"Here is the initial summary:\n{draft}\n\nAnd here is some feedback:\n{feedback}\n\n"
+            "Revise the summary to address the feedback and improve clarity and accuracy."
+        )
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": refine_prompt}]
+        )
+        final_draft = response["choices"][0]["message"]["content"].strip()
+        print("Refined Draft:")
+        print(final_draft)
+        return final_draft
+
+if __name__ == "__main__":
+    flow = MetaCognitiveFlow()
+    final_output = flow.kickoff()
+    print("Final Output:")
+    print(final_output)
+
+```
+
+Explanation:
+	•	The flow starts by drafting a summary.
+	•	Next, the reflection step uses a prompt to ask the model to critique its own work.
+	•	Finally, the initial draft and the feedback are combined to create a refined summary. This loop helps the agent self‑evaluate and improve iteratively.
+
+2. Multi‑Agent Collaboration
+
+In more complex tasks, different “agents” with specialized roles can collaborate to achieve a final result. For instance, one agent might focus on content generation while another reviews for style or technical correctness. The following example demonstrates a multi‑agent collaboration pattern using CrewAI Flows. Here, two “sub‑agents” generate distinct parts of a document, and then a final aggregation step synthesizes their outputs.
+
+```python
+
+from crewai.flow.flow import Flow, start, listen, or_
+from litellm import completion
+
+class MultiAgentCollaborationFlow(Flow):
+    model = "gpt-4o-mini"
+
+    @start()
+    def generate_introduction(self):
+        # Agent A generates the introduction section.
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": "Write a concise introduction for an article on AI ethics."}]
+        )
+        introduction = response["choices"][0]["message"]["content"].strip()
+        print("Introduction Generated:")
+        print(introduction)
+        return introduction
+
+    @start()
+    def generate_conclusion(self):
+        # Agent B generates the conclusion section.
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": "Write a compelling conclusion for an article on AI ethics."}]
+        )
+        conclusion = response["choices"][0]["message"]["content"].strip()
+        print("Conclusion Generated:")
+        print(conclusion)
+        return conclusion
+
+    @listen(or_(generate_introduction, generate_conclusion))
+    def synthesize_article(self, content):
+        # The aggregator waits for both sections to be ready.
+        # Here, for simplicity, we assume the first finished call triggers synthesis.
+        # In practice, you might wait for both using more advanced state management.
+        synthesis_prompt = (
+            f"Given the following content from different sections of an article:\n{content}\n"
+            "Combine and refine them into a coherent article section."
+        )
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": synthesis_prompt}]
+        )
+        final_article = response["choices"][0]["message"]["content"].strip()
+        print("Synthesized Article Section:")
+        print(final_article)
+        return final_article
+
+if __name__ == "__main__":
+    flow = MultiAgentCollaborationFlow()
+    final_article = flow.kickoff()
+    print("Final Article Section:")
+    print(final_article)
+    
+```
+
+Explanation:
+	•	Two agents (or tasks) are started in parallel: one generates an introduction, and the other a conclusion for an AI ethics article.
+	•	The or_ helper is used to trigger a synthesis step as soon as one section is complete. (In a production scenario, you may prefer to wait until both parts are ready, or you can merge their outputs in a state‑driven manner.)
+	•	The synthesis step combines the generated parts and produces a coherent output, demonstrating how different agent roles can collaborate.
+
+Conclusion
+
+By incorporating these additional patterns—a Meta‑Cognitive Reflection Loop for self‑evaluation and Multi‑Agent Collaboration for distributed task handling—you can further enhance the robustness and flexibility of your CrewAI Flows. These examples illustrate how to modularize tasks and bring together the strengths of different approaches in your AI agent workflows.
+
+Feel free to experiment further by mixing and matching these patterns to suit your project’s needs. Happy coding, and enjoy building sophisticated agentic systems with CrewAI Flows!
 ￼
 ￼
