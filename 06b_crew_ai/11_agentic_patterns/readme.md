@@ -1,6 +1,7 @@
 Below is a comprehensive, step‐by‐step tutorial that shows how to implement several agentic patterns using the latest version of CrewAI’s newly released Flows functionality. In this guide we’ll cover how to build workflows that mirror the Anthropic “Building Effective Agents” patterns—such as prompt chaining, routing, parallelization, orchestrator‐workers, evaluator‐optimizer, and autonomous agents—using CrewAI’s event‑driven Flow framework.
 
 Table of Contents
+
 	1.	Introduction
 	2.	Prerequisites and Setup
 	3.	Overview of Agentic Patterns
