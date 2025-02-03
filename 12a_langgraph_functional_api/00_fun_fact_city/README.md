@@ -9,6 +9,10 @@ The LangGraph Functional API makes it easy to build AI workflows by using regula
 
 Both decorators let you add powerful features like persistence (saving progress), memory, human-in-the-loop (pausing for user feedback), and streaming (real-time updates).
 
+### PlayAround after running this project to breakdown and understand tasks and entrypoint decorator.
+- [Entrypoint Documentation](https://langchain-ai.github.io/langgraph/concepts/functional_api/#entrypoint)
+- [Task Documentation](https://langchain-ai.github.io/langgraph/concepts/functional_api/#task)
+
 For more details, see the official [LangGraph Functional API documentation](https://langchain-ai.github.io/langgraph/concepts/functional_api/).
 ---
 
@@ -16,8 +20,8 @@ For more details, see the official [LangGraph Functional API documentation](http
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- Internet connection (to access the language model)
+- Python 3.10 or higher
+- API Key from Google AI Studio 
 - [uv](https://github.com/panaverisity/uv) (our preferred command-line runner)
 
 ### Installation
@@ -30,16 +34,19 @@ For more details, see the official [LangGraph Functional API documentation](http
    git clone https://github.com/panaverisity/learn-agentic-ai.git
    ```
 
-2. **Navigate to the Project Directory**
+2.1 **Navigate to the Project Directory**
 
    ```bash
-   cd learn-agentic-ai/fun_fact_workflow/step00_fun_fact
+   cd /learn-agentic-ai/12a_langgraph_functional_api/00_fun_fact_city/fun_fact_city
    ```
+
+2.2 **Navigate to the Project Directory**
+  Rename .env.example to .env and add GOOGLE_API_KEY. Optionally you can setup the LangChain Variables for tracing in langsmith.
 
 3. **Install Required Packages**
 
    ```bash
-   pip install --quiet -U langgraph langchain_openai langchain_google_genai
+   uv sync
    ```
 
 ### Running the Workflow with Python
@@ -47,107 +54,16 @@ For more details, see the official [LangGraph Functional API documentation](http
 You can run the workflow directly by executing the **fun_fact.py** file:
 
 ```bash
-python fun_fact.py
+uv run invoke
+```
+
+```bash
+uv run stream
 ```
 
 This will start the workflow and print the output to your terminal.
 
----
-
-## Running the Workflow with uv
-
-We use **uv** as our command-line runner. You can configure an entrypoint for the workflow in your `pyproject.toml` (or a similar configuration file).
-
-### Example Entry Point Configuration
-
-Add the following to your `pyproject.toml` file in the project root:
-
-```toml
-[tool.uv.entry_points]
-fun_fact = "fun_fact_workflow.step00_fun_fact.fun_fact:main_workflow"
-```
-
-Then, from the project root, run:
-
-```bash
-uv run fun_fact
-```
-
-This command will launch the workflow using the configured entrypoint.
-
----
-
-## Code Overview
-
-Below is the complete code used in this project. **Note:** The code is included exactly as it is, without any changes.
-
-```python
-%%capture --no-stderr
-%pip install --quiet -U langgraph langchain_openai langchain_google_genai
-
-from langchain_openai import ChatOpenAI
-import time
-import uuid
-from langgraph.func import entrypoint, task
-from langgraph.checkpoint.memory import MemorySaver
-
-# Initialize the language model
-model = ChatOpenAI(model="gpt-4o-mini")
-
-# Set up an in-memory checkpointer for saving progress
-checkpointer = MemorySaver()
-
-@task
-def generate_city(country: str) -> str:
-    """Ask the model to give a random city name for the given country."""
-    print("Starting workflow")
-    response = model.invoke(f"Return the name of a random city in the {country}.")
-    random_city = response.content
-    print(f"Random City: {random_city}")
-    return random_city
-
-@task
-def generate_fun_fact(city: str) -> str:
-    """Ask the model to share a fun fact about the given city."""
-    response = model.invoke(f"Tell me a fun fact about {city}")
-    fun_fact = response.content
-    return fun_fact
-
-@entrypoint(checkpointer=checkpointer)
-def main_workflow(country: str) -> dict:
-    """The main workflow that gets a city and then a fun fact about it."""
-    city = generate_city(country).result()
-    fact = generate_fun_fact(city).result()
-    return {"city": city, "fun_fact": fact, "country": country}
-
-# Generate a unique thread ID to save workflow state
-thread_id = str(uuid.uuid4())
-config = {
-    "configurable": {
-        "thread_id": thread_id
-    }
-}
-
-# Run the workflow with a sample input (here we use "cat" for fun)
-result = main_workflow.invoke("cat", config)
-print(f"Generated fun fact: {result}")
-```
-
-### Expected Output
-
-When you run the code, you might see something like:
-
-```
-Starting workflow
-Random City: Sure! How about "Catropolis"? It's a fun, fictional city name inspired by cats!
-Generated fun fact: {
-    'city': 'Sure! How about "Catropolis"? ...',
-    'fun_fact': 'Absolutely! In the whimsical world of "Catropolis," ...',
-    'country': 'cat'
-}
-```
-
----
+----
 
 ## Basic Concepts
 
@@ -171,22 +87,3 @@ For more details on these concepts, visit:
   [LangGraph Functional API](https://langchain-ai.github.io/langgraph/concepts/functional_api/)
 - **Blog Post on the Functional API:**  
   [Introducing the LangGraph Functional API](https://blog.langchain.dev/introducing-the-langgraph-functional-api/)
-- **Related Example:**  
-  See [step_06_crewai](../step_06_crewai) for more examples and guides.
-
----
-
-## Contributing & Feedback
-
-If you have any questions or suggestions, please open an issue or submit a pull request on our [GitHub repository](https://github.com/panaverisity/learn-agentic-ai).
-
----
-
-## License
-
-This project is licensed under the MIT License.
-
----
-
-Happy coding and enjoy building your fun fact AI workflow with the LangGraph Functional API!
-```
