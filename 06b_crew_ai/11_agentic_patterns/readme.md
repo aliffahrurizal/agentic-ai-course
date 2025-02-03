@@ -23,21 +23,30 @@ Prerequisites and Setup
 	1.	Install the Latest CrewAI:
 Ensure you have CrewAI (and the tools package if needed) installed. You can install via pip:
 
-pip install crewai crewai[tools] --upgrade
+    pip install crewai crewai[tools] --upgrade
 
 
 	2.	Environment Setup:
+
 Create and activate a virtual environment:
 
-python -m venv crewenv
-source crewenv/bin/activate  # On Windows use crewenv\Scripts\activate
+    uv venv 
+
+Activate with: 
+
+    source .venv/bin/activate
+
+# On Windows use crewenv\Scripts\activate
 
 
 	3.	API Keys and .env:
+
 If your workflow uses external APIs (for example, an LLM or search tool), set them in a .env file:
 
 OPENAI_API_KEY=your_openai_key_here
+
 OPENAI_MODEL_NAME=gpt-4o-mini
+
 SERPER_API_KEY=your_serper_key_here
 
 
@@ -47,6 +56,7 @@ In your Python code, you’ll import from crewai.flow.flow along with any additi
 Overview of Agentic Patterns
 
 Before diving into code, let’s briefly review the agentic patterns we’ll implement:
+
 	•	Prompt Chaining: Decompose a task into sequential subtasks (each output feeding the next call).
 	•	Routing: Use output classification to direct different follow‑up processes.
 	•	Parallelization: Run multiple LLM calls simultaneously (using the or_ helper) and aggregate results.
