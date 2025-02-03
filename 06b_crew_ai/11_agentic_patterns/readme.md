@@ -179,6 +179,8 @@ Parallelization and Aggregation with the or_ Decorator
 
 Sometimes you want to run several subtasks in parallel and aggregate their outputs. For instance, you might ask the model for multiple outlines and then select or merge them. CrewAI provides the or_ helper to trigger a listener when any (or all, using and_) tasks finish.
 
+```python
+
 from crewai.flow.flow import Flow, start, listen, or_
 from litellm import completion
 
@@ -218,6 +220,8 @@ if __name__ == "__main__":
     print("Final Aggregated Output:")
     print(final)
 
+```
+
 This flow starts two tasks in parallel and then uses or_ so that as soon as one finishes the aggregator runs.
 
 Orchestrator-Workers: Dynamically Delegating Subtasks
@@ -225,6 +229,8 @@ Orchestrator-Workers: Dynamically Delegating Subtasks
 For more complex problems, an orchestrator may dynamically break a task into subtasks and delegate them to “worker” flows. In CrewAI, you can simulate this by creating a flow that calls helper flows or even external Crews.
 
 Below is a simplified example where the orchestrator splits a task (e.g., refining a draft) into multiple iterations:
+
+```python
 
 from crewai.flow.flow import Flow, start, listen
 from litellm import completion
@@ -263,11 +269,15 @@ if __name__ == "__main__":
     print("Final Draft:")
     print(final_draft)
 
+```
+
 This pattern shows how you can use sequential delegation within a Flow to refine outputs over multiple turns.
 
 Evaluator-Optimizer Pattern for Iterative Refinement
 
 For tasks that benefit from iterative evaluation (for example, when human feedback is available), you can implement a loop where one task generates output and another “evaluates” it. While CrewAI Flows do not yet have a built‑in loop decorator, you can simulate iterative refinement by chaining a generation task with an evaluation task.
+
+```python
 
 from crewai.flow.flow import Flow, start, listen
 from litellm import completion
@@ -305,11 +315,15 @@ if __name__ == "__main__":
     print("Final Summary:")
     print(final_summary)
 
+```
+
 This simple two-step flow represents the evaluator-optimizer pattern by “asking for feedback” and then producing a refined version.
 
 Combining Patterns in an Autonomous Agent Workflow
 
 Finally, let’s put it all together. In many real-world applications, you might want to start with a simple prompt, then dynamically choose between workflows based on the input, run some tasks in parallel, and finally refine the results. The following example combines multiple patterns to form an autonomous agent workflow for generating and refining a content piece.
+
+```python
 
 from crewai.flow.flow import Flow, start, listen, router, or_
 from litellm import completion
@@ -373,6 +387,8 @@ if __name__ == "__main__":
     final_output = flow.kickoff()
     print("Final Autonomous Agent Output:")
     print(final_output)
+
+```python
 
 In this workflow:
 	•	The initial prompt creates the idea.
