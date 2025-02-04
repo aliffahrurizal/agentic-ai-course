@@ -37,6 +37,8 @@ Workflows and agents are both approaches to using AI in applications, but they d
 
 We will start off by understanding Design Patterns to build AI Workflows and move forward to building blocks and architectures for AI Agents. LangGraph Functional API is a tool to implement these design patterns for solving meaningful problems to create real value.
 
+Review the augmented_llm codebase to understand the basic building blocks for these workflows.
+
 ## Summary
 
 **Workflows**  
