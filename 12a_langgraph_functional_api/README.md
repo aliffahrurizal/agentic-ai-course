@@ -12,6 +12,8 @@ The Functional API helps you take full advantage of LangGraph’s powerful featu
 
 Both the Functional API and the traditional Graph API share the same runtime, which means you can use them together if needed.
 
+See what [companies are building with LangGraph](https://www.langchain.com/built-with-langgraph)
+
 ---
 
 ## Visual Overview
