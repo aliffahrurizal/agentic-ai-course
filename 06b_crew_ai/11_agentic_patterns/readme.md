@@ -1,3 +1,5 @@
+# Agentic Patterns using CrewAI
+
 Below is a comprehensive, step‐by‐step tutorial that shows how to implement several agentic patterns using the latest version of CrewAI’s newly released Flows functionality. In this guide we’ll cover how to build workflows that mirror the Anthropic “Building Effective Agents” patterns—such as prompt chaining, routing, parallelization, orchestrator‐workers, evaluator‐optimizer, and autonomous agents—using CrewAI’s event‑driven Flow framework.
 
 Table of Contents
@@ -563,7 +565,7 @@ if __name__ == "__main__":
     final_article = flow.kickoff()
     print("Final Article Section:")
     print(final_article)
-    
+
 ```
 
 Explanation:
@@ -575,6 +577,139 @@ Conclusion
 
 By incorporating these additional patterns—a Meta‑Cognitive Reflection Loop for self‑evaluation and Multi‑Agent Collaboration for distributed task handling—you can further enhance the robustness and flexibility of your CrewAI Flows. These examples illustrate how to modularize tasks and bring together the strengths of different approaches in your AI agent workflows.
 
-Feel free to experiment further by mixing and matching these patterns to suit your project’s needs. Happy coding, and enjoy building sophisticated agentic systems with CrewAI Flows!
-￼
-￼
+
+
+## Advanced Agentic Patterns
+
+
+Below are a couple of advanced agentic patterns that can further extend your toolkit when building intelligent workflows. In addition to the patterns we’ve already covered (prompt chaining, routing, parallelization, orchestrator‑workers, evaluator‑optimizer, meta‑cognitive reflection, and multi‑agent collaboration), consider the following two:
+
+	1.	Retrieval Augmentation Loop
+This pattern enables the agent to actively seek out external, up‑to‑date information during its task. Rather than relying solely on its built‑in knowledge, the agent generates a query, uses a retrieval mechanism (for example, a search API or database call), and then incorporates the retrieved information into its final output. This is especially useful in domains where the world is changing rapidly (news, market data, technical developments, etc.) and can help mitigate knowledge cutoff issues.
+Below is an example CrewAI Flow code that implements a retrieval augmentation loop. In this example, the agent generates a query, retrieves simulated data (via a helper function), and then summarizes that data.
+
+```python
+
+from crewai.flow.flow import Flow, start, listen
+from litellm import completion
+
+# Dummy retrieval function (in a real implementation, connect to an API or database)
+def retrieve_information(query):
+    # Simulate retrieval by returning a placeholder summary
+    return f"Retrieved information relevant to: {query}"
+
+class RetrievalAugmentationFlow(Flow):
+    model = "gpt-4o-mini"
+
+    @start()
+    def generate_query(self):
+        # Ask the LLM to formulate a query for additional information.
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": "Generate a query to retrieve current data on renewable energy adoption trends."}]
+        )
+        query = response["choices"][0]["message"]["content"].strip()
+        print("Generated Query:", query)
+        return query
+
+    @listen(generate_query)
+    def retrieve_data(self, query):
+        # Retrieve external data using the generated query.
+        data = retrieve_information(query)
+        print("Retrieved Data:", data)
+        return data
+
+    @listen(retrieve_data)
+    def summarize(self, data):
+        # Summarize the retrieved data.
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": f"Summarize the following information concisely: {data}"}]
+        )
+        summary = response["choices"][0]["message"]["content"].strip()
+        print("Summary:", summary)
+        return summary
+
+if __name__ == "__main__":
+    flow = RetrievalAugmentationFlow()
+    final_summary = flow.kickoff()
+    print("Final Summary:", final_summary)
+
+```
+
+	2.	Confidence-Based Escalation
+In some applications, it’s valuable for the agent to evaluate the quality or confidence of its own output and then decide whether to proceed, refine the result, or trigger a fallback (such as human review or an alternative strategy). In this pattern, after generating an answer, the agent asks itself to rate the response (using its own internal judgment or a secondary LLM call) and then uses that rating to determine if additional processing is required.
+
+Below is an example CrewAI Flow that demonstrates a confidence-based escalation loop. Here, the agent generates an explanation, assesses its own confidence on a scale, and then decides if it should escalate the output for fallback processing.
+
+```python
+
+from crewai.flow.flow import Flow, start, listen
+from litellm import completion
+
+class ConfidenceEscalationFlow(Flow):
+    model = "gpt-4o-mini"
+
+    @start()
+    def generate_response(self):
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": "Write a short explanation of quantum computing."}]
+        )
+        output = response["choices"][0]["message"]["content"].strip()
+        print("Initial Response:", output)
+        return output
+
+    @listen(generate_response)
+    def assess_confidence(self, output):
+        # Ask the model to rate its own confidence in the generated response.
+        prompt = f"On a scale of 1 to 10, how confident are you in the quality of the following explanation?\n{output}"
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        rating_str = response["choices"][0]["message"]["content"].strip()
+        try:
+            rating = int(rating_str)
+        except Exception:
+            rating = 5  # Default if the response cannot be parsed
+        print("Confidence Rating:", rating)
+        self.state["confidence"] = rating
+        return rating
+
+    @listen(assess_confidence)
+    def escalate_if_needed(self, rating):
+        # If the confidence is below a certain threshold, trigger fallback logic.
+        if rating < 7:
+            print("Confidence too low. Escalating to fallback process.")
+            # Insert fallback logic here (e.g., a refined prompt, human notification, etc.)
+            return "Fallback: Human review required."
+        else:
+            print("Confidence adequate. Proceeding with the output.")
+            return "Output accepted."
+
+if __name__ == "__main__":
+    flow = ConfidenceEscalationFlow()
+    result = flow.kickoff()
+    print("Final Outcome:", result)
+
+```
+
+Additional Considerations
+
+Beyond these patterns, it’s also important to consider:
+	•	Hierarchical Task Decomposition:
+While similar to orchestrator‑workers, a hierarchical approach recursively decomposes a complex task into multiple levels of subtasks. This can be useful in multi‑step projects where tasks can be nested.
+
+	•	Dynamic Memory and Context Updating:
+Agents that incorporate an evolving memory (or episodic memory) can maintain context over long interactions or across multiple sessions. This pattern is crucial for applications like dialogue systems or long‑term planning.
+
+	•	Fallback and Safe-Exit Patterns:
+Designing agents with clear escape hatches—when they detect high uncertainty, anomalous behavior, or potential risks—ensures that they can default to a safe mode or request human intervention.
+
+While the two examples above (retrieval augmentation and confidence-based escalation) are concrete additions, these additional considerations often blend into your overall design strategy. Their implementation in CrewAI Flows would follow similar principles: generate an output, assess it (perhaps via an extra LLM call or an external check), and then branch or iterate based on the result.
+
+Conclusion
+
+When building advanced agentic systems, being aware of additional patterns like retrieval augmentation, confidence-based escalation, hierarchical task decomposition, dynamic memory updating, and safe‐exit strategies can significantly improve robustness and adaptability. These patterns, when implemented using the modular CrewAI Flows framework, allow you to craft workflows that are not only powerful but also resilient in real‑world applications.
+
