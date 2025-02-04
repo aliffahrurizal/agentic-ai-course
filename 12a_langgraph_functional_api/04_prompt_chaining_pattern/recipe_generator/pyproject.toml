@@ -1,0 +1,32 @@
+[project]
+name = "recipe-generator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "rehan-ul-haq", email = "mmrhaq@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-google-genai>=2.0.9",
+    "langgraph>=0.2.69",
+    "python-dotenv>=1.0.1",
+]
+
+[project.scripts]
+recipe-generator = "recipe_generator:main"
+invoke = "recipe_generator:main"
+stream = "recipe_generator:stream"
+
+[tool.setuptools]
+packages = ["recipe_generator"]
+
+[tool.setuptools.package-dir]
+"recipe_generator" = "src/recipe_generator"
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
