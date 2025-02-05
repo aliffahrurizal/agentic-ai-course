@@ -1,16 +1,14 @@
-
 # Poem Flow
 
 ## Objective
 
-1. Increase our understanding of Tasks, and EntryPoint decorators. 
+1. Increase our understanding of Tasks, and EntryPoint decorators.
 2. Understand how to run tasks synchronously and asynchronously.
 3. Entrypoint can take different arguments like checkpointer, store...
 
 ## Run poemflow project
 
 After setting up environment run the following commands
-
 
 ```bash
 uv run invoke
@@ -22,15 +20,15 @@ uv run stream
 
 You can either clone this project or take the sample code from workflow.py and create your own project.
 
-After running the above commands change topic in poemflow/__init__.py to generate different poems.
+After running the above commands change topic in poemflow/**init**.py to generate different poems.
 
 ## How to Run Locally
 
 ### Prerequisites
 
 - Python 3.10 or higher
-- API Key from Google AI Studio 
-- [uv](https://github.com/panaverisity/uv) (our preferred command-line runner)
+- API Key from Google AI Studio
+- [uv] (our preferred command-line runner)
 
 ### Installation
 
@@ -44,12 +42,12 @@ After running the above commands change topic in poemflow/__init__.py to generat
 
 2.1 **Navigate to the Project Directory**
 
-   ```bash
-   cd /learn-agentic-ai/12a_langgraph_functional_api/01_poem_flow/poem_flow
-   ```
+```bash
+cd /learn-agentic-ai/12a_langgraph_functional_api/01_poem_flow/poem_flow
+```
 
 2.2 **Navigate to the Project Directory**
-  Rename .env.example to .env and add GOOGLE_API_KEY. Optionally you can setup the LangChain Variables for tracing in langsmith.
+Rename .env.example to .env and add GOOGLE_API_KEY. Optionally you can setup the LangChain Variables for tracing in langsmith.
 
 3. **Install Required Packages**
 
@@ -68,8 +66,6 @@ uv run invoke
 ```bash
 uv run stream
 ```
-
-
 
 ## Code Overview
 
@@ -112,7 +108,7 @@ def save_poem(poem: str) -> str:
 
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(poem)
-    
+
     return f"Poem saved successfully at {file_path}"
 
 @entrypoint()
@@ -121,7 +117,7 @@ def run_workflow(input: str | None):
     sentence_count = generate_sentence_count().result()
     poem = generate_poem(sentence_count).result()
     save_status = save_poem(poem).result()
-    
+
     return {"sentence_count": sentence_count, "poem": poem, "status": save_status}
 
 def stream():
@@ -131,6 +127,7 @@ def stream():
 stream()
 
 ```
+
 ### Expected Output
 
 When you run the code, you might see something like:

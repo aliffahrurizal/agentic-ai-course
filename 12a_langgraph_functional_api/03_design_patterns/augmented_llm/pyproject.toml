@@ -1,0 +1,27 @@
+[project]
+name = "llm_components"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Muhammad Junaid", email = "mr.junaidshaukat@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-google-genai>=2.0.9",
+    "langgraph>=0.2.69",
+    "numpy>=2.2.2",
+    "python-dotenv>=1.0.1",
+]
+
+[project.scripts]
+tools_response = "llm_components:understand_tools"
+structured_response = "llm_components:understand_structured_output"
+lt_memory = "llm_components:lt_memory_feed"
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
