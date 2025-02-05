@@ -13,21 +13,17 @@ The workflow leverages two key strategies:
 After simulating persona interactions, the workflow uses a **Judge Evaluation** task to review and provide an overall assessment. Finally, an **Industry Research** task leverages the judge’s feedback to supply supporting evidence and actionable recommendations for improving the prompt. All results are then aggregated into a professional Markdown report.
 
 ---
-
 ### Mermaid Flowchart
 
 ```mermaid
 flowchart TD
-    A[User Input: System Prompt Instructions & Gold Standard]
-    B[Simulate Persona Tests<br/>(Multiple Concise Simulations)]
-    C[Judge Evaluation<br/>(Overall Assessment)]
-    D[Industry Research<br/>(Using Judge Evaluation)]
-    E[Aggregate Final Markdown Report]
-    
-    A --> B
-    B --> C
-    C --> D
-    D --> E
+    A[User Input: System Prompt Instructions & Gold Standard] --> F[Task Simulated Personas]
+    F --> C[Judge Evaluation]
+    C --> D[Prompt Improvement Research]
+    D --> E[Aggregate Final Report]
+
+    style A fill:#663399,stroke:#333,stroke-width:2px
+    style E fill:#663399,stroke:#333,stroke-width:2px
 ```
 
 ---
