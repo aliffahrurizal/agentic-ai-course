@@ -1,11 +1,10 @@
-
 ## How to Run Locally
 
 ### Prerequisites
 
 - Python 3.10 or higher
-- API Key from Google AI Studio 
-- [uv](https://github.com/panaverisity/uv) (our preferred command-line runner)
+- API Key from Google AI Studio
+- [uv] (our preferred command-line runner)
 
 ### Installation
 
@@ -19,12 +18,12 @@
 
 2.1 **Navigate to the Project Directory**
 
-   ```bash
-   cd /learn-agentic-ai/12a_langgraph_functional_api/00_fun_fact_city/fun_fact_city
-   ```
+```bash
+cd /learn-agentic-ai/12a_langgraph_functional_api/00_fun_fact_city/fun_fact_city
+```
 
 2.2 **Navigate to the Project Directory**
-  Rename .env.example to .env and add GOOGLE_API_KEY. Optionally you can setup the LangChain Variables for tracing in langsmith.
+Rename .env.example to .env and add GOOGLE_API_KEY. Optionally you can setup the LangChain Variables for tracing in langsmith.
 
 3. **Install Required Packages**
 
@@ -43,8 +42,6 @@ uv run invoke
 ```bash
 uv run stream
 ```
-
-
 
 ## Code Overview
 

@@ -15,6 +15,7 @@ The result is an end-to-end solution that automates the creative process of reci
 The project implements the **prompt chaining** pattern by decomposing the overall task into a sequence of smaller, interdependent subtasks. Each step is handled by a dedicated function (or “task”), and the output from one task is used as the input for the next. Here's how the pattern is applied:
 
 1. **Sequential Subtasks:**
+
    - **Analyze Ingredients:** The first task sends a prompt to the LLM with the list of ingredients. The LLM returns an analysis of the ingredients, including potential flavor profiles and pairing ideas.
    - **Suggest Cuisine:** Next, the analysis is fed into a second prompt that asks the LLM to recommend a suitable cuisine based on the insights gathered.
    - **Generate Recipe:** Finally, both the original list of ingredients and the suggested cuisine are provided in a third prompt to generate a complete recipe with instructions and serving suggestions.
@@ -29,17 +30,15 @@ The project implements the **prompt chaining** pattern by decomposing the overal
 
 To run the agent, simply provide a comma-separated list of ingredients. You can change the intial prompt in `main()` or `stream()` functions in `__init__.py`.
 
-
 ---
-
 
 ## How to Run Locally
 
 ### Prerequisites
 
 - Python 3.10 or higher
-- API Key from Google AI Studio 
-- [uv](https://github.com/panaverisity/uv) (our preferred command-line runner)
+- API Key from Google AI Studio
+- [uv] (our preferred command-line runner)
 
 ### Installation
 
@@ -53,12 +52,12 @@ To run the agent, simply provide a comma-separated list of ingredients. You can 
 
 2.1 **Navigate to the Project Directory**
 
-   ```bash
-   cd /learn-agentic-ai/12a_langgraph_functional_api/04_prompt_chaining_pattern/recipe_generator
-   ```
+```bash
+cd /learn-agentic-ai/12a_langgraph_functional_api/04_prompt_chaining_pattern/recipe_generator
+```
 
 2.2 **Navigate to the Project Directory**
-  Rename .env.example to .env and add GOOGLE_API_KEY. Optionally you can setup the LangChain Variables for tracing in langsmith.
+Rename .env.example to .env and add GOOGLE_API_KEY. Optionally you can setup the LangChain Variables for tracing in langsmith.
 
 3. **Install Required Packages**
 
@@ -67,7 +66,6 @@ To run the agent, simply provide a comma-separated list of ingredients. You can 
    ```
 
 ### Running the Workflow with Python
-
 
 ```bash
 uv run invoke

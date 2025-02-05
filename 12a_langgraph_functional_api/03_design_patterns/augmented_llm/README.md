@@ -1,6 +1,6 @@
 # Building block: The augmented LLM
 
-The basic building block of agentic systems is an LLM enhanced with augmentations such as retrieval, tools, and memory. 
+The basic building block of agentic systems is an LLM enhanced with augmentations such as retrieval, tools, and memory.
 
 ## Objective
 
@@ -18,7 +18,7 @@ Run the jupyter notebook in Collab present in /notebook dir first and then try r
 
 - Python 3.10 or higher
 - API Key from Google AI Studio
-- [uv](https://github.com/panaverisity/uv) (preferred package manager)
+- [uv] (preferred package manager)
 
 ### Installation
 
@@ -81,6 +81,7 @@ result
 ```
 
 Output:
+
 ```bash
 SearchQuery(search_query='Calcium CT score high cholesterol', justification=None)
 ```
@@ -103,12 +104,13 @@ response.tool_calls
 ```
 
 Output:
+
 ```bash
 [{'name': 'search_medical_database',
   'args': {'query': 'recent studies on statins'},
   'id': '9bcfc36a-2474-45e7-9ea4-4b8750c16b56',
   'type': 'tool_call'}]
-  ```
+```
 
 ### 3. Memory Integration
 
@@ -139,7 +141,7 @@ in_memory_store = InMemoryStore(
 @task
 def call_model(messages: list[BaseMessage], memory_store: BaseStore, user_id: str):
     """Retrieves user context from memory and responds accordingly."""
-    
+
     namespace = ("memories", user_id)
     last_message = messages[-1]
 
@@ -174,7 +176,7 @@ def workflow(
     store: BaseStore,
 ):
     """Handles cross-thread memory and conversation flow."""
-    
+
     user_id = config["configurable"]["user_id"]
     previous = previous or []
     inputs = add_messages(previous, inputs)
@@ -200,6 +202,7 @@ for chunk in workflow.stream([input_message2], config2, stream_mode="values"):
     chunk.pretty_print()
 
 ```
+
 Example Output with Memory:
 
 ```bash
