@@ -12,7 +12,6 @@ When it comes to AI applications—especially those built on large language mode
 
 ### AI Workflows and AI Agents
 
-
 ![Workflows vs AI Agents](../assets/workflows_vs_agents.png)
 
 **AI Workflows** are systems that follow a predetermined, hard‑coded sequence of steps. The design patterns used in workflows are about orchestrating a series of AI calls and tool integrations in a predictable, repeatable manner. For example, a customer support workflow might use routing to classify queries and then sequentially process them via prompt chaining. In these systems, the sequence and logic are predefined by the developer, which makes them reliable and easier to audit.
@@ -38,6 +37,10 @@ Workflows and agents are both approaches to using AI in applications, but they d
 We will start off by understanding Design Patterns to build AI Workflows and move forward to building blocks and architectures for AI Agents. LangGraph Functional API is a tool to implement these design patterns for solving meaningful problems to create real value.
 
 Review the augmented_llm codebase to understand the basic building blocks for these workflows.
+
+## Combining and customizing these patterns
+
+These building blocks aren't prescriptive. They're common patterns that developers can shape and combine to fit different use cases. The key to success, as with any LLM features, is measuring performance and iterating on implementations. To repeat: you should consider adding complexity only when it demonstrably improves outcomes.
 
 ## Summary
 
