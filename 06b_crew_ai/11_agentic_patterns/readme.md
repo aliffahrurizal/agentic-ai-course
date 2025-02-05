@@ -407,9 +407,9 @@ In this workflow:
 
 	•	The router selects which branch to follow based on a condition.
 
-	•	Depending on the branch, either a tech‑focused or a general outline is generated.
+	•	Depending on the branch, either a tech‑focused [or](https://docs.crewai.com/concepts/flows#conditional-logic-or) a general outline is generated.
 
-	•	Finally, the or_ decorator aggregates the output and a final optimization step refines the outline.
+	•	Finally, the or_ decorator aggregates the output [and](https://docs.crewai.com/concepts/flows#conditional-logic-and) a final optimization step refines the outline.
 
 Conclusion and Next Steps
 
