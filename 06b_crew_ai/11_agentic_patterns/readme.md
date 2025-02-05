@@ -235,6 +235,72 @@ if __name__ == "__main__":
 
 This flow starts two tasks in parallel and then uses or_ so that as soon as one finishes the aggregator runs.
 
+## Parallelization and Aggregation with the and_ Decorator
+
+Below is an example that demonstrates how to use the and_ decorator in CrewAI Flows. In this example, two tasks run in parallel, and we use and_ to wait until both tasks complete before combining their outputs. The scenario simulates generating two separate creative outputs (a slogan and a tagline) for a futuristic brand, and then the flow aggregates both results into a single combined message.
+
+```python
+
+from crewai.flow.flow import Flow, start, listen, and_
+from litellm import completion
+
+class AndAggregationFlow(Flow):
+    model = "gpt-4o-mini"
+
+    @start()
+    def generate_slogan(self):
+        # This task generates a creative slogan.
+        response = completion(
+            model=self.model,
+            messages=[{
+                "role": "user",
+                "content": "Generate a creative slogan for a futuristic brand."
+            }]
+        )
+        slogan = response["choices"][0]["message"]["content"].strip()
+        print("Slogan generated:", slogan)
+        return slogan
+
+    @start()
+    def generate_tagline(self):
+        # This task generates a creative tagline.
+        response = completion(
+            model=self.model,
+            messages=[{
+                "role": "user",
+                "content": "Generate a creative tagline for a futuristic brand."
+            }]
+        )
+        tagline = response["choices"][0]["message"]["content"].strip()
+        print("Tagline generated:", tagline)
+        return tagline
+
+    @listen(and_(generate_slogan, generate_tagline))
+    def combine_outputs(self, outputs):
+        # The `and_` decorator ensures this method is called only when both tasks complete.
+        # 'outputs' is a tuple containing the outputs of generate_slogan and generate_tagline.
+        slogan, tagline = outputs
+        combined = f"Combined Output: Slogan - '{slogan}' | Tagline - '{tagline}'"
+        print("Aggregated Combined Output:", combined)
+        return combined
+
+if __name__ == "__main__":
+    flow = AndAggregationFlow()
+    final_output = flow.kickoff()
+    print("Final Output of the Flow:")
+    print(final_output)
+
+```
+
+Explanation
+	•	generate_slogan: Marked with @start(), this method sends a prompt to the language model to generate a creative slogan. Its output is printed and returned.
+	•	generate_tagline: Also marked with @start(), this method independently generates a creative tagline.
+	•	combine_outputs: Decorated with @listen(and_(generate_slogan, generate_tagline)), this method is triggered only once both generate_slogan and generate_tagline complete. The outputs from both tasks are received as a tuple, which the method then combines into a single message.
+
+This pattern is useful when you require multiple independent tasks to finish before taking a subsequent action—ensuring that all required outputs are available.
+
+
+
 ## Orchestrator-Workers: Dynamically Delegating Subtasks
 
 For more complex problems, an orchestrator may dynamically break a task into subtasks and delegate them to “worker” flows. In CrewAI, you can simulate this by creating a flow that calls helper flows or even external Crews.
@@ -283,6 +349,123 @@ if __name__ == "__main__":
 ```
 
 This pattern shows how you can use sequential delegation within a Flow to refine outputs over multiple turns.
+
+## Advanced Orchestrator-Workers: Dynamically Delegating Subtasks
+
+
+Below is an alternative, detailed example of the orchestrator‑workers pattern using CrewAI Flows. In this example, the orchestrator (a single Flow method) receives a complex problem, dynamically breaks it down into subtasks, delegates each subtask to worker functions, and then synthesizes the results into one final output.
+
+This approach simulates a real-world scenario where a call center chatbot (or any AI system) must analyze a complex query by having several specialized “worker” agents process different aspects of the problem. The orchestrator gathers these responses and combines them into a synthesized report.
+
+Below is the complete CrewAI Flow code with in‑line comments for clarity:
+
+```python
+
+from crewai.flow.flow import Flow, start, listen
+from litellm import completion  # Replace with your LLM API client
+
+class OrchestratorWorkersFlow(Flow):
+    # Set the model to use (adjust according to your deployment)
+    model = "gpt-4o-mini"
+
+    @start()
+    def initial_task(self):
+        """
+        The orchestrator's starting point:
+        - Receives a complex problem description.
+        - Dynamically breaks it down into subtasks.
+        """
+        problem_description = "Analyze the code for potential vulnerabilities and suggest improvements."
+        print("Orchestrator received problem:", problem_description)
+        # Dynamically define subtasks (in practice, these could be generated via an LLM)
+        subtasks = [
+            "Identify potential security vulnerabilities in the code.",
+            "Recommend improvements for code efficiency.",
+            "Suggest best practices for error handling."
+        ]
+        # Store the subtasks in the flow's state for later reference
+        self.state.subtasks = subtasks
+        return problem_description
+
+    @listen(initial_task)
+    def delegate_subtasks(self, problem_description):
+        """
+        The orchestrator delegates each subtask to a worker function.
+        In this simple example, we iterate through the subtasks,
+        call a worker for each, and collect the results.
+        """
+        subtasks = self.state.get("subtasks", [])
+        results = []
+        for task in subtasks:
+            # Delegate the subtask to the worker function and collect its result
+            result = self.worker_task(task)
+            results.append(result)
+        # Save the worker outputs in state for synthesis
+        self.state.worker_results = results
+        return results
+
+    def worker_task(self, subtask):
+        """
+        Worker function simulating the processing of a subtask.
+        Each worker could be an independent LLM call or a specialized agent.
+        """
+        print("Worker processing subtask:", subtask)
+        # Create a prompt for the worker to address the subtask
+        prompt = f"Please address the following task: {subtask}"
+        # Call the LLM (or another agent) to generate an answer for this subtask
+        response = completion(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        # Extract the worker's output from the response
+        worker_output = response["choices"][0]["message"]["content"].strip()
+        print("Worker output:", worker_output)
+        return worker_output
+
+    @listen(delegate_subtasks)
+    def synthesize_results(self, worker_results):
+        """
+        The orchestrator synthesizes the outputs from all workers into one final report.
+        """
+        synthesized = "Synthesized Report:\n"
+        for idx, output in enumerate(worker_results, start=1):
+            synthesized += f"Subtask {idx}: {output}\n"
+        print(synthesized)
+        return synthesized
+
+if __name__ == "__main__":
+    # Create and kick off the flow
+    flow = OrchestratorWorkersFlow()
+    final_report = flow.kickoff()
+    print("Final Report:")
+    print(final_report)
+
+```
+
+Explanation
+
+	1.	Initial Task (initial_task method):
+	•	The flow starts by receiving a complex problem (e.g., analyzing code for vulnerabilities).
+	•	The orchestrator “breaks” this problem into a list of subtasks, which are stored in the flow’s state.
+	
+    2.	Delegating Subtasks (delegate_subtasks method):
+	•	This method is triggered after the initial task completes.
+	•	It retrieves the list of subtasks from the state and iterates over them.
+	•	For each subtask, it calls the worker_task method (simulating a worker agent) to process that piece of work.
+	•	The results from each worker are stored in the state.
+	
+    3.	Worker Task (worker_task method):
+	•	This helper function simulates processing a subtask.
+	•	It generates a prompt based on the subtask description and calls an LLM to produce an answer.
+	•	The worker’s output is returned to the delegate method.
+	
+    4.	Synthesizing Results (synthesize_results method):
+	•	After all worker tasks have been completed, this method is triggered.
+	•	It aggregates the outputs from all worker tasks into a final, synthesized report.
+	•	The final report is printed and returned as the flow’s overall output.
+
+This example demonstrates the orchestrator-workers pattern in a clear, step‑by‑step manner using CrewAI’s Flow framework. It shows how to dynamically delegate subtasks, collect responses, and synthesize them into a final result—a pattern that you can extend and adapt to suit real-world use cases such as multi-agent decision‑making in a call center chatbot or other applications.
+
 
 ## Evaluator-Optimizer Pattern for Iterative Refinement
 
