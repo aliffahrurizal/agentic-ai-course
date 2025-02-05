@@ -1,0 +1,28 @@
+[project]
+name = "workflow_evaluator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Muhammad Junaid", email = "mr.junaidshaukat@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-google-genai>=2.0.9",
+    "langchain-groq>=0.2.4",
+    "langgraph>=0.2.69",
+    "pandas>=2.2.3",
+    "python-dotenv>=1.0.1",
+    "tabulate>=0.9.0",
+]
+
+[project.scripts]
+invoke = "workflow_evaluator:stream"
+stream = "workflow_evaluator:stream"
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
