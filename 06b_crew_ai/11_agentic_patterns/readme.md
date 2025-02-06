@@ -24,40 +24,41 @@ CrewAI’s new Flows feature provides an event‑driven, state‑managed framewo
 In this tutorial we implement these patterns step by step using CrewAI Flows. We assume you are familiar with Python and basic LLM API usage.
 
 Prerequisites and Setup
-	1.	Install the Latest CrewAI:
-Ensure you have CrewAI (and the tools package if needed) installed. You can install via pip:
 
-    pip install crewai crewai[tools] --upgrade
+	1.	Install the Latest CrewAI:
+		Ensure you have CrewAI (and the tools package if needed) installed. You can install via pip:
+
+    		pip install crewai crewai[tools] --upgrade
 
 
 	2.	Environment Setup:
 
-Create and activate a virtual environment:
+		Create and activate a virtual environment:
 
-    uv venv 
+    		uv venv 
 
-Activate with: 
+		Activate with: 
 
-    source .venv/bin/activate
+    		source .venv/bin/activate
 
-    On Windows use crewenv\Scripts\activate
+    		On Windows use crewenv\Scripts\activate
 
 
 	3.	API Keys and .env:
 
-If your workflow uses external APIs (for example, an LLM or search tool), set them in a .env file:
+		If your workflow uses external APIs (for example, an LLM or search tool), set them in a .env file:
 
-OPENAI_API_KEY=your_openai_key_here
+		OPENAI_API_KEY=your_openai_key_here
 
-OPENAI_MODEL_NAME=gpt-4o-mini
+		OPENAI_MODEL_NAME=gpt-4o-mini
 
-SERPER_API_KEY=your_serper_key_here
+		SERPER_API_KEY=your_serper_key_here
 
 
 	4.	Import CrewAI’s Flow Module:
-In your Python code, you’ll import from crewai.flow.flow along with any additional modules (for state management, etc.).
+		In your Python code, you’ll import from crewai.flow.flow along with any additional modules (for state management, etc.).
 
-Overview of Agentic Patterns
+## Overview of Agentic Patterns
 
 Before diving into code, let’s briefly review the agentic patterns we’ll implement:
 
