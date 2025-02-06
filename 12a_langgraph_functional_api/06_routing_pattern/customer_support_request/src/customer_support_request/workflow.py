@@ -1,6 +1,4 @@
 import os
-from typing import TypedDict, List, Dict
-import logging
 from dotenv import load_dotenv, find_dotenv
 from langgraph.func import entrypoint, task
 from typing_extensions import Literal
@@ -11,8 +9,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 _: bool = load_dotenv(find_dotenv())
 
 llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
-
-
 
 # 1. Define the routing schema using a structured output model.
 class Route(BaseModel):
@@ -78,6 +74,14 @@ def generate_general_response(query: str) -> str:
     msg = llm.invoke(prompt)
     return msg.content
 
+@task
+def write_to_file(response: str):
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
+    response_file_path = os.path.join(output_dir, "customer_support_request.txt")
+    with open(response_file_path, "w", encoding="utf-8") as response_file:
+        response_file.write(response)
+    return response_file_path
 # 4. Create the routing workflow entrypoint.
 @entrypoint()
 def customer_support_routing(query: str) -> str:
@@ -94,16 +98,10 @@ def customer_support_routing(query: str) -> str:
     else:
         response = "Sorry, we could not determine the type of your request. Please contact customer support directly."
     
-    # Save the final response to a text file
-    output_dir = "output"
-    os.makedirs(output_dir, exist_ok=True)
-    response_file_path = os.path.join(output_dir, "customer_support_response.txt")
-    with open(response_file_path, "w", encoding="utf-8") as response_file:
-        response_file.write(response)
-    
-    logging.info(f"Customer support response saved to {response_file_path}")
-    
+    # Step 4: Save the final plan to a text file.
+    file_path = write_to_file(response).result()
+
     return {
         "final_response": response,
-        "response_path": response_file_path,
+        "file_path": file_path  # ✅ Returning file path instead of None
     }

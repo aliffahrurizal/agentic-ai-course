@@ -101,6 +101,7 @@ def write_to_file(response: str):
     response_file_path = os.path.join(output_dir, "orchestrator-worker.txt")
     with open(response_file_path, "w", encoding="utf-8") as response_file:
         response_file.write(response)
+    return response_file_path
 
 # 5. Orchestrator-Workers Workflow Entry Point.
 @entrypoint()
@@ -116,5 +117,8 @@ def personalized_fitness_plan(user_profile: str) -> str:
     final_plan = synthesizer(sections_content).result()
     
     # Step 4: Save the final plan to a text file.
-    write_to_file(final_plan)
-    return final_plan
+    file_path = write_to_file(final_plan).result() 
+    return {
+        final_plan: final_plan,
+        file_path: file_path
+        }
