@@ -98,6 +98,32 @@ litellm.success_callback = ["lunary", "langfuse", "helicone"]
 response = completion(model="gpt-3.5-turbo", messages=messages)
 ```
 
+## Fallback Example:
+```python
+from litellm import completion, exceptions
+import os
+
+os.environ["LUNARY_PUBLIC_KEY"] = "your_lunary_public_key"
+os.environ["HELICONE_API_KEY"] = "your_helicone_api_key"
+
+def anthropic():
+    try:
+        print("Attempting to use anthropic model")
+        response = completion(
+            model="claude-3-5-sonnet-20241022",
+            messages=[{ "content": "Hello, how are you?","role": "user"}]
+        )
+        
+    except exceptions.BadRequestError as e:
+        print(f"\n!!!!!!!!!!! E R R O R !!!!!!!!!!!!!!!!!!!!!!!")
+        print(f"---ERROR DETAIL --- {e}\n")
+        print("\n!!!!!!!!!!!! Attempting to use gemini model !!!!!!!!!!!!!!!!!!!\n")
+        response = completion(
+            model="gemini/gemini-1.5-flash",
+            messages=[{ "content": "Hello, how are you?","role": "user"}]
+            )
+        print(response)
+```
 ## Advanced Features:  
 - **Model Fallbacks:** Implement fallback mechanisms to ensure reliability by specifying alternative models if the primary one fails.
 - **Configuration Management:** Utilize a config.yaml file to manage model-specific parameters effectively, simplifying adjustments and maintaining organized configurations.
