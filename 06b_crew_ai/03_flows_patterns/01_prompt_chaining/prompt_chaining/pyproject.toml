@@ -1,0 +1,21 @@
+[project]
+name = "prompt-chaining"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "rehan-ul-haq", email = "mmrhaq@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "crewai[tools]>=0.100.1",
+    "python-dotenv>=1.0.1",
+]
+
+[project.scripts]
+kickoff = "prompt_chaining.main:kickoff"
+plot = "prompt_chaining.main:plot"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
