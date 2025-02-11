@@ -71,6 +71,11 @@ Before diving into code, let’s briefly review the agentic patterns we’ll imp
 
 	•	Orchestrator-Workers: Dynamically break a task into subtasks, delegate to worker calls, and synthesize outputs.
 
+		Role of Synthesizer:
+			* Aggregation: It collects all the outputs from the worker LLMs.
+			* Processing: It processes these outputs to generate a unified response or outcome.
+			* Finalization: The synthesizer ensures that the final output is coherent and relevant to the original task or query.
+
 	•	Evaluator-Optimizer: Iterate on an output by having one LLM generate a response and another refine it.
 
 	•	Autonomous Agents: Combine the above in a loop where the agent uses tool feedback and halts based on stopping criteria.
