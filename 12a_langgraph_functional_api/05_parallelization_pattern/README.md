@@ -9,6 +9,8 @@ LLMs can sometimes work simultaneously on a task and have their outputs aggregat
 
 (Implement Parallelization Workflow using LangGraph)[https://langchain-ai.github.io/langgraph/tutorials/workflows/#prompt-chaining]
 
+(Task Method Spec)[https://langchain-ai.github.io/langgraph/reference/func/?h=pregel#langgraph.func.task]
+
 ### How the Workflow Works
 
 The core idea is simple: instead of relying on a single, monolithic LLM call for a complex task, you divide the work so that multiple LLM calls run concurrently, and then aggregate their outputs. This is achieved through two main strategies:

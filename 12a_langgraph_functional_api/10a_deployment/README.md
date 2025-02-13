@@ -3,9 +3,6 @@
 This guide focuses on the core deployment concepts for your application. We will use:
 
 1. LangGraph Cloud(Server)
-2. CrewAI Cloud
-3. BentoML
-4. FastAPI Server
 
 Deploying an AI Agent is more than an API Call. It's the environment for your agent(s) to operate and create some value. Think of it as Agentic Infrastructure where you manage
 - Persistence
@@ -82,8 +79,6 @@ Once setup completes open in bowser:
 - Add `+ New Deployment`
 - Then, select the Github repository (e.g., `langchain-academy`) that you just created for the course
 - Point the `LangGraph API config file` at one of the `studio` directories
-- For example, for module-1 use: `module-1/studio/langgraph.json`
-- Set your API keys (e.g., you can just copy from your `module-1/studio/.env` file)
 
 ![Screenshot 2024-09-03 at 11.35.12 AM.png](https://cdn.prod.website-files.com/65b8cd72835ceeacd4449a53/66dbad4fd61c93d48e5d0f47_deployment2.png)
 
@@ -93,3 +88,5 @@ We can then interact with our deployment a few different ways:
 
 - With the [SDK](https://langchain-ai.github.io/langgraph/cloud/quick_start/#use-with-the-sdk), as before.
 - With the [LangGraph Studio](https://langchain-ai.github.io/langgraph/cloud/quick_start/#interact-with-your-deployment-via-langgraph-studio).
+
+##
