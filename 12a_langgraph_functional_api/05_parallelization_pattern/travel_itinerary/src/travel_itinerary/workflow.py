@@ -1,5 +1,4 @@
 import os
-from typing import TypedDict, List, Dict
 import logging
 from dotenv import load_dotenv, find_dotenv
 from langgraph.func import entrypoint, task
@@ -9,7 +8,6 @@ _: bool = load_dotenv(find_dotenv())
 
 llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
 
-from langgraph.func import entrypoint, task
 @task
 def generate_restaurant_suggestions(location: str) -> str:
     """
@@ -58,6 +56,16 @@ def aggregate_itinerary(location: str, restaurants: str, attractions: str, hotel
     itinerary += "Enjoy your trip and make the most of your adventure!"
     return itinerary
 
+@task
+def write_to_file(response: str):
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
+    response_file_path = os.path.join(output_dir, "travel_itinerary.txt")
+    with open(response_file_path, "w", encoding="utf-8") as response_file:
+        response_file.write(response)
+    
+    return response_file_path
+
 @entrypoint()
 def travel_itinerary_workflow(location: str) -> str:
     # Run the three tasks in parallel
@@ -72,18 +80,11 @@ def travel_itinerary_workflow(location: str) -> str:
         attractions_future.result(),
         hotels_future.result()
     ).result()
-     # Save the final itinerary as a Markdown file
-    output_dir = "output"
-    os.makedirs(output_dir, exist_ok=True)
-    final_md_path = os.path.join(output_dir, "travel_itinerary_report.md")
-    with open(final_md_path, "w", encoding="utf-8") as md_file:
-        md_file.write(final_itinerary)
-
-    logging.info(f"Travel Itinerary report saved to {final_md_path}")
-    
+    # Save the final itinerary as a Markdown file
+    file_path = write_to_file(final_itinerary).result() 
     return {
-        "final_markdown": final_itinerary,
-        "report_path": final_md_path,
+        "final_itinerary": final_itinerary,
+        "file_path": file_path  # ✅ Now properly returning the file path
     }
 
 

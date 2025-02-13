@@ -56,9 +56,18 @@ def polish_response(response: str) -> str:
     msg = llm.invoke(prompt)
     return msg.content
 
+@task
+def write_to_file(response: str):
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
+    response_file_path = os.path.join(output_dir, "customer_support_email_composer.txt")
+    with open(response_file_path, "w", encoding="utf-8") as response_file:
+        response_file.write(response)
+    
+    return response_file_path
 
 @entrypoint()
-def customer_support_response_workflow(customer_email: str):
+def customer_support_response_workflow(customer_email: str) -> dict:
     # Step 1: Extract key issues from the customer's email.
     issues = extract_issues(customer_email).result()
 
@@ -67,9 +76,16 @@ def customer_support_response_workflow(customer_email: str):
 
     # Step 3: Check if the draft has the right tone.
     if check_tone(draft_response) == "Pass":
-        # If the tone is acceptable, finalize the response.
-        return polish_response(draft_response).result()
+        final_response = polish_response(draft_response).result()
     else:
         # If not, improve the tone first and then polish.
         improved_response = improve_response_tone(draft_response).result()
-        return polish_response(improved_response).result()
+        final_response = polish_response(improved_response).result()
+
+    # Step 4: Save the final response to a file
+    response_file_path = write_to_file(final_response).result()
+
+    return {
+        "final_response": final_response,
+        "file_path": response_file_path 
+    }

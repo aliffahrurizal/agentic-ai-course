@@ -1,0 +1,10 @@
+{
+    "graphs": {
+      "chain": "./src/langgraph_demo/prompt_chain.py:main_workflow"
+    },
+    "env": "./.env",
+    "python_version": "3.11",
+    "dependencies": [
+      "."
+    ]
+  }

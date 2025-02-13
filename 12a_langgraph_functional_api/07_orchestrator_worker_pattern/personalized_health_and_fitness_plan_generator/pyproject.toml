@@ -1,0 +1,26 @@
+[project]
+name = "personalized_health_and_fitness_plan_generator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Wania Kazmi", email = "waniashah019@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-google-genai>=2.0.9",
+    "langgraph>=0.2.69",
+    "python-dotenv>=1.0.1",
+    "rich>=13.9.4",
+]
+
+[project.scripts]
+invoke = "personalized_health_and_fitness_plan_generator:stream"
+stream = "personalized_health_and_fitness_plan_generator:stream"
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

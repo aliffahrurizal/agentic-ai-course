@@ -7,6 +7,41 @@ Python decorators are a powerful and elegant feature that allows developers to m
 ### What is a Decorator?
 A decorator is a callable (usually a function) that takes another function as an argument, modifies or extends its behavior, and returns the modified function.
 
+
+* * *
+
+### **\. Example --Smart Home Automation (Enhancement Decorator)**
+
+* **Function:** Turning on the TV.
+* **Before Execution (Decorator):** Adjust room lighting and temperature.
+* **Function Execution:** TV turns on and starts playing.
+* **After Execution (Decorator):** Adjusts volume based on room noise level.
+
+```python
+def smart_home_decorator(func):
+    def wrapper():
+        # Before execution
+        print("Adjusting room lighting...")
+        print("Setting optimal temperature...")
+        
+        # Original function execution
+        func()
+        
+        # After execution
+        print("Measuring ambient noise...")
+        print("Adjusting TV volume...")
+    
+    return wrapper
+
+@smart_home_decorator
+def turn_on_tv():
+    print("TV turning on...")
+    print("Starting content playback...")
+
+# Using the decorated function
+turn_on_tv()
+```
+* * *
 ### Why Use Decorators?
 - Code reusability.
 - Separation of concerns.
