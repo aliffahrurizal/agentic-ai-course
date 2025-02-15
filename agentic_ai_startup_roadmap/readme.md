@@ -9,7 +9,7 @@ This document outlines the roadmap for building an Agentic AI startup, divided i
 
 ---
 
-## Assignment Level 1
+## Assignment Level 1 (CrewAI Development Lifecycle)
 
 1. **Anthropic Design Patterns**
 2. **CrewAI Flows Implementation**  
@@ -33,12 +33,15 @@ This document outlines the roadmap for building an Agentic AI startup, divided i
 16. **CrewAI Inter-Agent Communication**  
     - Deployed separately.
 17. **Observability with AgentOps**
-18. **CrewAI Automated Coding**  
+18. **Testing with Pytest**  
+    - Unit tests and integration tests
+    - Test coverage and reporting
+19. **CrewAI Automated Coding**  
     - Using Cursor and GitHub Copilot.
 
 ---
 
-## Assignment Level 2
+## Assignment Level 2 (LangGraph Development Lifecycle)
 
 1. **LangGraph Functional API**
 2. **LangGraph Design Pattern Implementation**  
@@ -58,33 +61,39 @@ This document outlines the roadmap for building an Agentic AI startup, divided i
 13. **LangGraph Inter-Agent Communication**  
     - Deployed separately.
 14. **Observability with LangSmith**
-15. **LangGraph and CrewAI Inter-Agent Communication**  
+15. **Testing with Pytest**  
+    - Unit and integration testing along with test coverage and reporting with pytest
+16. **LangGraph and CrewAI Inter-Agent Communication**  
     - Deployed separately.
-16. **Research on Inter-Agent Communication Protocols**
+17. **Research on Inter-Agent Communication Protocols**
 
 ---
 
-## Assignment Level 3 (Enterprise Level)
+## Assignment Level 3 (Enterprise-Scale Autogen Orchestration)
 
 1. **Autogen > 0.4**
 2. **MCP with Autogen**
 3. **Stripe with Autogen**
 4. **Deployment with Serverless Containers (Azure)**
-5. **Inter-Agent Communication with All Other Agents**
+5. **Testing with Pytest**  
+    - **Unit and integration testing along with test coverage and reporting with pytest**
+6. **Inter-Agent Communication with All Other Agents**
 
 ---
 
-## Assignment Level 4 (Agentia World Submission)
+## Assignment Level 4 (Agentia World Production Platform)
 
 1. **Select and Build Vertical Agents**  
    - Compatible with inter-agent communication protocols.
 2. **Select and Build MCP Servers**
 3. **Stripe Payment Integration**
-4. **Observability Implementation**
+4. **Testing with Pytest**  
+    - Unit and integration testing along with test coverage and reporting with pytest
+5. **Observability Implementation**
 
 ---
 
-## Assignment Level 5 (Become a Startup Founder)
+## Assignment Level 5 (Become a Venture Innovator and Leader)
 
 1. **Identify Market Gap**  
    - Research and propose a startup idea to become a Co-Founder.
