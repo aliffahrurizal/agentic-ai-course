@@ -4,6 +4,16 @@ CrewAI is an open-source Python framework designed to facilitate the development
 
 A significant advancement in CrewAI's capabilities is the introduction of **Flows**. Flows provide a structured, event-driven framework for creating and managing AI workflows, allowing developers to seamlessly connect multiple tasks, manage state, and control execution flow within AI applications. This feature simplifies the development of sophisticated AI automations by enabling the chaining of tasks and the coordination of multiple agents, referred to as Crews. 
 
+<br/><br/>
+| Component | Description | Key Features |
+| --- | --- | --- |
+| **Crew** | The top-level organization | • Manages AI agent teams  <br>• Oversees workflows  <br>• Ensures collaboration  <br>• Delivers outcomes |
+| **AI Agents** | Specialized team members | • Have specific roles (researcher, writer)  <br>• Use designated tools  <br>• Can delegate tasks  <br>• Make autonomous decisions |
+| **Process** | Workflow management system | • Defines collaboration patterns  <br>• Controls task assignments  <br>• Manages interactions  <br>• Ensures efficient execution |
+| **Tasks** | Individual assignments | • Have clear objectives  <br>• Use specific tools  <br>• Feed into larger process  <br>• Produce actionable results |
+
+<br/><br/>
+
 **Key Features of CrewAI Flows:**
 
 - **Simplified Workflow Creation:** Flows enable the easy chaining of multiple Crews and tasks to create complex AI workflows. 

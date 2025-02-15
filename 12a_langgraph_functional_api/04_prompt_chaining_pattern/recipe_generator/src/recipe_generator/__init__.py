@@ -1,9 +1,8 @@
-from recipe_generator.workflow import recipe_generation_agent
+from recipe_generator.run import main_run, stream_run
 
 def main():
-    result = recipe_generation_agent.invoke(input="tomatoes, basil, mozzarella, olive oil, garlic")
-    print("\n\n", "Final Recipe: ", result, "\n\n")
+    main_run()
+
 
 def stream():
-    for event in recipe_generation_agent.stream(input="tomatoes, basil, mozzarella, olive oil, garlic"):
-        print(event)
+    stream_run()
