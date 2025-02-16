@@ -15,6 +15,10 @@ Together we will build this new world:
 
 https://agentia.world/
 
+The Learning Roadmap:
+
+https://github.com/panaversity/learn-agentic-ai/tree/main/agentic_ai_startup_roadmap
+
 ---
 
 
