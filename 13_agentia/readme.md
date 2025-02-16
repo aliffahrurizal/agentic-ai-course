@@ -17,6 +17,10 @@ https://agentia.world/
 
 ---
 
+## Goals
+
+Monetize Agentic AI: Teaching + AI Agents as Components + Freelancing + Agentic Startups
+
 ## Roadmaps
 
 [OpenAI Roadmap](https://www.linkedin.com/posts/peter-gostev_openai-have-uncharacteristically-shared-activity-7295551112193945600--5br/)
