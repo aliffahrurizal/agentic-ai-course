@@ -15,9 +15,22 @@ Together we will build this new world:
 
 https://agentia.world/
 
-The Learning Roadmap:
+---
 
-https://github.com/panaversity/learn-agentic-ai/tree/main/agentic_ai_startup_roadmap
+## Roadmaps
+
+[OpenAI Roadmap](https://www.linkedin.com/posts/peter-gostev_openai-have-uncharacteristically-shared-activity-7295551112193945600--5br/)
+
+[Our Learning Roadmap](https://github.com/panaversity/learn-agentic-ai/tree/main/agentic_ai_startup_roadmap)
+
+### Our Agentic Startups Roadmap
+
+1. Agentia World: AI Agents as Components (The Parent Startup: AI Agent and MCP Server Marketplace)
+2. Panaversity: Agentic AI Learning with Agentic AI (Startup + Agentia Agents for Customized Services)
+3. Customer Service AI Agents: [Call Center AI Agents](https://www.economist.com/business/2024/10/16/can-artificial-intelligence-rescue-customer-service) (Startup + Agentia Agents for Customized Services)
+4. Customer Acquisition AI Agent: LinkedIn AI Agent (Startup + Agentia Agents for Customized Services)
+5. Communication Hub AI Agent: Email + Whatsapp + LinkedIn + Slack Automated Management (Startup + Agentia Agents for Customized Services)
+
 
 ---
 
