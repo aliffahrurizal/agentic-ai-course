@@ -15,6 +15,10 @@ Together we will build this new world:
 
 https://agentia.world/
 
+The Learning Roadmap:
+
+https://github.com/panaversity/learn-agentic-ai/tree/main/agentic_ai_startup_roadmap
+
 ---
 
 
@@ -51,6 +55,10 @@ https://www.linkedin.com/posts/how-do-i-use-ai_the-next-generation-of-ai-agents-
    Meta-agents oversee networks of agents, ensuring harmony and preventing conflicts. For instance:
    - A city-level meta-agent orchestrates public utilities, law enforcement, and civic services.
    - A global sustainability agent ensures environmental balance by coordinating across industries and governments.
+
+6. **Orchestration Agent**
+   An orchestration agent is essentially the “conductor” of a multi-agent system, ensuring that all    specialized agents work together efficiently toward a common objective.
+   - https://chatgpt.com/share/67b15ffa-0b30-8001-800a-fff07841c6cd
 
 ---
 
