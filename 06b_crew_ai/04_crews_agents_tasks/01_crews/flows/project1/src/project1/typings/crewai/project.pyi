@@ -1,0 +1,13 @@
+from typing import Any, Callable, TypeVar
+from crewai import Agent, Task
+
+T = TypeVar('T')
+
+def CrewBase(cls: T) -> T: ...
+def agent(func: Callable[..., Agent]) -> Callable[..., Agent]: ...
+def task(func: Callable[..., Task]) -> Callable[..., Task]: ...
+def crew(func: Callable) -> Callable: ...
+
+class CrewBaseClass:
+    agents: list[Agent]
+    tasks: list[Task] 
