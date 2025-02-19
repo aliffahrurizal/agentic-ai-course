@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-toolcalling = "toolcalling:main"
+toolcalling = "toolcalling.hello_tool:run_main"
 
 [build-system]
 requires = ["hatchling"]
