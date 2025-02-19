@@ -1,4 +1,3 @@
-import os
 import asyncio
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.base import TaskResult
