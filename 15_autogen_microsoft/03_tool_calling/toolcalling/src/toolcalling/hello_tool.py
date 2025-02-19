@@ -5,7 +5,7 @@ from autogen_ext.models.openai import OpenAIChatCompletionClient
 
 # Define a model client. You can use other model client that implements
 # the `ChatCompletionClient` interface.
-model_client = OpenAIChatCompletionClient(
+model_client: OpenAIChatCompletionClient = OpenAIChatCompletionClient(
     model="gemini-2.0-flash",
     api_key="gemini api key",
 )
@@ -20,7 +20,7 @@ async def get_weather(city: str) -> str:
 
 # Define an AssistantAgent with the model, tool, system message, and reflection enabled.
 # The system message instructs the agent via natural language.
-agent = AssistantAgent(
+agent: AssistantAgent = AssistantAgent(
     name="weather_agent",
     model_client=model_client,
     tools=[get_weather],
