@@ -1,5 +1,5 @@
 [project]
-name = "helloworld"
+name = "teams"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -10,11 +10,10 @@ requires-python = ">=3.12"
 dependencies = [
     "autogen-agentchat>=0.4.7",
     "autogen-ext[openai]>=0.4.7",
-    "python-dotenv>=1.0.1",
 ]
 
 [project.scripts]
-helloworld = "helloworld.hello:run_main"
+teams = "teams:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -165,23 +165,6 @@ wheels = [
 ]
 
 [[package]]
-name = "helloworld"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "autogen-agentchat" },
-    { name = "autogen-ext", extra = ["openai"] },
-    { name = "python-dotenv" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "autogen-agentchat", specifier = ">=0.4.7" },
-    { name = "autogen-ext", extras = ["openai"], specifier = ">=0.4.7" },
-    { name = "python-dotenv", specifier = ">=1.0.1" },
-]
-
-[[package]]
 name = "httpcore"
 version = "1.0.7"
 source = { registry = "https://pypi.org/simple" }
@@ -412,15 +395,6 @@ wheels = [
 ]
 
 [[package]]
-name = "python-dotenv"
-version = "1.0.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/bc/57/e84d88dfe0aec03b7a2d4327012c1627ab5f03652216c63d49846d7a6c58/python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca", size = 39115 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6a/3e/b68c118422ec867fa7ab88444e1274aa40681c606d59ac27de5a5588f082/python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a", size = 19863 },
-]
-
-[[package]]
 name = "regex"
 version = "2024.11.6"
 source = { registry = "https://pypi.org/simple" }
@@ -480,6 +454,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a2/87/a6771e1546d97e7e041b6ae58d80074f81b7d5121207425c964ddf5cfdbd/sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc", size = 20372 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e9/44/75a9c9421471a6c4805dbf2356f7c181a29c1879239abab1ea2cc8f38b40/sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2", size = 10235 },
+]
+
+[[package]]
+name = "teams"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "autogen-agentchat" },
+    { name = "autogen-ext", extra = ["openai"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "autogen-agentchat", specifier = ">=0.4.7" },
+    { name = "autogen-ext", extras = ["openai"], specifier = ">=0.4.7" },
 ]
 
 [[package]]
