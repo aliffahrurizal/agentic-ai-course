@@ -10,10 +10,11 @@ requires-python = ">=3.12"
 dependencies = [
     "autogen-agentchat>=0.4.7",
     "autogen-ext[openai]>=0.4.7",
+    "python-dotenv>=1.0.1",
 ]
 
 [project.scripts]
-teams = "teams:main"
+teams = "teams.hello_team:run_main"
 
 [build-system]
 requires = ["hatchling"]
