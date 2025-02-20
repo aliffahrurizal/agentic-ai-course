@@ -22,11 +22,24 @@ LangGraph Platform is a commercial solution for deploying agentic applications i
 - [Concepts](<https://langchain-ai.github.io/langgraph/concepts/langgraph_platform/>)
 - [API Spec](<https://langchain-ai.github.io/langgraph/cloud/reference/api/api_ref.html#tag/assistants>)
 - [API Reference](<https://langchain-ai.github.io/langgraph/cloud/reference/api/api_ref/>)
+- [LangGraph CLI Concepts](https://langchain-ai.github.io/langgraph/concepts/langgraph_cli/)
+- [LangGraph CLI API Ref.](https://langchain-ai.github.io/langgraph/cloud/reference/cli/)
+
 
 Let's get a quick project setup:
 1. Create a new project add langgraph package and add implementation for any Design Pattern or AI Workflow.
 2. At root add a langraph.json file with following details. Rename the path to path of your agent.
 **Note**- Ensure you have `LANGSMITH_API_KEY` environment variable in .env file. Get the API Key for free from LangSmith Dashboard
+
+### LG_DEV_MODE
+
+```bash
+Run this command
+
+uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev
+```
+
+### LAngGraph Demo Project
 
 ```bash
 cd langgraph_demo

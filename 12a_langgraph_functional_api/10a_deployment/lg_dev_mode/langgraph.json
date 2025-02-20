@@ -1,0 +1,8 @@
+{
+    "graphs": {
+        "react": "./src/lg_dev_mode/react.py:agent",
+        "pr": "./src/lg_dev_mode/agent.py:pr"
+    },
+    "env": ".env",
+    "dependencies": ["."]
+}
