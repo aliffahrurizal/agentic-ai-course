@@ -1,0 +1,20 @@
+[project]
+name = "lg-dev-mode"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Muhammad Junaid", email = "mr.junaidshaukat@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-google-genai>=2.0.9",
+    "langgraph>=0.2.74",
+]
+
+[project.scripts]
+lg-dev-mode = "lg_dev_mode:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
