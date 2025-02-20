@@ -1,0 +1,4 @@
+.env
+.mypy_cache
+.venv
+/src/helloworld/__pycache__

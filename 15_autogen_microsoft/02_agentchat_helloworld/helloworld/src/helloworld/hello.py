@@ -15,9 +15,6 @@ if not gemini_api_key:
     raise ValueError("GEMINI_API_KEY is not set. Please ensure it is defined in your .env file.")
 
 async def main() -> None:
-
-    
-
     # Create the model client
     model_client: OpenAIChatCompletionClient = OpenAIChatCompletionClient(model="gemini-2.0-flash", api_key=gemini_api_key)
     agent: AssistantAgent = AssistantAgent("assistant", model_client)

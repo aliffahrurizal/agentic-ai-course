@@ -1,13 +1,25 @@
 import asyncio
+import os
+from dotenv import load_dotenv
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.ui import Console
 from autogen_ext.models.openai import OpenAIChatCompletionClient
+
+# Load the environment variables from the .env file
+load_dotenv()
+
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+# Check if the API key is present; if not, raise an error
+if not gemini_api_key:
+    raise ValueError("GEMINI_API_KEY is not set. Please ensure it is defined in your .env file.")
+
 
 # Define a model client. You can use other model client that implements
 # the `ChatCompletionClient` interface.
 model_client: OpenAIChatCompletionClient = OpenAIChatCompletionClient(
     model="gemini-2.0-flash",
-    api_key="gemini api key",
+    api_key=gemini_api_key,
 )
 
 
