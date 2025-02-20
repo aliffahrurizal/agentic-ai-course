@@ -1,8 +1,8 @@
-# Agentic AI Design Patterns with Autogen
+# Anthropic Agentic AI Design Patterns
 
 [Anthropic’s research on effective agents](https://www.anthropic.com/research/building-effective-agents)
 
-Below is a detailed “paper” that explains how AutoGen 0.4.7+ can be used to implement each of the five Anthropic agentic design patterns—along with code examples. In our discussion, we cover:
+Below is a detailed “paper” that explains how AutoGen can be used to implement each of the five Anthropic agentic design patterns—along with code examples. In our discussion, we cover:
 
 1. **Prompt Chaining:** Passing the output of one prompt as the input to the next agent.  
 2. **Routing:** Directing a user query to the most appropriate specialized agent.  
@@ -10,13 +10,13 @@ Below is a detailed “paper” that explains how AutoGen 0.4.7+ can be used to 
 4. **Orchestrator‑Workers:** Using an orchestrator agent to delegate subtasks to worker agents and then aggregate results.  
 5. **Evaluator‑Optimizer:** Iteratively refining outputs by evaluating and then optimizing results.
 
-The Anthropic research on building effective agents [citeturn2search13] outlines these patterns; AutoGen’s flexible, asynchronous, and multi‑agent architecture makes it possible to implement all five.
+The Anthropic research on building effective agents outlines these patterns; AutoGen’s flexible, asynchronous, and multi‑agent architecture makes it possible to implement all five.
 
 ---
 
 ## 1. Introduction
 
-Modern AI systems increasingly rely on agentic design patterns to solve complex tasks by decomposing work into multiple stages, routing queries to specialized agents, running agents in parallel, orchestrating subtasks, and iteratively optimizing results. In this paper, we demonstrate that AutoGen 0.4.7+ can implement all five of the following Anthropic design patterns:
+Modern AI systems increasingly rely on agentic design patterns to solve complex tasks by decomposing work into multiple stages, routing queries to specialized agents, running agents in parallel, orchestrating subtasks, and iteratively optimizing results. In this paper, we demonstrate that AutoGen can implement all five of the following Anthropic design patterns:
   
 1. **Prompt Chaining**  
 2. **Routing**  
@@ -30,7 +30,7 @@ We provide a brief explanation and a code example for each design pattern using 
 
 ## 2. Background
 
-AutoGen is an open‑source programming framework that supports building multi‑agent AI applications. Its recent 0.4.7+ update introduces an asynchronous, event‑driven architecture with powerful multi‑agent orchestration, flexible team configurations (such as RoundRobinGroupChat and SelectorGroupChat), and built‑in support for tool integration and state management. These features naturally lend themselves to implementing the Anthropic design patterns described in [Anthropic’s Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) [citeturn2search13].
+AutoGen is an open‑source programming framework that supports building multi‑agent AI applications. Its recent update introduces an asynchronous, event‑driven architecture with powerful multi‑agent orchestration, flexible team configurations (such as RoundRobinGroupChat and SelectorGroupChat), and built‑in support for tool integration and state management. These features naturally lend themselves to implementing the Anthropic design patterns described in [Anthropic’s Building Effective Agents](https://www.anthropic.com/research/building-effective-agents).
 
 ---
 
@@ -282,7 +282,7 @@ asyncio.run(evaluator_optimizer_flow("Draft a proposal to reduce energy consumpt
 
 ## 4. Conclusion
 
-AutoGen 0.4.7+ is a highly flexible framework that supports all five of the Anthropic agentic design patterns—prompt chaining, routing, parallelization, orchestrator‑workers, and evaluator‑optimizer. By leveraging its asynchronous, event‑driven architecture and multi‑agent orchestration capabilities, developers can design complex workflows that distribute tasks among specialized agents, aggregate results, and iteratively refine outputs. The code examples provided above serve as a foundation that you can expand upon to build sophisticated agentic AI systems for a variety of applications.
+AutoGen is a highly flexible framework that supports all five of the Anthropic agentic design patterns—prompt chaining, routing, parallelization, orchestrator‑workers, and evaluator‑optimizer. By leveraging its asynchronous, event‑driven architecture and multi‑agent orchestration capabilities, developers can design complex workflows that distribute tasks among specialized agents, aggregate results, and iteratively refine outputs. The code examples provided above serve as a foundation that you can expand upon to build sophisticated agentic AI systems for a variety of applications.
 
 Each pattern has its unique strengths:
 - **Prompt chaining** enables sequential task processing.
@@ -291,10 +291,9 @@ Each pattern has its unique strengths:
 - **Orchestrator‑workers** allow coordinated task delegation and aggregation.
 - **Evaluator‑optimizer** facilitates iterative improvement of solutions.
 
-Together, these patterns illustrate how AutoGen 0.4.7+ can be employed to build next‑generation AI applications that are both robust and scalable.
+Together, these patterns illustrate how AutoGen can be employed to build next‑generation AI applications that are both robust and scalable.
 
 ---
 
- [citeturn2search13]  
 
 

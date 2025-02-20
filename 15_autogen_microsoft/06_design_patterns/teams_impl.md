@@ -1,4 +1,4 @@
-# Agentic AI Design Patterns with Teams Implementation
+# Anthropic Agentic AI Design Patterns with AutoGenTeams Implementation
 
 AutoGen’s team constructs—like the SelectorGroupChat and RoundRobinGroupChat—are designed to coordinate multi‑agent interactions, making them especially well‑suited to implementing several of Anthropic’s design patterns. In particular, teams are a natural fit for:
 
@@ -251,5 +251,5 @@ AutoGen teams—through constructs like SelectorGroupChat—are a powerful tool 
 
 By leveraging a custom selector function, you can dynamically control the flow of conversation in a multi‑agent team, matching the Anthropic design patterns with robust, asynchronous, and collaborative implementations.
 
-These examples illustrate how AutoGen 0.4.7+ teams can be adapted to implement complex multi-agent workflows, providing a flexible foundation for building next‑generation AI applications.
+These examples illustrate how AutoGen teams can be adapted to implement complex multi-agent workflows, providing a flexible foundation for building next‑generation AI applications.
 
