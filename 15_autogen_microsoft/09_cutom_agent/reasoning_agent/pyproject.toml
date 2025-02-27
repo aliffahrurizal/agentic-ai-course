@@ -1,0 +1,23 @@
+[project]
+name = "reasoning-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Muhammad Junaid", email = "mr.junaidshaukat@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "autogen-agentchat>=0.4.7",
+    "autogen-ext[openai]>=0.4.7",
+    "python-dotenv>=1.0.1",
+]
+
+[project.scripts]
+reasoning-agent = "reasoning_agent:main"
+lats = "reasoning_agent.lats_agent:call_lats_agent"
+hello = "reasoning_agent.hello:call_countdown_agent"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
