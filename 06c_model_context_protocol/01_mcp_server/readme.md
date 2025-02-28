@@ -1,6 +1,6 @@
 # MCP Server
 
-We will using [Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk) for developing MCP Servers.
+We will use [Python MCP SDK](https://github.com/modelcontextprotocol/python-sdk) for developing MCP Servers.
 
     uv init weather
 
