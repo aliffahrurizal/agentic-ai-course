@@ -1,0 +1,23 @@
+[project]
+name = "knowldge5"
+version = "0.1.0"
+description = "knowldge5 using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai[tools]>=0.102.0,<1.0.0",
+    "google-generativeai>=0.8.4",
+]
+
+[project.scripts]
+kickoff = "knowldge5.main:kickoff"
+plot = "knowldge5.main:plot"
+kn = "knowldge5.main1:my_knowldge"
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "flow"
