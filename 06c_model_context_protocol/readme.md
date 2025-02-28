@@ -1,4 +1,4 @@
-# Model Context Protocol (MCP): Claude New Protocol
+# Model Context Protocol (MCP)
 
 **The simple way to connect AI tools to data sources like GitHub, Google Drive, and Slack**
 
@@ -9,8 +9,6 @@
 [Repo](https://github.com/modelcontextprotocol)
 
 [Documentation](https://modelcontextprotocol.io/introduction)
-
-[Install Claude Desktop](https://claude.ai/download)
 
 The **Model Context Protocol (MCP)** is an open standard developed by Anthropic to facilitate secure and standardized connections between AI assistants, such as Claude, and various data sources, including content repositories, business tools, and development environments. This protocol enables AI systems to access and interact with both local and remote resources, enhancing their ability to provide relevant and context-aware responses. 
 
@@ -36,9 +34,5 @@ To leverage MCP with Claude Desktop, users can configure the application to conn
 
 - **Scalability:** MCP's standardized approach facilitates the development of AI systems that can maintain context as they interact with various tools and datasets, promoting a more sustainable architecture. 
 
-**Getting Started with MCP:**
 
-Developers interested in implementing MCP can begin by exploring the official [Model Context Protocol Quickstart Guide](https://modelcontextprotocol.io/quickstart), which provides detailed instructions on setting up MCP servers and integrating them with AI applications like Claude Desktop.
-
-By adopting MCP, organizations and developers can enhance the functionality of AI assistants, enabling them to interact seamlessly with a wide array of data sources and tools, thereby improving the relevance and quality of AI-generated responses.
 
