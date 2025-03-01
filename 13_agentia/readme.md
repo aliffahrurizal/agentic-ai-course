@@ -15,6 +15,18 @@ Together we will build this new world:
 
 https://agentia.world/
 
+The Future Architecture of Agentic AI and AI Agent To Agent Communication:
+I have been discussing this topic with the latest AI, and it might help you clarify your thinking as it helps me:
+
+OpenAI Deep Research:
+https://chatgpt.com/share/67c2c168-7df4-8001-9624-f30c61b1c692
+
+Google Gemini 2.0 Flash Thinking:
+https://docs.google.com/document/d/1FNygr3kTxARVWMOMWaW-hRnNO81BdRgYjyaktFRfR8Y/edit?usp=sharing
+
+Anthropic 3.7 Sonnet:
+https://claude.ai/share/8807c67a-750f-4ba7-a719-7d57df697456
+
 ---
 
 ## Goals
