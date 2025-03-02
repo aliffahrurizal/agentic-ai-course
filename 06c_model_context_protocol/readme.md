@@ -4,6 +4,8 @@
 
 **It’s a protocol to allow Claude (or other LLMs) to interface with external tools (databases, web servers, file systems etc)**
 
+[Watch: Building Agents with Model Context Protocol - Full Workshop with Mahesh Murag of Anthropic](https://www.youtube.com/watch?v=kQmXtrmQ5Zg)
+
 [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
 
 [Repo](https://github.com/modelcontextprotocol)
