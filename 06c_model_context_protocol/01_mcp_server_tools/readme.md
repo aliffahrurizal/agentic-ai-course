@@ -25,6 +25,5 @@ You can install this weather server in Claude Desktop and interact with it right
     mcp install weather.py
 
 
-
-
-
+If you are a Mac user facing the error to integrate MCP with Claude desktop, then the chat below will help you.
+[ChatGPT 03](https://chatgpt.com/share/67c64692-9374-8007-bedc-ca1cde76c95e)
