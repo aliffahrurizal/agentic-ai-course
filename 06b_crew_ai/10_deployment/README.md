@@ -1,6 +1,3 @@
-Below is a sample **README.md** you can use to outline the steps for deploying your CrewAI flow from GitHub. Adapt it as needed for your project.
-
----
 
 # CrewAI Deployment
 
@@ -105,3 +102,9 @@ This guide walks through creating a CrewAI flow locally, pushing it to GitHub, a
 ---
 
 **That’s it!** You’ve successfully created and deployed a CrewAI flow from GitHub. If you have any issues or questions, refer to the official [CrewAI documentation](https://crewai.com/docs) or open an issue in your repository.
+
+## Video Tutorial
+
+Watch this video tutorial for a detailed walkthrough of the deployment process:
+
+[![CrewAI Deployment Tutorial](https://img.youtube.com/vi/ubIUHudIeIs/0.jpg)](https://www.youtube.com/watch?v=ubIUHudIeIs)
