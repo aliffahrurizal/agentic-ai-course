@@ -1,5 +1,5 @@
 https://docs.crewai.com/concepts/planning
-
+* youtube video link: https://youtu.be/DpQw0DP7dE8?t=505
 # Before enabling planning
 
 1. run command in terminal `crewai run`
