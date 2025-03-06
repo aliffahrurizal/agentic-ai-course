@@ -1,2 +1,22 @@
 https://docs.crewai.com/concepts/testing
 
+# Change code in `src/pr1/main.py` in `test()` and `train()` functions
+#### FROM
+```python
+inputs = {
+        'topic': 'AI LLMs',
+    }
+```
+### To
+```python
+inputs = {
+        'topic': 'AI LLMs',
+        'current_year': str(datetime.now().year)
+    }
+```
+
+1. run terminal command `crewai test --n_iterations 2 --model gpt-4o-mini`
+
+![CrewAI Testing](./image.png)
+
+
