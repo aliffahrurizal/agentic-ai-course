@@ -11,11 +11,17 @@ In summary:
 This combination provides both robust instrumentation and powerful visualization for your CrewAI deployments.
 
 
-https://docs.crewai.com/how-to/openlit-observability
+1. https://docs.crewai.com/how-to/openlit-observability
+    *    Youtube video link : https://youtu.be/DpQw0DP7dE8?t=3733
 
-https://docs.arize.com/phoenix/tracing/integrations-tracing/crewai
+2. https://docs.crewai.com/how-to/agentops-observability
+    *    Youtube video link: https://youtu.be/DpQw0DP7dE8?t=4972
 
-https://phoenix.arize.com/integration/crewai/
+3. https://docs.arize.com/phoenix/tracing/integrations-tracing/crewai
+
+4. https://phoenix.arize.com/integration/crewai/
+
+
 
 
 ￼  ￼
