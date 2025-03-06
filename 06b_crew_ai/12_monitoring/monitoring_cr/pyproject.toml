@@ -1,0 +1,24 @@
+[project]
+name = "monitoring_cr"
+version = "0.1.0"
+description = "monitoring_cr using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai[agentops,tools]>=0.100.1,<1.0.0",
+    "openlit>=1.33.10",
+]
+
+[project.scripts]
+monitoring_cr = "monitoring_cr.main:run"
+run_crew = "monitoring_cr.main:run"
+train = "monitoring_cr.main:train"
+replay = "monitoring_cr.main:replay"
+test = "monitoring_cr.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
