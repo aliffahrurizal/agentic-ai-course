@@ -1,0 +1,1 @@
+https://mcp.so/client/crewai_mcp_adapter
