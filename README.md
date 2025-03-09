@@ -13,9 +13,11 @@ Reference:
 
 https://www.linkedin.com/posts/alexwang2911_aiagents-robotics-technology-activity-7282829390445453314-QLeS
 
-### AI-201: Fundamentals of Agentic AI
+### AI-201: Fundamentals of Agentic AI  -  From Foundations to Autonomous Agents
 
 AI 201 Fundamentals of Agentic AI we cover chapters: 00-06, 7b, 8, 8b, 9, 9b, 10, 10b, and 11
+
+Kickstart your journey into Agentic AI! This course provides a rapid yet comprehensive introduction to Conversational, Generative, and Agentic AI.  You'll master the foundational concepts, then immediately build practical Conversational AI applications to understand human-AI interaction firsthand.  The focus quickly shifts to Agentic Design Patterns, which you'll implement using CrewAI to create truly autonomous AI agents.  You'll become proficient with CrewAI, developing agents ready for real-world tasks.  Furthermore, you'll gain the unique skills to construct Model Context Protocol (MCP) servers and agents, enabling you to build next-generation augmented LLMs. Finally, we'll explore the groundbreaking potential of Agentic Payments, envisioning the future of AI in finance.
 
 
 **[AI-201 Video Playlist](https://www.youtube.com/playlist?list=PL0vKVrkG4hWpDokw004ujFI6U_58WChPl)**
@@ -24,12 +26,12 @@ Note: These videos are for additional learning, and do not cover all the materia
 
 
 
-### AI-202: Advanced Agentic AI Engineering
+### AI-202: Advanced Agentic AI Engineering - Master Enterprise-Scale AI Agent Development
 
-AI 202 Advanced Agentic AI we cover chapters: 00, 06, 7a, 8, 8a, 9, 9a, 10, 10a, 11, and 12
+AI 202 Advanced Agentic AI we cover chapters: 06, 7a, 8, 8a, 9, 9a, 10, 10a, 11, and 12
 
+Ready to engineer truly sophisticated AI agent systems?  AI-202 builds upon your AI-201 foundation to propel you into advanced Agentic AI engineering.  You'll master powerful frameworks like Microsoft AutoGen to construct complex agents for intricate tasks and advanced decision-making.  Focusing on Agent-to-Agent communication and orchestration, you'll develop enterprise-ready multi-agent solutions.  You'll build robust Model Context Protocol (MCP) servers, and then craft dynamic, user-centric agentic frontends with Next.js and TypeScript.  The course culminates in a professional project where you'll design and deploy a complete enterprise-grade agentic solution, showcasing your mastery of cutting-edge AI technologies and your readiness for the forefront of the field.
 
-The sum up the main focus is to learn Microsoft Autogen, CrewAI, Model Context Protocol (MCP), AgentOps, FastAPI, and Cloud Native Technologies.   
 
 
 ## Which is the Best Agentic Framework?
