@@ -2,6 +2,8 @@
 
 **[Chatbot Arena Leaderboard](https://lmarena.ai/?leaderboard)**
 
+**[GAIA Leaderboard](https://huggingface.co/spaces/gaia-benchmark/leaderboard)**
+
 **[Open LLM Leaderboard](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard#/)**
 
 **[Berkeley Function-Calling Leaderboard](https://gorilla.cs.berkeley.edu/leaderboard.html)**

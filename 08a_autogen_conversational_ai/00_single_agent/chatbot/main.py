@@ -1,8 +1,13 @@
+from typing import List, cast
+
 import os
 from dotenv import load_dotenv
 import chainlit as cl
-from litellm import completion
-import json
+from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.base import Response
+from autogen_agentchat.messages import ModelClientStreamingChunkEvent, TextMessage
+from autogen_core import CancellationToken
+from autogen_ext.models.openai import OpenAIChatCompletionClient
 
 # Load the environment variables from the .env file
 load_dotenv()
@@ -13,66 +18,60 @@ gemini_api_key = os.getenv("GEMINI_API_KEY")
 if not gemini_api_key:
     raise ValueError("GEMINI_API_KEY is not set. Please ensure it is defined in your .env file.")
 
-@cl.on_chat_start
-async def start():
-    """Set up the chat session when a user connects."""
-    # Initialize an empty chat history in the session.
-    cl.user_session.set("chat_history", [])
+@cl.set_starters  # type: ignore
+async def set_starts() -> List[cl.Starter]:
+    return [
+        cl.Starter(
+            label="Greetings",
+            message="Hello! What can you help me with today?",
+        ),
+        cl.Starter(
+            label="Weather",
+            message="Find the weather in New York City.",
+        ),
+    ]
 
-    await cl.Message(content="Welcome to the Panaversity AI Assistant! How can I help you today?").send()
 
-@cl.on_message
-async def main(message: cl.Message):
-    """Process incoming messages and generate responses."""
-    # Send a thinking message
-    msg = cl.Message(content="Thinking...")
-    await msg.send()
+@cl.step(type="tool")  # type: ignore
+async def get_weather(city: str) -> str:
+    return f"The weather in {city} is 73 degrees and Sunny."
 
-    # Retrieve the chat history from the session.
-    history = cl.user_session.get("chat_history") or []
+
+@cl.on_chat_start  # type: ignore
+async def start_chat() -> None:
     
-    # Append the user's message to the history.
-    history.append({"role": "user", "content": message.content})
+    # Create the model client
+    model_client: OpenAIChatCompletionClient = OpenAIChatCompletionClient(model="gemini-2.0-flash", api_key=gemini_api_key)
     
 
-    try:
-        # Get completion from LiteLLM
-        response = completion(
-            model="gemini/gemini-2.0-flash",
-            api_key=gemini_api_key,
-            messages=history
-        )
-        
-        response_content = response.choices[0].message.content
-        
-        # Update the thinking message with the actual response
-        msg.content = response_content
-        await msg.update()
+    # Create the assistant agent with the get_weather tool.
+    assistant = AssistantAgent(
+        name="assistant",
+        tools=[get_weather],
+        model_client=model_client,
+        system_message="You are a helpful assistant",
+        model_client_stream=True,  # Enable model client streaming.
+        reflect_on_tool_use=True,  # Reflect on tool use.
+    )
 
-        # Append the assistant's response to the history.
-        history.append({"role": "assistant", "content": response_content})
-    
-        # Update the session with the new history.
-        cl.user_session.set("chat_history", history)
-        
-        # Optional: Log the interaction
-        print(f"User: {message.content}")
-        print(f"Assistant: {response_content}")
-        
-    except Exception as e:
-        msg.content = f"Error: {str(e)}"
-        await msg.update()
-        print(f"Error: {str(e)}")
+    # Set the assistant agent in the user session.
+    cl.user_session.set("prompt_history", "")  # type: ignore
+    cl.user_session.set("agent", assistant)  # type: ignore
 
 
-# Right on it is not fully functioning because we are not
-# loading json file on on_chat_start
-@cl.on_chat_end
-async def on_chat_end():
-    # Retrieve the full chat history at the end of the session
-    history = cl.user_session.get("chat_history") or []
-    # Save the chat history to a file (or persist it elsewhere)
-    with open("chat_history.json", "w") as f:
-        json.dump(history, f, indent=2)
-    print("Chat history saved.")
-
+@cl.on_message  # type: ignore
+async def chat(message: cl.Message) -> None:
+    # Get the assistant agent from the user session.
+    agent = cast(AssistantAgent, cl.user_session.get("agent"))  # type: ignore
+    # Construct the response message.
+    response = cl.Message(content="")
+    async for msg in agent.on_messages_stream(
+        messages=[TextMessage(content=message.content, source="user")],
+        cancellation_token=CancellationToken(),
+    ):
+        if isinstance(msg, ModelClientStreamingChunkEvent):
+            # Stream the model client response to the user.
+            await response.stream_token(msg.content)
+        elif isinstance(msg, Response):
+            # Done streaming the model client response. Send the message.
+            await response.send()
