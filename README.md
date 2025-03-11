@@ -1,6 +1,6 @@
 # Learn Agentic AI
 
-This repo is part of the [Panaversity Certified Agentic and Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201 and AI-202 courses.
+This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201 and AI-202 courses.
 
 ![Agentic AI Top Trend](toptrend.webp)
 
@@ -13,49 +13,26 @@ Reference:
 
 https://www.linkedin.com/posts/alexwang2911_aiagents-robotics-technology-activity-7282829390445453314-QLeS
 
-### AI-201: Fundamentals of Agentic AI
+### AI-201: Fundamentals of Agentic AI  -  From Foundations to Autonomous Agents
 
-Covers Chapters from -01 to 11
+AI 201 Fundamentals of Agentic AI we cover chapters: 00-06, 7b, 8, 8b, 9, 9b, 10, 10b, and 11
+
+Kickstart your journey into Agentic AI! This course provides a rapid yet comprehensive introduction to Conversational, Generative, and Agentic AI.  You'll master the foundational concepts, then immediately build practical Conversational AI applications to understand human-AI interaction firsthand.  The focus quickly shifts to Agentic Design Patterns, which you'll implement using CrewAI to create truly autonomous AI agents.  You'll become proficient with CrewAI, developing agents ready for real-world tasks.  Furthermore, you'll gain the unique skills to construct Model Context Protocol (MCP) servers and agents, enabling you to build next-generation augmented LLMs. Finally, we'll explore the groundbreaking potential of Agentic Payments, envisioning the future of AI in finance.
+
 
 **[AI-201 Video Playlist](https://www.youtube.com/playlist?list=PL0vKVrkG4hWpDokw004ujFI6U_58WChPl)**
 
 Note: These videos are for additional learning, and do not cover all the material taught in the onsite classes.
 
-### Projects for AI-201 Students
-
-To begin with all AI-201 students will complete these projects:
-
-Generative AI Projects:
-https://github.com/panaversity/learn-agentic-ai/tree/main/02_generative_ai_for_beginners/PROJECTS
-
-Agentic AI Projects:
-https://github.com/panaversity/learn-agentic-ai/tree/main/05_crew_ai/PROJECTS
-
-Project Checking: Your Instructors will check your project on the due date in class. You will be removed from
-the class until you successfully complete your project and submit it.
-
-All AI-201 students will complete these projects (links included in form) and submit them in this form:
-https://forms.gle/VSZaLDBwCHNPzY5Z6
-
-Project Checking: Your Instructors will check your project on the due date in class. You will be removed from
-the class until you successfully complete your project and submit it.
-
-### AI-202: Advanced Agentic AI Engineering
-
-Covers Chapters 12 and onwards
-
-**[AI-202 Video Playlist](https://www.youtube.com/playlist?list=PL0vKVrkG4hWoHDg46N85-9NDhmOaPWEwA)**
-
-Note: These videos are for additional learning, and do not cover all the material taught in the onsite classes.
-
-### Projects for AI-202 Students
-
-All AI-202 students will complete these projects (links included in form) and submit them in this form:
-https://forms.gle/Zfp2CWSmp9e91Wkk9
 
 
-Project Checking: Your Instructors will check your project on the due date in class. You will be removed from
-the class until you successfully complete your project and submit it.
+### AI-202: Advanced Agentic AI Engineering - Master Enterprise-Scale AI Agent Development
+
+AI 202 Advanced Agentic AI we cover chapters: 06, 7a, 8, 8a, 9, 9a, 10, 10a, 11, and 12
+
+Ready to engineer truly sophisticated AI agent systems?  AI-202 builds upon your AI-201 foundation to propel you into advanced Agentic AI engineering.  You'll master powerful frameworks like Microsoft AutoGen to construct complex agents for intricate tasks and advanced decision-making.  Focusing on Agent-to-Agent communication and orchestration, you'll develop enterprise-ready multi-agent solutions.  You'll build robust Model Context Protocol (MCP) servers, and then craft dynamic, user-centric agentic frontends with Next.js and TypeScript.  The course culminates in a professional project where you'll design and deploy a complete enterprise-grade agentic solution, showcasing your mastery of cutting-edge AI technologies and your readiness for the forefront of the field.
+
+
 
 ## Which is the Best Agentic Framework?
 
