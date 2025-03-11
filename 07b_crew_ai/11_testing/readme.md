@@ -16,7 +16,7 @@ inputs = {
 ```
 
 1. run terminal command `crewai test --n_iterations 2 --model gpt-4o-mini`
-2. or `1. run terminal command `crewai test --n_iterations 2 --model gemini/gemini-2.0-flash`
+2. or run terminal command `crewai test --n_iterations 2 --model gemini/gemini-2.0-flash`
 
 ![CrewAI Testing](./image.png)
 
