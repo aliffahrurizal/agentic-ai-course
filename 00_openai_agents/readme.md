@@ -63,6 +63,8 @@ For more in-depth technical details and examples, you can explore the [official 
 https://github.com/openai/openai-agents-python
 
 
+[Building AI Agents with OpenAI’s Agents SDK: A Beginner’s Guide](https://medium.com/@agencyai/building-ai-agents-with-openais-agents-sdk-a-beginner-s-guide-66751e5e7e05)
+
 ## Early Reviews
 
 [Unpacking OpenAI’s Agents SDK: A Technical Deep Dive into the Future of AI Agents](https://mtugrull.medium.com/unpacking-openais-agents-sdk-a-technical-deep-dive-into-the-future-of-ai-agents-af32dd56e9d1)
