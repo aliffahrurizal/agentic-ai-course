@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
+from agents.run import RunConfig
 
 # Load the environment variables from the .env file
 load_dotenv()
@@ -17,12 +18,20 @@ external_client = AsyncOpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
 )
 
-agent: Agent = Agent(name="Assistant", 
-                     instructions="You are a helpful assistant",  
-                     model=OpenAIChatCompletionsModel(
-                        model="gemini-2.0-flash",
-                        openai_client=external_client)
-    )
+model = OpenAIChatCompletionsModel(
+    model="gemini-2.0-flash",
+    openai_client=external_client
+)
 
-result = Runner.run_sync(agent, "Write a haiku about recursion in programming.")
+config = RunConfig(
+    model=model,
+    model_provider=external_client,
+    tracing_disabled=True
+)
+
+agent: Agent = Agent(name="Assistant", instructions="You are a helpful assistant", model=model)
+
+result = Runner.run_sync(agent, "Write a haiku about recursion in programming.", run_config=config)
+
+print("\nCALLING AGENT\n")
 print(result.final_output)
