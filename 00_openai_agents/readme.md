@@ -65,6 +65,8 @@ https://github.com/openai/openai-agents-python
 
 ## Early Reviews
 
+[Unpacking OpenAI’s Agents SDK: A Technical Deep Dive into the Future of AI Agents](https://mtugrull.medium.com/unpacking-openais-agents-sdk-a-technical-deep-dive-into-the-future-of-ai-agents-af32dd56e9d1)
+
 Developers are giving the OpenAI Agents SDK high marks for its simplicity and power. Here’s a snapshot of the feedback from the community:
 
 - **Ease of Use & Python-First Approach:**  
