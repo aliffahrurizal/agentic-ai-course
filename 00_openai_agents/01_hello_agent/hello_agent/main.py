@@ -31,7 +31,7 @@ config = RunConfig(
 
 agent: Agent = Agent(name="Assistant", instructions="You are a helpful assistant", model=model)
 
-result = Runner.run_sync(agent, "Write a haiku about recursion in programming.", run_config=config)
+result = Runner.run_sync(agent, "Hello, how are you.", run_config=config)
 
 print("\nCALLING AGENT\n")
 print(result.final_output)
