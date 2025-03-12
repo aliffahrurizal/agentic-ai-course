@@ -4,6 +4,8 @@ The OpenAI Agents SDK is an open‐source, lightweight framework that lets devel
 
 ### Core Concepts
 
+**[Learn how to build agents with the OpenAI.](https://platform.openai.com/docs/guides/agents-sdk)**
+
 - **Agents:**  
   These are language models (LLMs) that are preconfigured with specific instructions, access to tools (like web search or file retrieval), and even safety guardrails. Agents can generate responses and decide which tool to call based on the context.  
  
