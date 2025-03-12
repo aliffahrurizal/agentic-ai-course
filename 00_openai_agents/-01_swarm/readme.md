@@ -16,3 +16,31 @@ OpenAI's Swarm is an experimental framework designed to facilitate the orchestra
 
 The Swarm framework emphasizes a minimalist approach, focusing on simplicity and flexibility. This design makes it accessible for developers to experiment with multi-agent orchestration without the complexity often associated with more extensive frameworks. By leveraging these core abstractions, Swarm enables the creation of scalable, testable, and efficient multi-agent systems capable of handling complex, collaborative tasks.
 
+
+## Anthropic Design Patterns
+
+OpenAI's Agents SDK is a versatile framework designed to facilitate the development and orchestration of AI agents, enabling them to perform complex tasks efficiently. This SDK aligns closely with several design patterns proposed by Anthropic for building effective agents, allowing developers to implement these patterns seamlessly.
+
+https://www.anthropic.com/engineering/building-effective-agents
+
+**1. Prompt Chaining (Chain Workflow):**
+
+This pattern involves breaking down complex tasks into a sequence of simpler, manageable steps, where each step builds upon the previous one. The Agents SDK supports this by allowing developers to define agents that execute specific functions in a predetermined order, ensuring a structured approach to task completion. 
+
+**2. Routing:**
+
+Routing entails directing tasks to the most appropriate agent based on the task's nature. The Agents SDK facilitates this through its handoff mechanism, enabling agents to transfer control to other agents better suited to handle specific subtasks, thereby optimizing task management. 
+
+**3. Parallelization:**
+
+This pattern focuses on executing multiple subtasks concurrently to enhance efficiency. With the Agents SDK, developers can design agents that operate in parallel, leveraging the SDK's orchestration capabilities to manage simultaneous processes effectively. 
+
+**4. Orchestrator-Workers:**
+
+In this design, an orchestrator agent decomposes a complex task into smaller subtasks and assigns them to worker agents. The Agents SDK's architecture supports this by allowing an orchestrator agent to oversee the workflow and delegate tasks to specialized worker agents, ensuring coordinated task execution. 
+
+**5. Evaluator-Optimizer:**
+
+This pattern involves iterative improvement through feedback loops, where an evaluator agent assesses the performance of other agents and suggests optimizations. The Agents SDK's guardrails feature enables the implementation of such evaluative mechanisms, allowing for continuous performance enhancement and adherence to desired behaviors. 
+
+By leveraging the OpenAI Agents SDK, developers can effectively implement these design patterns, as outlined by Anthropic, to build robust and efficient AI agent systems. 
