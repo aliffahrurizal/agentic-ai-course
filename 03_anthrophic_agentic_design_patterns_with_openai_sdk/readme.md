@@ -1,4 +1,4 @@
-# Agentic Design Patterns
+# Anthrophic Agentic Design Patterns with OpenAI Agentic SDK
 
 [Building effective agents By Anthropic](https://www.anthropic.com/research/building-effective-agents)
 
