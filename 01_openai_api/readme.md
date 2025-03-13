@@ -66,7 +66,7 @@ OpenAI's new Responses API represents a significant evolution in its API infrast
 
 1. **State Management**
 
-   - *Chat Completions*: Operated on a stateless model, requiring developers to resend entire conversation histories with each interaction.
+   - *Chat Completions*: Operated on a stateless model, requiring developers to resend entire conversation histories with each interaction.
 
    - *Responses API*: Introduces statefulness by automatically storing responses, allowing for seamless conversation continuity through the use of `previous_response_id`.
 
@@ -90,7 +90,7 @@ OpenAI's new Responses API represents a significant evolution in its API infrast
 
 5. **Improved API Design and Usability**
 
-   - Simplifies structure by transitioning from externally-tagged to internally-tagged polymorphism.
+   - Simplifies structure by transitioning from externally-tagged to internally-tagged polymorphism.
 
    - Flattens JSON response structures, enhancing ease of parsing and integration.
 
@@ -143,7 +143,7 @@ OpenAI's **Responses API** (released in early 2025) simplifies creating structur
 
 ---
 
-### 📊 **Likelihood of Industry Adoption (my estimation):**
+### 📊 **Likelihood of Industry Adoption (our estimation):**
 | Factor                          | Likelihood of Adoption |
 |---------------------------------|------------------------|
 | Developer friendliness          | ✅ High                |
