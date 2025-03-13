@@ -1,5 +1,6 @@
 
-🚀 **[Open in Google Colab](https://colab.research.google.com/drive/1gmj2g515XHCKMhXRc58vBU6Rc9x5xykd?usp=sharing)**
+🚀 **[Open in Google Colab](https://colab.research.google.com/drive/1gmj2g515XHCKMhXRc58vBU6Rc9x5xykd?usp=sharing)**<br>
+🚀 **[Open in Colab - gemini](https://colab.research.google.com/drive/13qluzlzZ4Vko2F5ZGKt1lEIEvQjzlTjQ?usp=sharing)** *[Error](https://github.com/openai/openai-agents-python/issues/124)*
 # Streamed Agent Output Examples
 
 This README demonstrates how to implement and interpret streamed output from agents using Python's asynchronous features and the hypothetical `agents` library.
