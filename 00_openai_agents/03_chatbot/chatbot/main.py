@@ -62,22 +62,18 @@ async def main(message: cl.Message):
 
     try:
         print("\n[CALLING_AGENT_WITH_CONTEXT]\n", history, "\n")
-        result = Runner.run_sync(agent, history, run_config=config)
+        result = Runner.run_sync(starting_agent = agent,
+                    input=history,
+                    run_config=config)
         
         response_content = result.final_output
         
         # Update the thinking message with the actual response
         msg.content = response_content
         await msg.update()
-
-        # Append the assistant's response to the history.
-        history.append({"role": "developer", "content": response_content})
-        # NOTE: Here we are appending the response to the history as a developer message.
-        # This is a BUG in the agents library.
-        # The expected behavior is to append the response to the history as an assistant message.
     
         # Update the session with the new history.
-        cl.user_session.set("chat_history", history)
+        cl.user_session.set("chat_history", result.to_input_list())
         
         # Optional: Log the interaction
         print(f"User: {message.content}")
