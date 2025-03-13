@@ -1,3 +1,5 @@
+
+🚀 **[Open in Google Colab](https://colab.research.google.com/drive/1gmj2g515XHCKMhXRc58vBU6Rc9x5xykd?usp=sharing)**
 # Streamed Agent Output Examples
 
 This README demonstrates how to implement and interpret streamed output from agents using Python's asynchronous features and the hypothetical `agents` library.
