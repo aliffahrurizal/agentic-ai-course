@@ -1,14 +1,18 @@
-The OpenAI Agents SDK is an open‐source, lightweight framework that lets developers build and orchestrate “agentic” AI applications—systems where multiple AI “agents” work together to perform complex, multi-step tasks autonomously. Here are the key details:
-
----
-
-### Core Concepts
+The OpenAI Agents SDK is an open‐source, lightweight framework that lets developers build and orchestrate “agentic” AI applications—systems where multiple AI “agents” work together to perform complex, multi-step tasks autonomously. 
 
 **[OpenAI Agents SDK Docs](https://openai.github.io/openai-agents-python/)**
 
 **[OpenAI’s strategic gambit: The Agents SDK and why it changes everything for enterprise AI](https://venturebeat.com/ai/openais-strategic-gambit-the-agent-sdk-and-why-it-changes-everything-for-enterprise-ai/)**
 
 https://github.com/aurelio-labs/cookbook/blob/main/gen-ai/openai/agents-sdk-intro.ipynb
+
+Here are the key details:
+
+---
+
+### Core Concepts : The Power of Simplicity in Design
+
+What truly sets the Agents SDK apart is its thoughtful balance of simplicity and power. The SDK is built around four core primitives:
 
 - **Agents:**  
   These are language models (LLMs) that are preconfigured with specific instructions, access to tools (like web search or file retrieval), and even safety guardrails. Agents can generate responses and decide which tool to call based on the context.  
@@ -23,7 +27,9 @@ https://github.com/aurelio-labs/cookbook/blob/main/gen-ai/openai/agents-sdk-intr
   
 
 - **Tracing & Observability:**  
-  The SDK includes integrated tracing capabilities that allow developers to visualize and debug the flow of an agent’s actions. This is particularly useful for monitoring complex workflows and optimizing performance.  
+  The SDK includes integrated tracing capabilities that allow developers to visualize and debug the flow of an agent’s actions. This is particularly useful for monitoring complex workflows and optimizing performance.
+
+This minimalist approach makes the SDK approachable for newcomers while providing enough flexibility for experienced developers to build sophisticated systems. The built-in tracing capabilities further enhance the development experience by making it easy to visualize, debug, and evaluate agent workflows.
   
 
 ---
