@@ -6,6 +6,8 @@ The OpenAI Agents SDK is an open‐source, lightweight framework that lets devel
 
 **[Learn how to build agents with the OpenAI.](https://platform.openai.com/docs/guides/agents-sdk)**
 
+**[OpenAI’s strategic gambit: The Agents SDK and why it changes everything for enterprise AI](https://venturebeat.com/ai/openais-strategic-gambit-the-agent-sdk-and-why-it-changes-everything-for-enterprise-ai/)**
+
 https://github.com/aurelio-labs/cookbook/blob/main/gen-ai/openai/agents-sdk-intro.ipynb
 
 - **Agents:**  
