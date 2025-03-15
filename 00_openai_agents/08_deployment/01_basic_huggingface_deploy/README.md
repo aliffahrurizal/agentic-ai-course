@@ -35,17 +35,13 @@ This guide outlines the process of deploying a Chainlit application using Docker
 
 ### 2. Local Development Setup
 
-1. Create a virtual environment:
+1. Install UV package manager
+
+2. Create a virtual environment:
    ```bash
-   python -m venv .venv
+   uv venv
    .venv\Scripts\activate  # On Mac: source .venv/bin/activate
    ```
-
-2. Install UV package manager:
-   ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
-
 3. Install dependencies:
    ```bash
    uv sync
