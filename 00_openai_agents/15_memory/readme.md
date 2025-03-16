@@ -9,6 +9,7 @@ Here's a breakdown of the memory types and how they relate to agentic workflows:
 **1. Memory Types in Agentic Frameworks:**
 
 * **Episodic Memory:**
+    * Stores individual interaction “episodes” or past events.
     * This stores specific, personal experiences or "episodes" of the agent's interaction with the environment or users.
     * Think of it as a log of what the agent has done and observed.
     * In an OpenAI Agents SDK context, this could involve storing:
@@ -19,6 +20,7 @@ Here's a breakdown of the memory types and how they relate to agentic workflows:
     * Example: "At 2:30 PM, the user asked for the weather in London, and I called the weather API, which returned 15 degrees Celsius."
 
 * **Semantic Memory:**
+    * Stores facts, user profiles, and external knowledge.
     * This stores general knowledge and facts about the world.
     * It's about understanding concepts, relationships, and meanings.
     * In the Agents SDK, this could be:
@@ -28,8 +30,10 @@ Here's a breakdown of the memory types and how they relate to agentic workflows:
     * Example: "London is the capital of the United Kingdom." or "The capital of France is Paris."
 
 * **Procedural Memory:**
+    * Holds the agent’s “how-to” information, such as system instructions and operational rules.
     * This stores knowledge about how to do things, or "procedures."
     * It's about skills, habits, and learned behaviors.
+    * It's is used to update your system prompt dynamically.
     * In the Agents SDK, this could involve:
         * Storing sequences of actions or tool calls that have been successful in the past.
         * Learning and refining strategies for achieving specific goals.
@@ -37,6 +41,7 @@ Here's a breakdown of the memory types and how they relate to agentic workflows:
     * Example: "To get the weather, first, call the weather API with the city name, then parse the temperature from the response."
 
 * **Temporal Memory:**
+    * Captures the order and timing of events or interactions.
     * This is related to the agents ability to track and understand the passage of time, and the order of events.
     * This is often tightly coupled with episodic memory, but can also be considered it's own type.
     * In the Agents SDK, this would include.
@@ -63,6 +68,22 @@ Here's a breakdown of the memory types and how they relate to agentic workflows:
         * File storage.
         * Knowledge graphs.
     * This is the memory that the agent uses to inform it's actions over multiple conversations.
+    * Memory updates are performed asynchronously. A separate process gathers and organizes new information after the primary response is generated, which decouples memory maintenance from the immediate conversation flow and reduces latency.
+
+**3. You can:**
+
+* **Configure Memory Stores:**
+Set up persistent memory stores (such as vector databases, graph databases or JSON-based stores) for each type of memory. Semantic and episodic memories are often stored for retrieval during future interactions, while procedural memory is used to update your system prompt dynamically.
+
+* **Customize Update Strategies:**
+Choose between hot path updates for immediate context enrichment and background processes for less time-critical memory updates. This flexibility lets you balance performance and context preservation based on your application’s needs.
+
+* **Leverage Memory in Prompts:**
+When constructing your system prompt for an agent call, you can inject relevant memories—whether they are high-level summaries (from episodic memory) or key facts (from semantic memory)—to make responses more context-aware and personalized. Temporal memory helps ensure that the most recent interactions carry appropriate weight.
+
+By combining these different memory types and update mechanisms, your agent becomes better equipped to maintain a coherent, contextually rich conversation over long interactions, adapt its behavior based on past events, and improve over time.
+
+This layered memory design is one of the key innovations in building robust agentic systems with the OpenAI Agents SDK. It helps transform a stateless model into one that is dynamically adaptive and contextually aware, closely mimicking how human memory contributes to intelligent behavior.
 
 **Applying this to OpenAI Agents SDK:**
 
