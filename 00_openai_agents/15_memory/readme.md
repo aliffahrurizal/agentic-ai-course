@@ -13,14 +13,14 @@ Here's a breakdown of the memory types and how they relate to agentic workflows:
     * This stores specific, personal experiences or "episodes" of the agent's interaction with the environment or users.
     * Think of it as a log of what the agent has done and observed.
     * In an OpenAI Agents SDK context, this could involve storing:
-        * User inputs and agent responses.
+        * **User inputs and agent responses.**
         * API call results.
         * Observations from tools the agent used.
         * Timestamps associated with each event.
     * Example: "At 2:30 PM, the user asked for the weather in London, and I called the weather API, which returned 15 degrees Celsius."
 
 * **Semantic Memory:**
-    * Stores facts, user profiles, and external knowledge.
+    * Stores facts, **user profiles**, and external knowledge.
     * This stores general knowledge and facts about the world.
     * It's about understanding concepts, relationships, and meanings.
     * In the Agents SDK, this could be:
@@ -44,11 +44,15 @@ Here's a breakdown of the memory types and how they relate to agentic workflows:
     * Captures the order and timing of events or interactions.
     * This is related to the agents ability to track and understand the passage of time, and the order of events.
     * This is often tightly coupled with episodic memory, but can also be considered it's own type.
+    * It can be updated using a dynamic, temporally-aware knowledge graph that continuously integrates new information while tracking how relationships and facts evolve over time.
+    * Bi-Temporal Modeling: Instead of a single timeline, the system employs dual time-tracking. One timeline captures the actual occurrence of events (when facts were valid), while a second timeline records the order in which data was ingested. This dual approach allows the memory layer to mark outdated information as invalid when new, conflicting data is received.
+    * Dynamic Knowledge Integration: As new interactions occur or business data changes, the system extracts facts and relationships from both unstructured and structured sources. These facts are enriched with temporal metadata—such as timestamps indicating when a fact became valid and when it was superseded—ensuring that only current and relevant information is used.
+    * Hybrid Retrieval: For efficient recall, the memory layer combines semantic similarity search, full-text retrieval, and graph-based queries. This hybrid approach ensures that the most pertinent, time-sensitive context is retrieved quickly, while also preserving the underlying relationships between entities.
     * In the Agents SDK, this would include.
         * Timestamps on all events.
         * The ability to understand "before" and "after" relationships.
         * The ability to understand time based context for actions.
-    * Example: "The user asked about the weather, then 5 minutes later, asked about restaurants."
+    
 
 **2. Memory Mechanisms:**
 
@@ -83,7 +87,7 @@ When constructing your system prompt for an agent call, you can inject relevant 
 
 By combining these different memory types and update mechanisms, your agent becomes better equipped to maintain a coherent, contextually rich conversation over long interactions, adapt its behavior based on past events, and improve over time.
 
-This layered memory design is one of the key innovations in building robust agentic systems with the OpenAI Agents SDK. It helps transform a stateless model into one that is dynamically adaptive and contextually aware, closely mimicking how human memory contributes to intelligent behavior.
+**This layered memory design is one of the key innovations in building robust agentic systems with the OpenAI Agents SDK. It helps transform a stateless model into one that is dynamically adaptive and contextually aware, closely mimicking how human memory contributes to intelligent behavior.**
 
 **Applying this to OpenAI Agents SDK:**
 
