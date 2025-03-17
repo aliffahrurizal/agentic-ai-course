@@ -2,6 +2,8 @@
 
 https://openai.github.io/openai-agents-python/ref/agent/#agents.agent.Agent.as_tool
 
+Interestingly, you can turn other agents into tools. This allows one agent to call another for assistance without fully handing off control. The orchestrator agent uses the other agents as a tool, depending on the user’s request, while retaining oversight.
+
 The `as_tool` method in OpenAI's Agents SDK allows you to transform an `Agent` instance into a callable tool that other agents can utilize. This feature facilitates the creation of modular and interactive AI systems where agents can delegate tasks among themselves.
 
 This is different from handoffs in two ways: 

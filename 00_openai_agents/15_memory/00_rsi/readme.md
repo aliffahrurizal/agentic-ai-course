@@ -69,10 +69,7 @@ To sum up:
 
 ## **How RSI Drives AGI:**
 
-
 The relationship between Recursive Self-Improvement (RSI) and Artificial General Intelligence (AGI) is very close. In essence, RSI is seen by many as a key mechanism by which AGI could truly come into its own. Here's how achieving RSI would significantly aid in the pursuit of AGI:
-
-
 
 * **Accelerated Intelligence Growth:**
     * AGI aims for human-level general intelligence. RSI allows an AI to surpass that level by continually enhancing its own cognitive abilities. This rapid, iterative improvement could lead to an "intelligence explosion," where the AI's capabilities increase exponentially.
