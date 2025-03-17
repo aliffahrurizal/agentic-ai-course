@@ -4,6 +4,9 @@
 
 [Core Concepts](https://langchain-ai.github.io/langmem/concepts/conceptual_guide/)
 
+We will use this course to learn concepts: [Course: Long-Term Agentic Memory with LangGraph](https://www.deeplearning.ai/short-courses/long-term-agentic-memory-with-langgraph/)
+
+
 Let's clarify and refine the understanding of memory types within the context of agentic frameworks, specifically with an eye towards how they might be implemented using tools like the OpenAI Agents SDK.
 
 Here's a breakdown of the memory types and how they relate to agentic workflows:
