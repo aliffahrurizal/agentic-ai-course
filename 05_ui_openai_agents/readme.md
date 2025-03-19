@@ -81,6 +81,7 @@ Developing user interfaces (UIs) for AI agents is crucial for making them access
     * Demonstrating the capabilities of AI agents.
     * Building interactive demos for machine learning models.
     * Creating simple web applications for model testing.
+    * [Introduced FastRTC, a new way to build real-time AI apps](https://fastrtc.org/)
 
 **4. Next.js and FastAPI (Dockerized):**
 
