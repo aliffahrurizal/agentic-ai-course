@@ -1,4 +1,7 @@
 # Traces on Local Machine
+
+🚀 **[Open in Google Colab](https://colab.research.google.com/drive/1BQhJc7o4UbPPy_5OWidmpA37TclaI1jy?usp=sharing)**
+
 ```python
 import os
 from openai import AsyncOpenAI
