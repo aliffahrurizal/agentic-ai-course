@@ -1,4 +1,6 @@
-# Anthrophic Agentic Design Patterns with OpenAI Agentic SDK
+# Agentic Design Patterns with OpenAI Agents SDK
+
+[Orchestrating multiple agents using OpenAI Agents SDK ](https://openai.github.io/openai-agents-python/multi_agent/)
 
 [Building effective agents By Anthropic](https://www.anthropic.com/research/building-effective-agents)
 
