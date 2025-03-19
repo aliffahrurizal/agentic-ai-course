@@ -1,6 +1,6 @@
 # Agentic Long Term Memory in OpenAI Agentic 
 
-[Different Types of Memories in Agentic Framework](https://www.linkedin.com/pulse/different-types-memories-agentic-framework-gourav-g--shdxc/)((
+[Different Types of Memories in Agentic Framework](https://www.linkedin.com/pulse/different-types-memories-agentic-framework-gourav-g--shdxc/)
 
 [Core Concepts](https://langchain-ai.github.io/langmem/concepts/conceptual_guide/)
 
