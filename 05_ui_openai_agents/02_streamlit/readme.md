@@ -1,6 +1,8 @@
 # Learn Streamlit
 
-We will learn from these resources:
+[Streamlit Agent](https://github.com/coleam00/ottomator-agents/blob/main/openai-sdk-agent/v6_streamlit_agent.py)
+
+Now let us learn streamlitWe from chapters and these resources:
 
 [A Beginners Guide To Streamlit](https://www.geeksforgeeks.org/a-beginners-guide-to-streamlit/)
 

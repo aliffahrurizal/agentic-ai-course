@@ -2,7 +2,9 @@
 
 The OpenAI Agents SDK is an open‐source, lightweight framework that lets developers build and orchestrate “agentic” AI applications—systems where multiple AI “agents” work together to perform complex, multi-step tasks autonomously. 
 
-**[OpenAI Agents SDK Classes Video Playlist](https://www.youtube.com/playlist?list=PL0vKVrkG4hWovpr0FX6Gs-06hfsPDEUe6)**
+**[OpenAI Agents SDK Panaversity Classes Video Playlist](https://www.youtube.com/playlist?list=PL0vKVrkG4hWovpr0FX6Gs-06hfsPDEUe6)**
+
+**[Watch: OpenAI’s BRAND NEW Agents SDK (Crash Course)](https://www.youtube.com/watch?v=e7qvd2bOITc&t=4s)
 
 **[OpenAI Agents SDK Docs](https://openai.github.io/openai-agents-python/)**
 
