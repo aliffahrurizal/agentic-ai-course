@@ -14,6 +14,29 @@ The OpenAI Agents SDK is an open‐source, lightweight framework that lets devel
 
 https://github.com/aurelio-labs/cookbook/blob/main/gen-ai/openai/agents-sdk-intro.ipynb
 
+## Questions to Start Thinking
+
+OpenAI Agents SDK is designed very well, I have some questions so that you start thinking about the code:
+
+1. The Agent class has been defined as a dataclass why?
+
+Check the source code of Agent: https://openai.github.io/openai-agents-python/ref/agent/
+
+2a. The system prompt is contained in the Agent class as instructions? Why you can also set it as callable?
+
+2b. But the user prompt is passed as parameter in the run method of Runner and the method is a classmethod
+
+Check this out: https://openai.github.io/openai-agents-python/ref/run/
+
+3. What is the purpose of the Runner class?
+
+4. What are generics in Python? Why we use it for TContext?
+
+
+Note: Check out the source code to understand.
+
+
+
 Here are the key details:
 
 ---
