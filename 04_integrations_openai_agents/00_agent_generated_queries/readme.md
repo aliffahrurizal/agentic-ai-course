@@ -1,8 +1,8 @@
 # Designing Database Interaction in OpenAI Agents SDK: Dynamic Query Generation vs. Predefined Queries
 
-[Deep Research Report](https://g.co/gemini/share/6567c94ed4e2)
+**[Deep Research Report](https://g.co/gemini/share/6567c94ed4e2)**
 
-[Audio Overview](https://g.co/gemini/share/66d2de3fea98)
+**[Audio Overview](https://g.co/gemini/share/66d2de3fea98)**
 
 When integrating database interactions within OpenAI's Agents SDK, developers face a crucial decision: should the agent dynamically generate SQL queries based on the database schema, or should predefined queries be embedded within the tool functions? Each approach has its own set of advantages and challenges.
 

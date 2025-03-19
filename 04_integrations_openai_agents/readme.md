@@ -1,8 +1,8 @@
 # Enhancing AI Agent Capabilities: Integrating OpenAI Agents SDK with Diverse Data Sources and External APIs
 
-[Deep Research Report](https://g.co/gemini/share/6915140a090c)
+**[Deep Research Report](https://g.co/gemini/share/6915140a090c)**
 
-[Deep Research Audio](https://g.co/gemini/share/758fdbe02978)
+**[Deep Research Audio](https://g.co/gemini/share/758fdbe02978)**
 
 **Abstract:**
 
