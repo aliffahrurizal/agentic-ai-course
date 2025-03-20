@@ -6,6 +6,8 @@ https://platform.openai.com/docs/api-reference/responses
 
 [Web Search and States with Responses API](https://cookbook.openai.com/examples/responses_api/responses_example)
 
+[Doing RAG on PDFs using File Search in the Responses API](https://cookbook.openai.com/examples/file_search_responses)
+
 ## Step 1: Installation
 
 Install the OpenAI Python library using `uv`:
