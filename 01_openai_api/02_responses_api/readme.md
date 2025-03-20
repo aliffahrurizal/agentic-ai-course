@@ -4,6 +4,8 @@ https://platform.openai.com/docs/guides/text?api-mode=responses
 
 https://platform.openai.com/docs/api-reference/responses
 
+[Web Search and States with Responses API](https://cookbook.openai.com/examples/responses_api/responses_example)
+
 ## Step 1: Installation
 
 Install the OpenAI Python library using `uv`:
