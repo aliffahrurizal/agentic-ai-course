@@ -1,4 +1,4 @@
-# Agentic Long Term Memory in OpenAI Agentic 
+# Long Term Memory with OpenAI Agents SDK 
 
 [Different Types of Memories in Agentic Framework](https://www.linkedin.com/pulse/different-types-memories-agentic-framework-gourav-g--shdxc/)
 
