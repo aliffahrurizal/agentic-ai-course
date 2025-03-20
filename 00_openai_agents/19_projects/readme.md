@@ -19,3 +19,8 @@ https://www.datacamp.com/tutorial/openai-agents-sdk-tutorial
 https://cookbook.openai.com/examples/agents_sdk/dispute_agent
 
 
+## Project 4: "Agento": A Modular AI Planning System
+
+The "Agento" project showcases how the OpenAI Agents SDK can be used to turn broad goals into structured, actionable plans with iterative polish. Literally, you can start this sucker off with ANY goal or idea you can think of and it will go to work on it for you. Dive into the details and grab the starter code here, and improve this code:
+
+https://github.com/dazzaji/agento6
