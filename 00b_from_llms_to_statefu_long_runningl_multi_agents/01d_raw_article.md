@@ -1,6 +1,6 @@
 # From LLMs to Stateful Long Running Multi-Agent Systems
 
-Note: This article was manually crafted by our team.
+**Note: This article was manually crafted by our team.**
 
 ## From LLMs to Multi-Agent Systems
 
