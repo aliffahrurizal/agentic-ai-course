@@ -71,7 +71,7 @@ This combo leverages OpenAI’s cutting-edge API and AutoGen’s multi-agent pro
 ## Long-Term Stateful Agentic Workflows  
 A multi-agent system designed to track a project over months could utilize Serverless Containers, Step Functions, or Kubernetes for agent execution, Amazon S3 for file storage, Neon Postgres for structured data, Neo4j for graph-based relationships, and Apache Kafka for message passing—though this comes with a steep learning curve.  
 
-LangGraph Cloud offers a managed platform for stateful agent workflows, built on cloud infrastructure.
+LangGraph Cloud and Microsoft AutoGen Runtime offers a managed platform for stateful agent workflows, built on cloud infrastructure.
 
 ### Detailed Explanation
 
@@ -111,27 +111,22 @@ The paragraph lists a plausible stack for such workflows. Let’s validate each 
     - Messaging systems (e.g., Kafka producers/consumers, topic partitioning).
   - **Implication**: For teams without DevOps or distributed systems experience, this complexity can delay deployment, making simpler alternatives appealing.
 
-#### 3. LangGraph Cloud as a Hosted Solution
-- **What It Is**: LangGraph Cloud, launched by LangChain in early 2025, is a managed platform for building and running stateful agent workflows. It abstracts the complexity of the above stack.
+#### 3. LangGraph Cloud and Microsoft AutoGen Runtime as a Hosted Solution
+- **What It Is**: LangGraph Cloud, launched by LangChain in early 2025, and Microsoft AutoGen Runtime (to be announced soon) are managed platforms for building and running stateful agent workflows. It abstracts the complexity of the above stack.
 - **Features**:
   - **State Management**: Persists agent states (e.g., via a built-in database or integrations like Redis).
-  - **Execution**: Runs agents on scalable cloud infrastructure (likely AWS-based, given LangChain’s ecosystem).
+  - **Execution**: Runs agents on scalable cloud infrastructure (likely AWS-based, given LangChain’s ecosystem) in case of LangGraph Cloud and Azure in case of Microsoft AutoGen Runtime.
   - **Tool Integration**: Supports LLM-driven tool calling (e.g., Responses API, MCP).
   - **Monitoring**: Offers tracing and debugging (e.g., LangSmith integration).
 - **Why It Fits**: It simplifies deployment by:
   - Eliminating manual setup of Kubernetes, Kafka, etc.
   - Providing a unified API for agent orchestration.
   - Leveraging cloud scalability and reliability out of the box.
-- **Evidence**: LangChain’s documentation (March 2025 updates) and X posts from developers highlight its use for long-running workflows, positioning it as a competitor to custom stacks or AutoGen’s runtime.
+- **Evidence**: LangChain’s documentation (March 2025 updates) and X posts from developers highlight its use for long-running workflows, positioning it as a competitor to custom stacks.
 
 #### 4. Why This Makes Sense
 - **Custom Stack**: The listed technologies (Serverless Containers, S3, Neon, Neo4j, Kafka) are industry-standard for distributed, stateful systems—common in enterprise-grade applications beyond AI (e.g., microservices). They meet the needs of persistence, scalability, and coordination for long-term agentic workflows.
-- **LangGraph Cloud**: For teams prioritizing speed and simplicity, it abstracts this complexity into a managed service, reducing the learning curve while retaining cloud benefits.
-
-### Detailed Validation
-- **As of March 22, 2025**: 
-  - Neon Postgres is a rising serverless DB (fully launched 2024), Neo4j is established for graphs, and Kafka remains a messaging gold standard—current and relevant choices.
-  - LangGraph Cloud’s rollout aligns with LangChain’s push for production-ready agent tools (post-LangGraph OSS in 2024), supported by community adoption.
+- **LangGraph Cloud and Microsoft AutoGen Runtime**: For teams prioritizing speed and simplicity, it abstracts this complexity into a managed service, reducing the learning curve while retaining cloud benefits.
 
 ## Supplementary Supporting Technologies
 
@@ -142,7 +137,7 @@ The paragraph lists a plausible stack for such workflows. Let’s validate each 
 - **/llms.txt**: /llms.txt is used to provide a concise, LLM-friendly summary of a website’s key information in a standardized Markdown file, enabling AI agents to efficiently access and process relevant content without parsing complex HTML pages.
 
 ### Our Full Agentic Stack
-Our Agentic AI technology stack is built on the OpenAI Responses API as the foundation, layered with the OpenAI Agents SDK for orchestration. Microsoft AutoGen enhances this with additional multi-agent capabilities for enterprise use, while LangGraph Cloud provides the infrastructure to deploy and scale it effectively.  
+Our Agentic AI technology stack is built on the OpenAI Responses API as the foundation, layered with the OpenAI Agents SDK for orchestration. Microsoft AutoGen enhances this with additional multi-agent capabilities for enterprise use, while LangGraph Cloud and Microsoft AutoGen Runtime provides the infrastructure to deploy and scale it effectively.  
 
 - **Agentic Fit**: These components align with Anthropic’s agent patterns (e.g., orchestrator-workers over months) and leverage the Responses API’s multi-tool functionality.
 
@@ -159,8 +154,8 @@ Our Agentic AI technology stack is built on the OpenAI Responses API as the foun
 3. **Microsoft AutoGen**:
    - **Role**: Extends the SDK with flexible multi-agent orchestration, supporting diverse prebuilt patterns (v0.4+).
 
-4. **LangGraph Cloud**:
-   - **Role**: Managed platform for stateful workflows, abstracting scaling and persistence (early 2025 launch).
+4. **LangGraph Cloud and Microsoft AutoGen Runtime**:
+   - **Role**: Managed platform for stateful workflows, abstracting scaling and persistence.
    - **Why Correct**: Provides cloud deployment, reducing the need for custom infra (e.g., Kubernetes), though it’s a service, not raw infrastructure.
 
 5. **Agentic Fit**:
@@ -168,4 +163,4 @@ Our Agentic AI technology stack is built on the OpenAI Responses API as the foun
 
 ### Conclusion
 
-This is a viable agentic AI stack as of March 22, 2025. It balances OpenAI’s ecosystem (Responses API, SDK) with AutoGen’s flexibility and LangGraph Cloud’s scalability, aligning with modern agentic design principles. 
+This is a viable agentic AI stack as of March, 2025. It balances OpenAI’s ecosystem (Responses API, SDK) with AutoGen’s flexibility and LangGraph Cloud’s and Microsoft AutoGen Runtime scalability, aligning with modern agentic design principles. 
