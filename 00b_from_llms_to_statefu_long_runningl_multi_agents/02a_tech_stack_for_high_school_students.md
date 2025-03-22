@@ -1,4 +1,4 @@
-### Building Smart Helpers: A Simple Guide to Agentic AI for High Schoolers
+# Building Smart Helpers: A Simple Guide to Agentic AI for High Schoolers
 
 Imagine a team of super-smart robot helpers that can plan your homework, find answers online, and even work together over months to finish a big school project—all without you telling them every single step. That’s what **Agentic AI** is all about! In 2025, companies are starting to use these helpers, and they’re built with some cool tools. Let’s explore how they work in a way anyone can understand—no tech know-how needed!
 
