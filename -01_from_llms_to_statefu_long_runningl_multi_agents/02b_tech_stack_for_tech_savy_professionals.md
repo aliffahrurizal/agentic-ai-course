@@ -38,13 +38,13 @@ The **OpenAI Agents SDK**, released alongside the Responses API, layers orchestr
 
 ---
 
-#### Deployment: LangGraph Cloud – Scalable Stateful Infrastructure
+#### Deployment: LangGraph Cloud and Microsoft AutoGen Runtime – Scalable Stateful Infrastructure
 
-**LangGraph Cloud** (early 2025, LangChain) provides the infrastructure for deploying and scaling long-term, stateful agentic workflows.
+**LangGraph Cloud (early 2025, LangChain) and Microsoft AutoGen Runtime (to be announced soon)** provides the infrastructure for deploying and scaling long-term, stateful agentic workflows.
 
-- **Role**: A managed platform abstracting execution, state persistence (e.g., via Redis or internal DBs), and tool integration, with tracing via LangSmith.
+- **Role**: A managed platform abstracting execution, state persistence, and tool integration.
 - **Value**: Eliminates the need for bespoke cloud setups, offering scalability and reliability for multi-agent systems running over weeks or months.
-- **Context**: A competitor to custom stacks or AutoGen’s runtime, it’s ideal for teams prioritizing deployment speed over granular control.
+- **Context**: A competitor to custom stacks, it’s ideal for teams prioritizing deployment speed over granular control.
 
 ---
 

@@ -1,4 +1,4 @@
-### Building Smart Helpers: A Simple Guide to Agentic AI for High Schoolers
+# Building Smart Helpers: A Simple Guide to Agentic AI for High Schoolers
 
 Imagine a team of super-smart robot helpers that can plan your homework, find answers online, and even work together over months to finish a big school project—all without you telling them every single step. That’s what **Agentic AI** is all about! In 2025, companies are starting to use these helpers, and they’re built with some cool tools. Let’s explore how they work in a way anyone can understand—no tech know-how needed!
 
@@ -37,12 +37,12 @@ It’s not the only way to do this, but it’s a great add-on to make our helper
 
 ---
 
-#### The Big Stage: LangGraph Cloud – Keeping Helpers Running Long-Term
+#### The Big Stage: LangGraph Cloud and Microsoft AutoGen Runtime – Keeping Helpers Running Long-Term
 
-For helpers that need to work for weeks or months—like tracking a group project—we use **LangGraph Cloud**. It’s like a big, safe playground where they can live and grow.
+For helpers that need to work for weeks or months—like tracking a group project—we use **LangGraph Cloud and/or AutoGen Runtime**. It’s like a big, safe playground where they can live and grow.
 
-- **What It Does**: It keeps all the helpers’ memories (like what they’ve done so far) and makes sure they don’t stop working, even if lots of people need them at once. It’s run online by a company called LangChain, launched in early 2025.
-- **Why It’s Cool**: Without this, our helpers might forget things or slow down. LangGraph Cloud makes them reliable and strong, like moving from a toy car to a real truck.
+- **What It Does**: It keeps all the helpers’ memories (like what they’ve done so far) and makes sure they don’t stop working, even if lots of people need them at once. It’s run online by a company called LangChain and Microsoft.
+- **Why It’s Cool**: Without this, our helpers might forget things or slow down. LangGraph Cloud and Microsoft AutoGen Runtime makes them reliable and strong, like moving from a toy car to a real truck.
 
 ---
 
@@ -80,7 +80,7 @@ Here’s how our helper team looks:
 - **Brain**: OpenAI Responses API lets them think and act.
 - **Team Leader**: OpenAI Agents SDK organizes them.
 - **Muscle**: Microsoft AutoGen makes them tough for big jobs.
-- **Stage**: LangGraph Cloud keeps them going strong over time.
+- **Stage**: LangGraph Cloud and Microsoft AutoGen Runtime keeps them going strong over time.
 
 Plus, those bonus tools (memory, MCP, etc.) make them extra awesome. This team can do simple stuff like homework or big stuff like running a club—all while learning and adapting, just like a real team!
 
