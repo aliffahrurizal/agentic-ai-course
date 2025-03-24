@@ -1,4 +1,4 @@
-# Full-Stack AI Agents with v0 and FastAPI
+# Full-Stack AI Agents with v0 (Next.js), FastAPI, and OpenAI Agents SDK
 
 ## v0 by Vercel
 
