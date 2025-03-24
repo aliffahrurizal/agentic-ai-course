@@ -62,7 +62,7 @@ For users, OpenRouter's value lies in its cost-effectiveness and broad model sel
 | Pricing Model            | Pay-per-use based on tokens, some models free, transparent pricing          |
 | Additional Features      | Playground for testing, streaming support, optional prompt logging          |
 
-This comprehensive overview ensures users have all necessary details to leverage OpenRouter effectively, aligning with its growing prominence in the AI development landscape as of March 24, 2025.
+This comprehensive overview ensures users have all necessary details to leverage OpenRouter effectively, aligning with its growing prominence in the AI development landscape as of March, 2025.
 
 ---
 
