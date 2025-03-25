@@ -34,7 +34,7 @@ https://ai.google.dev/gemini-api/docs/openai
 
 https://github.com/panaversity/learn-agentic-ai/tree/main/01_openai_agents/03_hello_agent
 
-OpenRounter APIs will server as a backup for development, and testing, in addition use it to test other models quickly as well.
+OpenRounter APIs will server as a backup for development, and testing a lot of other models quickly.
 
 
 ---
