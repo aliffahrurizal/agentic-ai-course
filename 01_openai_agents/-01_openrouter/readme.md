@@ -1,5 +1,7 @@
 # OpenRouter: A Unified Interface for 50 Free LLMs
 
+| [**Code Example:** Basic and OpenAI Agents SDK with OpenRouter](https://colab.research.google.com/drive/1LOEOBP52WJpmMWsOS7-SUDQBLtmXZ_1d?usp=sharing)
+
 The OpenRouter supports the latest DeepSeek V3 0324 and 50+ other models for free. Most of them support the defacto standard: OpenAI Chat Completion API.
 
 https://openrouter.ai/deepseek/deepseek-chat-v3-0324:free
