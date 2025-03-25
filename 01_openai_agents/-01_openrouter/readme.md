@@ -32,6 +32,7 @@ Google Gemini also now support OpenAI Chat Completion API, thus we can use it wi
 
 https://ai.google.dev/gemini-api/docs/openai
 
+https://github.com/panaversity/learn-agentic-ai/tree/main/01_openai_agents/03_hello_agent
 
 OpenRounter APIs will server as a backup for development, and testing, in addition use it to test other models quickly as well.
 
