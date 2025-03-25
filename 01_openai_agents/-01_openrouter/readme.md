@@ -8,6 +8,29 @@ Check out [OpenRouter Quickstart Guide](https://openrouter.ai/docs/quickstart) a
 
 ---
 
+## Rate Limits
+
+LLMs API rate limits are measured across several dimensions:
+
+1. Requests per minute (RPM)   
+2. Tokens per minute (TPM)   
+3. Requests per day (RPD)
+
+### OpenRouters Free Models Rata Limits
+
+OpenRouter’s free models typically have a global limit of 200 requests per day (RPD) across all free models, with some also capped at 20 requests per minute (RPM), as noted in their documentation. These limits apply to models with IDs ending in :free.
+
+### Google Gemini Rata Limits for Free Tier
+
+https://ai.google.dev/gemini-api/docs/rate-limits
+
+Free Tier of Gemini 2.0 Flash and Gemini 2.0 Flash-Lite have a limit of 1,5OO requests per day (RPD), while the limit for request per minitue (RPM) is 15 for Flash and 30 for Flash lite. There is also a cap of 1,000,000 Tokens per minute (TPM) for both the models.
+
+For development and testing 1,5OO requests per day (RPD) is good enough, therefore **for development and test we will be using the Google Gemini 2.0 Flash and Gemini 2.0 Flash-Lite model**. Both these models are also compatiable with OpenAI Chat Completion API and OpenAI Agents SDK. OpenRountes rate limit of 200 requests per day (RPD) across all free models is too restrictive for development and test.
+
+
+---
+
 ### What is OpenRouter?
 OpenRouter is a platform that provides a unified way to access a wide range of large language models (LLMs) from multiple providers, including both commercial options like OpenAI and Anthropic, and open-source models like Mistral and LLaMA. It simplifies using these models by offering a single API endpoint, allowing developers to switch between models without changing their code. The platform also optimizes for cost, performance, and availability by routing requests to the best provider based on factors like price, latency, and uptime.
 
