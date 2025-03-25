@@ -1,6 +1,6 @@
 # OpenRouter: A Unified Interface for 50 Free LLMs
 
-The OpenRouter supports the latest DeepSeek V3 0324 and 50+ other models for free.
+The OpenRouter supports the latest DeepSeek V3 0324 and 50+ other models for free. Most of them support the defacto standard: OpenAI Chat Completion API.
 
 https://openrouter.ai/deepseek/deepseek-chat-v3-0324:free
 
@@ -85,7 +85,7 @@ For users, OpenRouter's value lies in its cost-effectiveness and broad model sel
 | Pricing Model            | Pay-per-use based on tokens, some models free, transparent pricing          |
 | Additional Features      | Playground for testing, streaming support, optional prompt logging          |
 
-This comprehensive overview ensures users have all necessary details to leverage OpenRouter effectively, aligning with its growing prominence in the AI development landscape as of March 24, 2025.
+This comprehensive overview ensures users have all necessary details to leverage OpenRouter effectively, aligning with its growing prominence in the AI development landscape as of March, 2025.
 
 ---
 
