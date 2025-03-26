@@ -6,6 +6,8 @@
 
 2025 is being considered the year of Agentic AI. It is during this year enterprises will start developing and deploying AI Agents for automating their workflows. Now the question is what features and capabilities these AI Agents will have?
 
+![Agent Orchestration Layer](./agent-orchestration-layer.png)
+
 ### Definition of AI Agents:
 
 > "AI agents are large language models (LLMs) that operate in an iterative loop, utilizing tools and environmental feedback (such as tool call results) to autonomously plan and execute actions toward a goal, often incorporating human checkpoints to ensure alignment and oversight."

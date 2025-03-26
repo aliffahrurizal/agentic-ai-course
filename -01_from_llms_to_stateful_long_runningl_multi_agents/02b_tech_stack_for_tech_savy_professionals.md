@@ -6,6 +6,8 @@ Below is a article tailored for a tech-savvy professional audience. It assumes f
 
 As agentic AI gains traction in 2025, enterprises are adopting sophisticated technology stacks to build autonomous, multi-agent systems. This article outlines our stack—anchored by OpenAI’s Responses API and Agents SDK, enhanced by Microsoft AutoGen, and deployed via LangGraph Cloud—along with supplementary tools for memory, interoperability, and long-term stateful workflows.
 
+![Agent Orchestration Layer](./agent-orchestration-layer.png)
+
 ---
 
 #### Foundation: OpenAI Responses API – Core LLM Capabilities

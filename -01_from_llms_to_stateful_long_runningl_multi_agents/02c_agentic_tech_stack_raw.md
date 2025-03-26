@@ -4,6 +4,8 @@
  
 The OpenAI Responses API serves as a key foundation for developing agentic AI systems, offering advanced capabilities for autonomous task execution. The OpenAI Agents SDK complements this by providing a powerful framework to orchestrate multi-agent workflows using the Responses API. Together, these two components form the core pillars of our technology stack for building agentic AI.
 
+![Agent Orchestration Layer](./agent-orchestration-layer.png)
+
 ### Detailed Explanation
 
 Let’s break down each part of the above paragraph and explain why it’s accurate and how it relates to the broader context:

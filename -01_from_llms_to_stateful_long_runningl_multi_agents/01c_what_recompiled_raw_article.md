@@ -4,6 +4,8 @@
 
 2025 is shaping up to be the year of **Agentic AI**, marking a significant transition as enterprises increasingly adopt AI Agents to automate complex workflows. This raises a key question: what exactly are these AI Agents, and what capabilities should we expect from them?
 
+![Agent Orchestration Layer](./agent-orchestration-layer.png)
+
 ---
 
 ## Understanding AI Agents

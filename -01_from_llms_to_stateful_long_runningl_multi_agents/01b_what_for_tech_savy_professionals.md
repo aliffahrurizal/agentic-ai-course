@@ -2,6 +2,8 @@
 
 Below is a rewritten version of the raw article tailored for a tech-savvy professional audience. It assumes familiarity with concepts like APIs, LLMs, and cloud infrastructure, diving deeper into technical details, frameworks, and implications while maintaining clarity and avoiding unnecessary simplification.
 
+![Agent Orchestration Layer](./agent-orchestration-layer.png)
+
 ---
 
 ### From LLMs to Stateful, Long-Running Multi-Agent Systems: The Evolution of Agentic AI

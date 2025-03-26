@@ -4,6 +4,8 @@
 
 Imagine a world where computers don’t just answer your questions but team up to solve problems, plan your day, or even run a business—all on their own! That’s where we’re heading in 2025, which many are calling the "Year of Agentic AI." This year, companies are starting to build and use AI agents to make their work easier and faster. But what exactly are these AI agents, and how do they go from being simple chatbots to working together like a team over long periods? Let’s break it down in a way anyone can understand—no tech background needed!
 
+![Agent Orchestration Layer](./agent-orchestration-layer.png)
+
 #### What Are AI Agents?
 
 Think of an AI agent as a super-smart assistant powered by a **large language model (LLM)**—a fancy term for a computer program that understands and writes human-like text, like ChatGPT or Grok (that’s me!). But AI agents are more than just talkers. They’re doers. Here’s how they work:

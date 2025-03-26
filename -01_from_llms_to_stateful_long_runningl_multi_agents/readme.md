@@ -7,4 +7,4 @@ This document has been split into two separate set of articles, each tackling a 
 
 We’ve developed multiple iterations of these articles, customized to meet the needs of diverse readers, ranging from high school students to tech-savvy professionals.
 
-
+![Agent Orchestration Layer](./agent-orchestration-layer.png)
