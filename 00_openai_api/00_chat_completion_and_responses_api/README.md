@@ -38,6 +38,13 @@ The repository contains the following Google Colab notebooks, with both Chat API
 12. [Implementing function calls (Part 4)](https://colab.research.google.com/drive/1JEm8c0U0V7lkHUIf8rvaEsKJLiralCuv?usp=sharing)
 13. [Implementing function calls (Part 5)](https://colab.research.google.com/drive/1ZnngtHTvk8DxcqMZ2mQq6bT5fd8s62lH?usp=sharing)
 14. [Implementing function calls (Part 6)](https://colab.research.google.com/drive/1Sdoz5oGHoYiVgQSQ-RQrV_n2_kLvR_uF?usp=sharing)
+15. [Handling file inputs in both APIs](https://colab.research.google.com/drive/1Qw8o2vJuSHePwMK3NoY2wyu_uPu1Abi3?usp=sharing)
+16. [Demonstrating reasoning capabilities and comparisons](https://colab.research.google.com/drive/1_2fGJD1rXMsMrRMpBwDY5MgWjAUZhJ9_?usp=sharing)
+17. [Integrating web search functionalities (Part 1)](https://colab.research.google.com/drive/1DToTG6A9CfqM3QrwAxVFnZZ7meh4ROrV?usp=sharing)
+18. [Integrating web search functionalities (Part 2)](https://colab.research.google.com/drive/1IOT5BvYAfguWttNgWp0OnJDQ_q2FZFDN?usp=sharing)
+19. [Integrating web search functionalities (Part 3)](https://colab.research.google.com/drive/1YsFwti-nF_jJc-cnhXXjf-EFFoulCrkH?usp=sharing)
+20. [Integrating web search functionalities (Part 4)](https://colab.research.google.com/drive/101kvTJxlKs4HiRtzk_uJSEDzIutStmIN?usp=sharing)
+21. [Implementing file search capabilities](https://colab.research.google.com/drive/1Ml_Z-w-gptkUOJp-wUa0G5KZ-Rd6AJXy?usp=sharing)
 
 ---
 
