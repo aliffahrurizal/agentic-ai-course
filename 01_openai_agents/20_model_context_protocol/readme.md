@@ -1,5 +1,9 @@
 # Model Context Protocol (MCP)
 
+OpenAI Agents SDK now support MCP:
+
+https://github.com/openai/openai-agents-python/blob/main/docs/mcp.md
+
 **The simple way to connect AI tools to data sources like GitHub, Google Drive, and Slack**
 
 **It’s a protocol to allow Claude (or other LLMs) to interface with external tools (databases, web servers, file systems etc)**
