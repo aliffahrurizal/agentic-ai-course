@@ -150,3 +150,8 @@ Cloud infrastructure becomes indispensable as complexity, concurrency, and state
 
 The trajectory toward agentic AI is clear: from leveraging powerful LLM APIs, structured outputs, and dynamic tool calls to adopting standardized protocols (MCP, `/llms.txt`) and advanced design patterns. The future is shaped by intelligent, autonomous, and coordinated multi-agent systems, scalable both locally for lightweight tasks and in the cloud for robust, stateful, long-running workflows.
 
+## Subject: Analysis of Agentic AI Framework Design: Layered vs. Unified Approaches
+
+https://github.com/panaversity/learn-agentic-ai/blob/main/-01_from_llms_to_stateful_long_runningl_multi_agents/01d_what_raw_formated_article.md#subject-analysis-of-agentic-ai-framework-design-layered-vs-unified-approaches
+
+

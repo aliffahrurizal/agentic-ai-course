@@ -92,3 +92,8 @@ This year, businesses are jumping in—using APIs like Responses, tools like MCP
 ---
 
 This keeps it simple, using everyday examples (picnics, homework) to explain complex ideas like APIs, tool calling, and cloud systems—perfect for high schoolers with no tech background!
+
+
+## Subject: Analysis of Agentic AI Framework Design: Layered vs. Unified Approaches
+
+https://github.com/panaversity/learn-agentic-ai/blob/main/-01_from_llms_to_stateful_long_runningl_multi_agents/01d_what_raw_formated_article.md#subject-analysis-of-agentic-ai-framework-design-layered-vs-unified-approaches

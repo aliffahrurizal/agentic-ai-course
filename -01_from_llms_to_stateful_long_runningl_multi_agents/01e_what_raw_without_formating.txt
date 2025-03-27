@@ -181,4 +181,7 @@ State Persistence: Cloud databases (e.g., PostgreSQL) or memory stores (e.g., Re
 Scalability: Cloud platforms (e.g., AWS, GCP, Azure) provide distributed computing resources to handle multiple agents, concurrent users, or heavy workloads—beyond what a single machine can manage.
 Reliability: Cloud services offer fault tolerance (e.g., auto-scaling, load balancing) and uptime guarantees, ensuring agents remain operational for long-running tasks (e.g., a customer support agent running 24/7).
 
+Subject: Analysis of Agentic AI Framework Design: Layered vs. Unified Approaches
+
+https://github.com/panaversity/learn-agentic-ai/blob/main/-01_from_llms_to_stateful_long_runningl_multi_agents/01d_what_raw_formated_article.md#subject-analysis-of-agentic-ai-framework-design-layered-vs-unified-approaches
 

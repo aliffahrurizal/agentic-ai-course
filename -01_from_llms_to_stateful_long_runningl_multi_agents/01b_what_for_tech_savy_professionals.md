@@ -99,3 +99,9 @@ With the Responses API, MCP, /llms.txt, and Anthropic’s patterns, 2025 is set 
 ---
 
 This version retains the original structure but uses precise terminology (e.g., "ReAct," "JSON-RPC"), references specific technologies (e.g., Pinecone, Kafka), and focuses on implications for developers and architects—ideal for a tech-savvy professional audience.
+
+
+## Subject: Analysis of Agentic AI Framework Design: Layered vs. Unified Approaches
+
+https://github.com/panaversity/learn-agentic-ai/blob/main/-01_from_llms_to_stateful_long_runningl_multi_agents/01d_what_raw_formated_article.md#subject-analysis-of-agentic-ai-framework-design-layered-vs-unified-approaches
+
