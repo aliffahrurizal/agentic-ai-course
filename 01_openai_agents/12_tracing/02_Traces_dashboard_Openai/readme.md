@@ -56,6 +56,10 @@ Because they make up everything!
 Rating: That's a classic! I'd give it a solid 8 out of 10. It's a clever play on words and has that nerdy charm.
 
 ```
+## Openai Tracing Dashboard
+https://platform.openai.com/traces
+
+![OpenAI Tracing Dashboard](./openai_tracing_dashboard.gif)
 
 ## Openai Tracing Dashboard
 https://platform.openai.com/traces
