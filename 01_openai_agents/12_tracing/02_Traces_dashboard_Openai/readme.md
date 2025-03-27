@@ -59,9 +59,5 @@ Rating: That's a classic! I'd give it a solid 8 out of 10. It's a clever play on
 ## Openai Tracing Dashboard
 https://platform.openai.com/traces
 
-![OpenAI Tracing Dashboard](./openai_tracing_dashboard.gif)
-
-## Openai Tracing Dashboard
-https://platform.openai.com/traces
-
-![OpenAI Tracing Dashboard](https://github.com/panaversity/learn-agentic-ai/tree/main/01_openai_agents/12_tracing/02_Traces_dashboard_Openai/openai_tracing_dashboard.gif)
+[](https://github.com/panaversity/learn-agentic-ai/blob/main/01_openai_agents/12_tracing/02_Traces_dashboard_Openai/openai-tracing.gif?raw=true)
+<img src="https://github.com/panaversity/learn-agentic-ai/blob/main/01_openai_agents/12_tracing/02_Traces_dashboard_Openai/openai-tracing.gif?raw=true">
