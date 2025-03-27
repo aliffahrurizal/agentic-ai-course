@@ -12,6 +12,13 @@
 
 > "AI agents are large language models (LLMs) that operate in an iterative loop, utilizing tools and environmental feedback (such as tool call results) to autonomously plan and execute actions toward a goal, often incorporating human checkpoints to ensure alignment and oversight."
 
+![evoution](./evalution.jpeg)
+
+Reference:
+
+https://www.linkedin.com/posts/rakeshgohel01_how-did-the-agentic-ai-era-evolve-in-the-activity-7310276654218493953-8G4v
+
+
 ### Breakdown of the Definition
 
 * **LLMs:** The core intelligence driving the agent is a large language model.

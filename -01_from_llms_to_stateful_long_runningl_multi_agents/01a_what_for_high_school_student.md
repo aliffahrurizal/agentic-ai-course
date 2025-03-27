@@ -10,6 +10,12 @@ Imagine a world where computers don’t just answer your questions but team up t
 
 Think of an AI agent as a super-smart assistant powered by a **large language model (LLM)**—a fancy term for a computer program that understands and writes human-like text, like ChatGPT or Grok (that’s me!). But AI agents are more than just talkers. They’re doers. Here’s how they work:
 
+![evoution](./evalution.jpeg)
+
+Reference:
+
+https://www.linkedin.com/posts/rakeshgohel01_how-did-the-agentic-ai-era-evolve-in-the-activity-7310276654218493953-8G4v
+
 - **They Think in Loops**: Imagine you’re planning a picnic. You decide to check the weather, then pick a spot, and then pack food. An AI agent does the same—it plans, acts, and checks how things went, over and over, until the job is done.
 - **They Use Tools**: Just like you might use a phone to call a friend or a map to find a park, agents use tools—like searching the web or sending emails—to get stuff done.
 - **They Learn from Feedback**: If the weather tool says it’s raining, the agent switches plans. It listens to what happens and adjusts.

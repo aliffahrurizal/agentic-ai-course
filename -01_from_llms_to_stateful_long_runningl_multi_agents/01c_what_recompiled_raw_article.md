@@ -14,6 +14,13 @@
 
 AI agents are **large language models (LLMs)** operating in an iterative loop. They autonomously plan, execute actions, and adapt dynamically to achieve goals, using tools and feedback from their environment. Human checkpoints are often integrated to balance autonomy with oversight.
 
+![evoution](./evalution.jpeg)
+
+Reference:
+
+https://www.linkedin.com/posts/rakeshgohel01_how-did-the-agentic-ai-era-evolve-in-the-activity-7310276654218493953-8G4v
+
+
 #### Key Components:
 - **LLMs:** The core intelligence driving agent decisions.
 - **Iterative Loop:** Continuous "think-act-observe" cycles.

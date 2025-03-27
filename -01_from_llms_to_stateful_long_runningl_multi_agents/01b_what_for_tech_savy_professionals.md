@@ -4,6 +4,7 @@ Below is a rewritten version of the raw article tailored for a tech-savvy profes
 
 ![Agent Orchestration Layer](./agent-orchestration-layer.png)
 
+
 ---
 
 ### From LLMs to Stateful, Long-Running Multi-Agent Systems: The Evolution of Agentic AI
@@ -14,6 +15,13 @@ As we approach 2025—touted as the "Year of Agentic AI"—enterprises are geari
 
 Anthropic’s "Building Effective Agents" paper (December 2024) offers a precise definition:  
 **"AI agents are LLMs operating in an iterative loop, leveraging tools and environmental feedback (e.g., tool call results) to autonomously plan and execute actions toward a goal, often with human checkpoints for alignment and oversight."**
+
+![evoution](./evalution.jpeg)
+
+Reference:
+
+https://www.linkedin.com/posts/rakeshgohel01_how-did-the-agentic-ai-era-evolve-in-the-activity-7310276654218493953-8G4v
+
 
 - **LLM Core**: The agent’s reasoning engine is an LLM (e.g., GPT-4o, Claude), handling natural language processing and decision-making.
 - **Iterative Loop**: Agents follow a ReAct-like cycle—plan, act, observe—dynamically adjusting based on outcomes.

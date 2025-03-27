@@ -16,6 +16,13 @@ Environmental Feedback: Results from tools or external inputs guide the agent’
 Autonomous Planning and Execution: Agents dynamically decide their actions without a fixed script, adapting to achieve objectives.
 Human Checkpoints (Often): Human intervention is frequently included for validation or critical decisions, balancing autonomy with control.
 
+![evoution](./evalution.jpeg)
+
+Reference:
+
+https://www.linkedin.com/posts/rakeshgohel01_how-did-the-agentic-ai-era-evolve-in-the-activity-7310276654218493953-8G4v
+
+
 This definition emphasises that AI Agents are an LLM in a dynamic loop, leveraging tools and feedback to act autonomously, with humans stepping in as needed. It’s less about a fixed sequence (like workflows) and more about adaptive, goal-driven behaviour.
 
 The LLM APIs
