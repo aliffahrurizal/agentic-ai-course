@@ -1,9 +1,5 @@
 # Model Context Protocol (MCP)
 
-OpenAI Agents SDK now support MCP:
-
-https://github.com/openai/openai-agents-python/blob/main/docs/mcp.md
-
 **The simple way to connect AI tools to data sources like GitHub, Google Drive, and Slack**
 
 **It’s a protocol to allow Claude (or other LLMs) to interface with external tools (databases, web servers, file systems etc)**
@@ -103,7 +99,7 @@ These updates, reflect MCP’s rapid evolution since its introduction by Anthrop
 
 Looking ahead, the implications point to a growing ecosystem where MCP could become a default standard for AI-tool integration, reducing reliance on fragmented, vendor-specific solutions. However, challenges remain—such as ensuring broad adoption and refining the spec further (e.g., finalizing webhooks or event-driven features)—but these updates mark a significant step toward making AI systems more connected, efficient, and accessible.
 
-## OpenAI Adoption of MCO
+## OpenAI Adoption of MCP
 
 On March 25, 2025, OpenAI announced that it is adopting the **Model Context Protocol (MCP)** across all its products, with the **Agents SDK** already shipping with this feature and other products set to follow soon. This move has significant implications for developers, enterprises, and the broader AI ecosystem. Below, We’ll break down what this means and why it matters.
 
