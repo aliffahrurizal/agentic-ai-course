@@ -12,7 +12,9 @@
 
 [Documentation](https://modelcontextprotocol.io/introduction)
 
-**[A Deep Dive Into MCP and the Future of AI Tooling](https://a16z.com/a-deep-dive-into-mcp-and-the-future-of-ai-tooling/)**
+[A Deep Dive Into MCP and the Future of AI Tooling](https://a16z.com/a-deep-dive-into-mcp-and-the-future-of-ai-tooling/)
+
+**[MCP OpenAI Agents SDK](https://openai.github.io/openai-agents-python/mcp/)**
 
 ## What is MCP?
 
