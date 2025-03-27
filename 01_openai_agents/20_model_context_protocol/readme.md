@@ -16,6 +16,8 @@
 
 **[MCP OpenAI Agents SDK](https://openai.github.io/openai-agents-python/mcp/)**
 
+**[The open source Model Context Protocol was just updated — here’s why it’s a big deal](https://venturebeat.com/ai/the-open-source-model-context-protocol-was-just-updated-heres-why-its-a-big-deal/)]**
+
 ## What is MCP?
 
 The Model Context Protocol (MCP) is an open standard developed by Anthropic to streamline how AI systems, particularly large language models (LLMs), connect to and interact with external data sources and tools. It’s designed to solve a key limitation of AI models: their isolation from real-time, dynamic data. Instead of relying solely on static training data or requiring custom integrations for every new data source, MCP provides a universal, standardized way for AI applications to access and use information from various systems—like databases, APIs, file systems, or business tools—securely and efficiently.
