@@ -151,7 +151,7 @@ Another building block of multi-agent AI systems is message passing between AI a
 
 Tool calling functionality not only provides a mechanism for AI agents to connect to the outside world and ask for information, but also take action using these tool calls. It captures the dual role of tool calling as both an input mechanism (fetching data) and an output mechanism (performing actions).
 
-### Model Context Protocol
+### Model Context Protocol (MCP): The Agentic AI Standard
 
 Tool calling is a powerful feature that makes AI agents more than just chatbots, turning them into proactive, world-interacting entities! To do tool calling in a standardise way Model Context Protocol (MCP) has been introduced and being gaining adoption in the industry. MCP’s goal is to make tool calling more scalable and interoperable. Instead of developers building bespoke connectors for each tool or data source, MCP provides a single protocol that any compliant AI system can use, reducing complexity and maintenance overhead. It aims to replace fragmented, custom integrations with a universal interface, much like a "USB-C for AI," as some have described it. This allows agents to interact with systems like Google Drive, Slack, GitHub, or custom databases in a consistent way.
 
