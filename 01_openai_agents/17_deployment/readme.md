@@ -1,6 +1,6 @@
 # Deploying AI Agents (OpenAI Agents SDK) for Prototyping and Production
 
-## Hand-Written Prompt
+## Hand-Written LLM Prompt
 
 **Subject: Strategy for Prototyping and Production Deployment of AI Agents using OpenAI Agents SDK**
 
