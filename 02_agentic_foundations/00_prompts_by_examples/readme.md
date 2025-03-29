@@ -137,3 +137,120 @@ You will create multiple exercises, each covering a different scenario.
 It will be a multiple parts in each exercise. The first part will be that you will create a scenario and provide the background information that will allow the a prompt developer to write a prompt. In the second part you will write an effective prompt for the scenario. In the third part you will explain why you wrote the prompt as you did and the principles behind them. 
 The exercises will start from very basic, and continuously increase the difficulty level of the scenario and the effort required to write a prompt. 
 Create as many exercises as you think is required to train a person to become a expert llm prompt writer.
+
+
+
+# Prompt Practice Examples for Agentic AI Developers
+
+### Key Points
+- Crafting effective prompts for agentic AI systems is a critical skill that improves with practice, especially for developers designing autonomous agents.
+- Starting with clear, simple prompts and progressively incorporating complexity enhances reasoning ability, tool-calling proficiency, accuracy, cost efficiency, and context management.
+- Evidence suggests that well-defined prompts with context, examples, and explicit instructions optimize agent performance across these key factors.
+- Focusing on structured language and precise requirements ensures agents operate efficiently within their reasoning and tool-using capabilities.
+
+### Introduction
+Mastering prompt design is vital for agentic AI developers who build systems that reason autonomously, call tools effectively, deliver accurate outputs, manage costs, and handle large contexts. This tutorial offers a series of exercises tailored to teach you how to write prompts that align with these four key factors: reasoning ability, tool-calling proficiency, accuracy, cost efficiency, and context size. Starting with foundational examples and advancing to sophisticated scenarios, each exercise includes a scenario, an effective prompt, and an explanation to guide your learning.
+
+### Exercises Overview
+These exercises are designed to develop your prompt-writing skills for agentic AI, focusing on reasoning, tool use, precision, efficiency, and context handling. They progress in complexity to build your expertise gradually. Below, you’ll find detailed exercises to practice and refine your ability to create prompts that empower agentic systems.
+
+### Detailed Exercises
+Here are the exercises, each with a scenario, an effective prompt, and an explanation highlighting how the prompt optimizes the four key factors:
+
+#### Exercise 1: Basic Reasoning Task
+- **Scenario:** You want the agent to determine if a number is prime.
+- **Effective Prompt:** "Determine if 17 is a prime number. Think step by step."
+- **Explanation:** This prompt encourages step-by-step reasoning, a core ability for agentic AI, ensuring clarity and accuracy. It’s simple and cost-efficient, requiring minimal context, making it an ideal starting point.
+
+#### Exercise 2: Specifying Tool Use
+- **Scenario:** You need the agent to fetch the current weather for London using a weather API tool.
+- **Effective Prompt:** "Use the weather API tool to get the current weather in London, UK. Return only the temperature and conditions."
+- **Explanation:** Explicitly naming the tool enhances tool-calling proficiency, while limiting the output to key details boosts accuracy and cost efficiency by reducing unnecessary processing.
+
+#### Exercise 3: Providing Examples for Accuracy
+- **Scenario:** You want the agent to classify a customer review as positive or negative.
+- **Effective Prompt:** "Classify this review as positive or negative: 'Great service, fast delivery!' Examples: 'Loved it!' (positive), 'Terrible experience' (negative)."
+- **Explanation:** Including examples (few-shot prompting) improves accuracy by guiding the agent’s reasoning, keeping the prompt concise for cost efficiency and manageable within a small context size.
+
+#### Exercise 4: Optimizing for Cost Efficiency
+- **Scenario:** You need a summary of a 500-word article.
+- **Effective Prompt:** "Summarize this 500-word article in 50 words or fewer: [article text]. Focus on key points only."
+- **Explanation:** Specifying a word limit ensures cost efficiency by minimizing token usage, while "key points only" maintains accuracy and leverages reasoning within a constrained context.
+
+#### Exercise 5: Assigning a Role for Reasoning
+- **Scenario:** You want the agent to recommend a troubleshooting step for a software bug.
+- **Effective Prompt:** "Act as a software engineer. Recommend one troubleshooting step for this bug: [bug description]."
+- **Explanation:** Assigning a role sharpens the agent’s reasoning ability, tailoring the response to an expert perspective. It’s concise, cost-efficient, and fits small context sizes.
+
+#### Exercise 6: Handling Context Size
+- **Scenario:** You need the agent to analyze a 2,000-word document and extract three main arguments.
+- **Effective Prompt:** "Analyze this 2,000-word document: [document text]. Extract the three main arguments. Use concise bullet points."
+- **Explanation:** This prompt tests context size handling, requiring the agent to process a large input. "Concise bullet points" ensures cost efficiency and accuracy, while reasoning extracts key insights.
+
+#### Exercise 7: Step-by-Step Tool Integration
+- **Scenario:** You want the agent to calculate shipping costs using a tool and explain the process.
+- **Effective Prompt:** "Calculate shipping costs for a 5kg package from New York to Paris using the shipping cost tool. Show your reasoning step by step."
+- **Explanation:** Combining step-by-step reasoning with tool-calling proficiency ensures accuracy and transparency, while keeping the task focused for cost efficiency within a moderate context.
+
+#### Exercise 8: Using Output Primers for Precision
+- **Scenario:** You need a prioritized task list from a project plan.
+- **Effective Prompt:** "Create a prioritized task list from this project plan: [plan details]. Start with '1. Critical task:'"
+- **Explanation:** The output primer ensures a precise, structured response, enhancing accuracy and reasoning. It’s cost-efficient by avoiding vague outputs and fits within a standard context size.
+
+#### Exercise 9: Balancing Detail and Efficiency
+- **Scenario:** You want a detailed cost-benefit analysis of adopting a new tool, but within limits.
+- **Effective Prompt:** "Provide a cost-benefit analysis of adopting [tool name] in 200 words or fewer. Include pros, cons, and a recommendation."
+- **Explanation:** This balances reasoning and accuracy with cost efficiency by capping word count, ensuring the agent processes the request effectively within a manageable context.
+
+#### Exercise 10: Correcting a Prompt for Clarity
+- **Scenario:** You have this prompt: "Tell me how to fixing a slow computer fast."
+- **Task:** Identify and correct issues for agentic AI performance.
+- **Corrected Prompt:** "Explain how to fix a slow computer quickly in three steps."
+- **Explanation:** The corrected prompt improves clarity and specificity, enhancing reasoning and accuracy. "Three steps" keeps it concise for cost efficiency and manageable in context.
+
+#### Exercise 11: Comparing Prompts for Tool Use
+- **Scenario:** You need the agent to fetch stock prices.
+- **Prompt 1:** "Get stock prices."
+- **Prompt 2:** "Use the stock price tool to fetch the current price of AAPL and MSFT. Return in a table."
+- **Explanation:** Prompt 1 lacks specificity, risking poor tool use and accuracy. Prompt 2 optimizes tool-calling proficiency, accuracy, and reasoning with a clear format, staying cost-efficient.
+
+---
+
+### Comprehensive Analysis and Detailed Insights
+
+This section explores the process of creating this tutorial for agentic AI developers, focusing on prompts that optimize reasoning ability, tool-calling proficiency, accuracy, cost efficiency, and context size. It details the methodology, techniques, and resources used to craft the exercises.
+
+#### Background and Methodology
+The goal was to design a tutorial with exercises that teach agentic AI developers to write prompts tailored to autonomous systems. Each exercise includes a scenario, an effective prompt, and an explanation linking to the four key factors. I drew on insights from provided resources like "Best Prompt Techniques for Best LLM Responses," "26 Prompting Tricks to Improve LLMs," and "The Beginner's Guide to LLM Prompting," adapting them for agentic AI needs.
+
+#### Exercise Development Process
+The exercises were structured to progress from basic to advanced, emphasizing the four factors:
+
+1. **Identifying Key Techniques:** Techniques like step-by-step reasoning, tool specification, few-shot prompting, and output structuring were selected to enhance reasoning, tool use, and accuracy while managing costs and context.
+2. **Creating Scenarios:** Scenarios reflect agentic AI tasks, such as reasoning (prime numbers), tool use (weather API), and large context analysis (documents).
+3. **Developing Effective Prompts:** Prompts were crafted to balance the four factors—e.g., "think step by step" boosts reasoning, while word limits ensure cost efficiency.
+4. **Explaining Principles:** Explanations tie each prompt to reasoning, tool use, accuracy, cost, and context, showing developers how to optimize agent performance.
+
+#### Detailed Exercise Breakdown
+| Exercise No. | Scenario                            | Effective Prompt                                                                 | Key Factor Focus                     |
+|--------------|-------------------------------------|----------------------------------------------------------------------------------|---------------------------------------|
+| 1            | Check if 17 is prime               | "Determine if 17 is a prime number. Think step by step."                        | Reasoning ability                    |
+| 2            | Fetch London weather               | "Use the weather API tool to get the current weather in London, UK. Return only the temperature and conditions." | Tool-calling proficiency            |
+| 3            | Classify a review                  | "Classify this review as positive or negative: 'Great service, fast delivery!' Examples: 'Loved it!' (positive), 'Terrible experience' (negative)." | Accuracy                            |
+| 4            | Summarize an article               | "Summarize this 500-word article in 50 words or fewer: [article text]. Focus on key points only." | Cost efficiency                     |
+| 5            | Recommend troubleshooting          | "Act as a software engineer. Recommend one troubleshooting step for this bug: [bug description]." | Reasoning ability                   |
+| 6            | Analyze a large document           | "Analyze this 2,000-word document: [document text]. Extract the three main arguments. Use concise bullet points." | Context size                        |
+| 7            | Calculate shipping costs           | "Calculate shipping costs for a 5kg package from New York to Paris using the shipping cost tool. Show your reasoning step by step." | Tool use + Reasoning                |
+| 8            | Prioritize tasks                   | "Create a prioritized task list from this project plan: [plan details]. Start with '1. Critical task:'" | Accuracy                            |
+| 9            | Cost-benefit analysis              | "Provide a cost-benefit analysis of adopting [tool name] in 200 words or fewer. Include pros, cons, and a recommendation." | Cost efficiency + Reasoning         |
+| 10           | Correct a vague prompt             | Corrected to "Explain how to fix a slow computer quickly in three steps."       | Accuracy + Clarity                  |
+| 11           | Fetch stock prices                 | Prompt 2: "Use the stock price tool to fetch the current price of AAPL and MSFT. Return in a table." | Tool use + Accuracy                 |
+
+#### Additional Considerations for Agentic AI Developers
+Prompts were designed to avoid ambiguity, ensuring agents interpret tasks correctly. Techniques like limiting output length address cost efficiency, while explicit tool references enhance proficiency. Context size is tested in exercises like 6, preparing developers for real-world applications.
+
+#### Advanced Techniques and Future Learning
+Future tutorials could explore iterative prompting or multi-tool workflows, but this focuses on single-prompt optimization. Resources like Haystack’s PromptHub could inspire further learning.
+
+#### Conclusion
+This tutorial equips agentic AI developers with practical prompt-writing skills, optimizing reasoning, tool use, accuracy, cost, and context handling. Through structured practice, developers can enhance their agents’ performance in autonomous tasks.
