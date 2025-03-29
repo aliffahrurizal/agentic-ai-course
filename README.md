@@ -13,6 +13,8 @@ Reference:
 
 https://www.linkedin.com/posts/alexwang2911_aiagents-robotics-technology-activity-7282829390445453314-QLeS
 
+**[OpenAI Agents SDK vs LangGraph vs Autogen vs CrewAI](https://composio.dev/blog/openai-agents-sdk-vs-langgraph-vs-autogen-vs-crewai/)**
+
 
 ### AI-201: Fundamentals of Agentic AI  -  From Foundations to Autonomous Agents
 
