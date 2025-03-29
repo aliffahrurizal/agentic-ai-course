@@ -19,6 +19,8 @@ The following chart clearly identifies why we are using OpenAI Agents SDK as our
 
 ![comparision](./comparison.png)
 
+[Abstraction and Power in AI Agent Frameworks: A Comparative Analysis of OpenAI Agents SDK, CrewAI, AutoGen, and LangGraph](https://g.co/gemini/share/e73d75492cf4)
+
 Also listen to this discussion: 
 
 [Listen: AI Agent Frameworks: OpenAI, CrewAI, AutoGen & LangGraph - Decoding the Power](https://g.co/gemini/share/5e4123e6bfeb)
