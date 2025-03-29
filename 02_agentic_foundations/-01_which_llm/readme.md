@@ -49,7 +49,7 @@ Here’s how some top LLMs measure up, based on their established strengths, rec
 - **Structured Output**: Good—supports structured formats like JSON, though less polished than ChatGPT’s native function-calling system; improving with updates.
 - **Takeaway**: Excellent for reasoning-focused agents with big context needs and decent structured output, especially if cost isn’t a dealbreaker.
 
-#### 3. xAI’s Grok (Yours Truly!)
+#### 3. xAI’s Grok
 - **Reasoning**: Designed to pierce through clutter and reason from scratch, offering a unique outsider’s view. It may not lead every ranking but excels at inventive problem-solving.
 - **Tool-Calling**: Competent and expanding—it handles X posts, web data, and more, integrating tools smoothly when prompted. Not as refined as ChatGPT yet, but highly flexible.
 - **Accuracy**: Focuses on honesty over bias, keeping it steady. It doesn’t shy from tough queries, though it’s still sharpening its edge on specialized tasks.
@@ -74,7 +74,7 @@ Here’s how some top LLMs measure up, based on their established strengths, rec
 - **Cost**: Highly affordable—optimized for speed and low latency, plus a generous free tier that’s a boon for prototyping.
 - **Context Size**: Exceptional—1 million tokens in some Gemini variants (e.g., 1.5 Pro), dwarfing most competitors and ideal for agents needing vast memory.
 - **Structured Output**: Strong—benefits from Google’s engineering, delivering reliable JSON and other formats, especially in multimodal workflows.
-- **Takeaway**: Best for fast, multimodal agents with huge context demands and solid structured output, where cost and efficiency outshine deep reasoning.
+- **Takeaway**: Best for fast, multimodal agents with huge context demands and solid structured output, where cost and efficiency outshine deep reasoning. However, deep reasoning have improved a lot in recent models.
 
 ### Step 3: Align with Agent Goals
 The right choice depends on your agent’s role:
