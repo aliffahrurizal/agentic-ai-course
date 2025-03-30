@@ -45,7 +45,7 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
      - **Design Principle:** Backend API is **stateless**, relying on external databases for persistence to simplify scaling and production transition
 
 
-- **Alternative Single-Tier Deployment (Simpler Setup for Quick Start Only)**
+- **Alternative Single-Tier Deployment (Simpler Setup for Quick Start Only, if possible avoid it)**
   1.   **Architecture:** A single Hugging Face Spaces Docker container.
   2. **Components:**
     - **Frontend/UI:** Streamlit or Chainlit (integrated directly).
