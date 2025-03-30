@@ -1,6 +1,6 @@
 # Three-Tier Full-Stack Chatbots
 
-In the [05_chatbot](https://github.com/panaversity/learn-agentic-ai/tree/main/01_openai_agents/05_chatbot/chatbot) section, we created a basic monolithic chatbot. Now, in this section, we will construct three-tier, full-stack chatbots. These will be developed using the [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) and designed to support multiple tenants with user authentication. They will feature both long-term memory ([LangMem](https://langchain-ai.github.io/langmem/)) and short-term memory, with state persistence handled by a relational database ([CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/)). The front-end user interface (UI) will be crafted with [Chainlit](https://chainlit.io/), while the middle tier will leverage [FastAPI](https://fastapi.tiangolo.com/) to define REST APIs. We will use [SQLModel](https://sqlmodel.tiangolo.com/) to integrate with [CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/). The Agents API will adhere to standards outlined in LangChain's [Agent Protocol](https://github.com/langchain-ai/agent-protocol). Both the front-end and middle-tier components will be deployed in separate [Docker Containers](https://www.docker.com/resources/what-container/), hosted on [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker). These chatbots will serve as foundational templates for future product development.
+In the [05_chatbot](https://github.com/panaversity/learn-agentic-ai/tree/main/01_openai_agents/05_chatbot/chatbot) section, we created a basic monolithic chatbot. Now, in this section, we will construct three-tier, full-stack chatbots. These will be developed using the [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) and designed to support multiple tenants with user authentication. They will feature both long-term memory ([LangMem](https://langchain-ai.github.io/langmem/)) and short-term memory, with state persistence handled by a relational database ([CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/)). The front-end user interface (UI) will be crafted with [Chainlit](https://chainlit.io/), while the middle tier will leverage [FastAPI](https://fastapi.tiangolo.com/) to define REST APIs. We will use [SQLModel](https://sqlmodel.tiangolo.com/) to integrate with [CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/). The Agents API will adhere to standards outlined in LangChain's [Agent Protocol](https://github.com/langchain-ai/agent-protocol). Both the front-end and middle-tier components will be deployed in separate [Docker Containers](https://www.docker.com/resources/what-container/), hosted on [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker). The middle-tier REST API will be stateless. These chatbots will serve as foundational templates for future product development.
 
 ### What is a Three-Tier Architecture?
 
@@ -43,3 +43,31 @@ The three-tier architecture offers several advantages over a monolithic approach
 ### Conclusion
 
 While a monolithic architecture might be simpler for small, straightforward applications, the **three-tier architecture** excels in most modern scenarios due to its modularity, scalability, and maintainability. By separating concerns into distinct tiers, it provides the flexibility to grow, adapt, and handle complexity more effectively than a monolith, where everything is locked into a single unit.
+
+## What does Stateless API mean?
+
+When it's stated that the middle-tier REST API will be "stateless," it means that each request from the front-end to the middle-tier API is treated as an independent transaction. The middle-tier API does not retain any information or "state" from previous requests.
+
+Here's a breakdown of what that implies:
+
+* **No Session Data:**
+    * The API doesn't store session data or maintain any ongoing connection with the client.
+    * Each request must contain all the necessary information for the API to process it.
+* **Independence of Requests:**
+    * Each request is processed in isolation.
+    * The API doesn't rely on or assume any prior interactions.
+* **Scalability and Reliability:**
+    * Statelessness makes the API highly scalable because any server can handle any request.
+    * It also improves reliability because if one server fails, other servers can continue processing requests without interruption.
+* **Simplicity:**
+    * Stateless APIs are generally simpler to design and implement because they don't need to manage complex session states.
+
+In the context of the chatbot application described in the paragraph:
+
+* The front-end (Chainlit) will send requests to the middle-tier (FastAPI) containing all the necessary data, such as user input, authentication tokens, and any relevant context.
+* The middle-tier will process the request, interact with the database (CockroachDB Serverless) and the Agents SDK, and return a response.
+* The middle tier will not store any information about the conversation between requests. all needed information will be passed with each request.
+* The persistence of the chat history and user information will be handled by the relational database (CockroachDB), not in the middle tier API itself.
+
+Essentially, each request to the API is a fresh transaction, and the API relies on external storage (the database) for persistent data.
+
