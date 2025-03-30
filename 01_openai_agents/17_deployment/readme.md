@@ -45,8 +45,8 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
      - **Design Principle:** Backend API is **stateless**, relying on external databases for persistence to simplify scaling and production transition
 
 
-### Alternative Approach for Quick Start Development: Single-Tier Deployment (Simpler Setup)**
-    *   **Architecture:** A single Hugging Face Spaces Docker container.
+### **Alternative Approach for Quick Start Development: Single-Tier Deployment (Simpler Setup)**
+    *   **Architecture:** A single Hugging Face Spaces Docker container.**
     *   **Components:**
         *   **Frontend/UI:** Streamlit or Chainlit (integrated directly).
         *   **Backend/Agent Logic:** OpenAI Agents SDK running within the same container.
