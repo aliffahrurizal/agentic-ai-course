@@ -51,6 +51,7 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
     - **Frontend/UI:** Streamlit or Chainlit (integrated directly).
     - **Backend/Agent Logic:** OpenAI Agents SDK running within the same container.
     - **State Management:** CockroachDB (Serverless) with SQLModel for storing user session state (short-term memory) and potentially initial long-term memory structures.
+    - **Agent Memory:** [LangMem](https://langchain-ai.github.io/langmem/) with CockroachDB Serverless Store
 
 
 ---
@@ -74,7 +75,7 @@ Deliver a scalable, reliable, and maintainable deployment capable of handling nu
 ### Event Handling & Processing
 - **Event Bus:**  
   - **Primary:** Kafka (e.g., Confluent Cloud) for robust event streaming  
-  - **Alternative:** For simpler deployments, consider lighter options like RabbitMQ or cloud-native services (e.g., Azure Service Bus, AWS SNS/SQS) to reduce complexity  
+  - **Alternative:** For simpler deployments, consider lighter options like cloud-native services (e.g., Azure Service Bus, AWS Event Bridge) to reduce complexity  
 - **Event Triggering/Scheduling:**  
   - **Scheduled Tasks:** Azure Container Apps Jobs for triggering agent actions or batch processing (e.g., long-term agent reactivation or periodic tasks)  
 - **Event Consumption:**  
@@ -83,8 +84,10 @@ Deliver a scalable, reliable, and maintainable deployment capable of handling nu
   - **Alternative Option (Push-based/Integrated):** Connect Kafka (potentially via **Azure Event Hubs Kafka endpoint compatibility** or native integration if available) to trigger Azure Container Apps directly upon event arrival. Evaluate based on latency requirements and complexity trade-offs.
 
 ### Alternative Compute Platforms
-- Evaluate **Google Cloud Run** or **AWS Fargate** for potential cost or integration benefits, though Azure Container Apps is recommended for this use case.
+- Evaluate **Google Cloud Run** or **AWS App Runner** for potential cost or integration benefits, though Azure Container Apps is recommended for this use case.
 
+### The Ultimate Cloud Platform: Kubernetes
+Deploy compute (stateless containers), messaging (Kafka), and databases (Postgres) all on Kubernetes, but this will require a lot of DevOps expertise.
 ---
 
 ## III. Agentic AI Stack (State Management & Knowledge)
