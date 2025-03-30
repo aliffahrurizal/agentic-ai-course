@@ -118,6 +118,10 @@ Externalize agent state and knowledge into specialized databases to support stat
 
 ## IV. Key Considerations & Enhancements
 
+- **Need for Standard Agent APIs**
+  - Review this conversation to understand the need, usecases, and options: https://grok.com/share/bGVnYWN5_35075b0c-861d-4c7c-8f2e-c278ecfcbede
+https://github.com/langchain-ai/agent-protocol
+
 - **Vendor Lock-in Mitigation:**  
   - Use containerization (Docker) and open standards (Kubernetes, Kafka, Postgres) for portability  
   - Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel for this. 
