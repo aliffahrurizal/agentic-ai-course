@@ -87,7 +87,7 @@ Deliver a scalable, reliable, and maintainable deployment capable of handling nu
 - Evaluate **Google Cloud Run** or **AWS App Runner** for potential cost or integration benefits, though Azure Container Apps is recommended for this use case.
 
 ### The Ultimate Cloud Platform: Kubernetes
-Deploy compute (stateless containers), messaging (Kafka), and databases (Postgres) all on Kubernetes, but this will require a lot of DevOps expertise.
+Deploy compute (stateless containers), messaging (Kafka), and databases (Postgres) all on Kubernetes, but this will require a lot of DevOps expertise. However, the good news is given our production stack it will not be too difficult to do. 
 ---
 
 ## III. Agentic AI Stack (State Management & Knowledge)
