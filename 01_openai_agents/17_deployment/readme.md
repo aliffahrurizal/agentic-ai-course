@@ -46,11 +46,11 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
 
 
 ### **Alternative Approach for Quick Start Development: Single-Tier Deployment (Simpler Setup)**
-    *   **Architecture:** A single Hugging Face Spaces Docker container.**
-    *   **Components:**
-        *   **Frontend/UI:** Streamlit or Chainlit (integrated directly).
-        *   **Backend/Agent Logic:** OpenAI Agents SDK running within the same container.
-        *   **State Management:** CockroachDB (Serverless) with SQLModel for storing user session state (short-term memory) and potentially initial long-term memory structures.
+-   **Architecture:** A single Hugging Face Spaces Docker container.**
+-   **Components:**
+    - **Frontend/UI:** Streamlit or Chainlit (integrated directly).
+    - **Backend/Agent Logic:** OpenAI Agents SDK running within the same container.
+    - **State Management:** CockroachDB (Serverless) with SQLModel for storing user session state (short-term memory) and potentially initial long-term memory structures.
 
 
 ---
