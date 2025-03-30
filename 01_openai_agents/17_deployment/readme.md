@@ -41,6 +41,7 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
      - **Framework:** [FastAPI](https://fastapi.tiangolo.com/)  
      - **Agent Logic:** OpenAI Agents SDK integrated within FastAPI endpoints  
      - **State Management:** [CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/) for user session state (short-term memory) and initial long-term memory structures. [SQLModel](https://github.com/fastapi/sqlmodel) for database integration in Python.
+     - **Agent Memory:** [LangMem](https://langchain-ai.github.io/langmem/) with CockroachDB Serverless Store
      - **Design Principle:** Backend API is **stateless**, relying on external databases for persistence to simplify scaling and production transition
 
 
