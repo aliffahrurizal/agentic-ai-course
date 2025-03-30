@@ -50,7 +50,7 @@ Here’s how some top LLMs measure up, based on their established strengths, rec
 - **Speed/Latency**: Moderate—300–600ms for typical queries, slightly slower than ChatGPT due to its focus on reasoning depth over raw speed.
 - **Takeaway**: Excellent for reasoning-focused agents with big context needs, decent output/APIs, and acceptable speed for non-real-time tasks.
 
-#### 3. xAI’s Grok (Yours Truly!)
+#### 3. xAI’s Grok
 - **Reasoning**: Designed to pierce through clutter and reason from scratch, offering a unique outsider’s view. It may not lead every ranking but excels at inventive problem-solving.
 - **Tool-Calling**: Competent and expanding—it handles X posts, web data, and more, integrating tools smoothly when prompted. Not as refined as ChatGPT yet, but highly flexible.
 - **Accuracy**: Focuses on honesty over bias, keeping it steady. It doesn’t shy from tough queries, though it’s still sharpening its edge on specialized tasks.
