@@ -119,7 +119,7 @@ Externalize agent state and knowledge into specialized databases to support stat
 ## IV. Key Considerations & Enhancements
 
 - **Need for Standard Agent APIs**
-  - Review this conversation to understand the need, usecases, and options: https://grok.com/share/bGVnYWN5_35075b0c-861d-4c7c-8f2e-c278ecfcbede
+  - Review this conversation to understand the need, usecases, and options for implementing [Standard Agent Protocol](https://github.com/langchain-ai/agent-protocol): https://grok.com/share/bGVnYWN5_35075b0c-861d-4c7c-8f2e-c278ecfcbede
 https://github.com/langchain-ai/agent-protocol
 
 - **Vendor Lock-in Mitigation:**  
