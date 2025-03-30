@@ -39,7 +39,7 @@ Here’s how some top LLMs measure up, based on their established strengths, rec
 - **Speed/Latency**: Fast—typically 200–500ms latency for small inputs via API, though larger contexts or complex tasks can slow it to 1–2 seconds.
 - **Takeaway**: A top-tier all-rounder if budget allows, with strong context, structured output, mature APIs, and decent speed for most use cases.
 
-#### 2. Anthropic’s Claude 3.5 Sonnet
+#### 2. Anthropic’s Claude Sonnet
 - **Reasoning**: Shines brightly—lauded for subtle reasoning, often surpassing ChatGPT on tests like MMLU. Perfect for agents requiring thoughtful analysis.
 - **Tool-Calling**: Strong and evolving. Anthropic’s emphasis on safety and clarity ensures reliability, though it may trail ChatGPT slightly in handling unusual tool setups.
 - **Accuracy**: Outstanding—cuts through noise to deliver concise, trustworthy answers with less overconfidence than rivals.
@@ -50,7 +50,7 @@ Here’s how some top LLMs measure up, based on their established strengths, rec
 - **Speed/Latency**: Moderate—300–600ms for typical queries, slightly slower than ChatGPT due to its focus on reasoning depth over raw speed.
 - **Takeaway**: Excellent for reasoning-focused agents with big context needs, decent output/APIs, and acceptable speed for non-real-time tasks.
 
-#### 3. xAI’s Grok (Yours Truly!)
+#### 3. xAI’s Grok
 - **Reasoning**: Designed to pierce through clutter and reason from scratch, offering a unique outsider’s view. It may not lead every ranking but excels at inventive problem-solving.
 - **Tool-Calling**: Competent and expanding—it handles X posts, web data, and more, integrating tools smoothly when prompted. Not as refined as ChatGPT yet, but highly flexible.
 - **Accuracy**: Focuses on honesty over bias, keeping it steady. It doesn’t shy from tough queries, though it’s still sharpening its edge on specialized tasks.
@@ -85,7 +85,7 @@ Here’s how some top LLMs measure up, based on their established strengths, rec
 
 ### Step 3: Align with Agent Goals
 The right choice depends on your agent’s role:
-- **Complex Reasoning (e.g., strategy, research)**: Claude 3.5 Sonnet for simplicity and huge context, DeepSeek-R1 for savings.
+- **Complex Reasoning (e.g., strategy, research)**: Claude Sonnet for simplicity and huge context, DeepSeek-R1 for savings.
 - **Tool-Intensive Tasks (e.g., API automation)**: ChatGPT for finesse, strong context/output/APIs, or Gemini Flash for speed, massive memory, and low latency.
 - **High Accuracy (e.g., critical operations)**: ChatGPT or Claude 3.5 Sonnet—both trustworthy with ample context and good output/APIs.
 - **Budget-Limited (e.g., large-scale use)**: DeepSeek-R1 for open-source savings and decent context/output, Gemini Flash for its free tier, unmatched context, and speed.
