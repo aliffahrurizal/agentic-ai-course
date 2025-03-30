@@ -1,4 +1,4 @@
-# Whcih LLM should you use?
+# Which LLM Should You Use?
 
 In today’s AI-driven world, a key question is: which large language model (LLM) should you choose? My method starts with consulting the [Chatbot Arena Leaderboard](https://huggingface.co/spaces/lmarena-ai/chatbot-arena-leaderboard) from LMSYS, a trusted resource for evaluating LLMs based on their real-world conversational abilities. It relies on crowdsourced human votes and an Elo rating system, offering a lively, community-backed ranking. The top three LLMs shift as new versions emerge, but current trends suggest models like [OpenAI’s GPT](https://chatgpt.com/), [Google’s Gemini](https://gemini.google.com/app), and [xAI’s Grok](https://grok.com/) often lead the pack. These stand out for their sharp reasoning, smooth dialogue, and adaptability to various tasks.
 
