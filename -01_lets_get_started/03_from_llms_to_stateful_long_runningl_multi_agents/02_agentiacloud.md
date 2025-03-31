@@ -72,7 +72,7 @@ Together, these constructs provide the versatility to handle virtually any agent
 ### Development Stack: Open Source
 
 For development, both the prototype and production stacks are identical in terms of the tools and technologies used. The only difference lies in how they are deployed. This unified development approach ensures developers can build and test locally or in a cloud environment using the same stack, transitioning seamlessly to either prototyping or production deployment.  
-- **LLM APIs**: OpenAI Chat Completion (Google Gemini), Responses API 
+- **LLM APIs**: OpenAI Chat Completion (Google Gemini - Free Tier), Responses API 
 - **Lightweight Agents**: OpenAI Agents SDK (Open Source) 
 - **REST APIs**: FastAPI (Open Source)
 - **Stateless Serverless Docker Containers**: Docker Containers (Open Source)
