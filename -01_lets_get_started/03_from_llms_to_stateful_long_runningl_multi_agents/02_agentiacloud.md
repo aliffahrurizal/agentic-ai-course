@@ -1,5 +1,7 @@
 # AgentiaCloud: Free Scalable Intelligence, Simplified
 
+Agentic AI is reshaping how we approach problem-solving,we’re harnessing its power to deliver scalable, adaptable intelligence solutions. Our focus is on providing developers with the tools to create tailored AI Agent-driven workflows without unnecessary complexity. By leveraging a minimalist yet powerful architecture, we enable everything from simple queries to sophisticated multi-agent systems.
+
 By keeping predefined constructs to a minimum, we eliminate excess and empower developers to forge custom solutions—whether that’s a simple query or an intricate multi-agent workflow—tailored to their specific needs. Here’s the streamlined tools we use, in our layered architecture:
 
 1. **LLM APIs** that support robust Agent development, and are the defacto standard for interacting with LLMs. 
