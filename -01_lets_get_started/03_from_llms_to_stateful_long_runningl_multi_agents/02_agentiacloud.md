@@ -1,4 +1,4 @@
-# AgentiaCloud: Scalable Intelligence, Simplified
+# AgentiaCloud: Free Scalable Intelligence, Simplified
 
 By keeping predefined constructs to a minimum, we eliminate excess and empower developers to forge custom solutions—whether that’s a simple query or an intricate multi-agent workflow—tailored to their specific needs. Here’s the streamlined tools we use, in our layered architecture:
 
