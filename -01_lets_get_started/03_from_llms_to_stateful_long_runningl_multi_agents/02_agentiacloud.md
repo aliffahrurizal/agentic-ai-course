@@ -42,7 +42,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
 
 4. **Stateless Serverless Docker Containers**  
    - **Purpose**: These containers package your application logic (e.g., agents, APIs, MCP Servers) in a portable, stateless format, allowing automatic scaling and easy deployment without persistent internal state.  
-   - **Choice**: We’re using **[Docker Containers](https://www.docker.com/resources/what-container/)**, which provide a lightweight, consistent runtime environment deployable across platforms.  
+   - **Choice**: We’re using **[Docker Containers](https://www.docker.com/resources/what-container/)**, which provide a lightweight, consistent runtime environment deployable across platforms. For container hosting we use [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (free hosting with built-in CI/CD) for prototyping, and [Kubernetes](https://kubernetes.io/) on [always free Oracle VMs](https://github.com/nce/oci-free-cloud-k8s). 
    - **Why It Matters**: Containers support rapid deployment and efficient resource utilization, aligning with the lean framework’s focus on simplicity and scalability.
 
 5. **Asynchronous Message Passing**  
