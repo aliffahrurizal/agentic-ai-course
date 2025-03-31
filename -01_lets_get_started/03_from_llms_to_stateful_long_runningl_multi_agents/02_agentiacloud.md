@@ -45,7 +45,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
 
 5. **Asynchronous Message Passing**  
    - **Purpose**: This enables non-blocking, dynamic communication between containerized agents or system components, ideal for parallel or independent task processing.  
-   - **Choice**: **[RabbitMQ](https://www.cloudamqp.com/plans.html#rmq)** for prototyping. **Kafka for Kubernetes for production**. It is a distributed streaming platform optimized for high-throughput, fault-tolerant messaging, connecting agents in complex workflows.  
+   - **Choice**: **[RabbitMQ](https://www.cloudamqp.com/plans.html#rmq)** for prototyping. **[Kafka for Kubernetes](https://www.redhat.com/en/topics/integration/why-run-apache-kafka-on-kubernetes) for production**. It is a distributed streaming platform optimized for high-throughput, fault-tolerant messaging, connecting agents in complex workflows.  
    - **Why It Matters**: Asynchronous messaging decouples components, enhancing resilience and supporting event-driven architectures.
 
 6. **Flexible Container Invocation**  
@@ -88,7 +88,7 @@ The prototype stack is designed for rapid iteration and is completely free of ch
 - **LLM APIs**: OpenAI Chat Completion Compatible Google Gemini APIs which has a generious free tier, and Responses API  
 - **Lightweight Agents**: OpenAI Agents SDK  
 - **REST APIs**: FastAPI  
-- **Stateless Serverless Docker Containers**: Docker Containers deployed on **Hugging Face Docker Spaces** (free hosting with built-in CI/CD)  
+- **Stateless Serverless Docker Containers**: Docker Containers deployed on **[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (free hosting with built-in CI/CD)  
 - **Asynchronous Message Passing**: RabbitMQ (Free tier).  
 - **Flexible Container Invocation**: cron-job.org (totally free online scheduling service)  
 - **Relational Managed Database Services**: CockroachDB Serverless (free tier)  
@@ -111,7 +111,13 @@ The production stack is optimized for scalability, reliability, and performance,
 
 ### Training Developers for Production Deployment
 
-To equip developers with Kubernetes DevOps skills for production deployment, we leverage **Oracle Cloud Infrastructure (OCI)**, which offers a "free forever" tier which Offers 2 AMD VMs (1/8 OCPU, 1 GB RAM each) or up to 4 Arm-based VMs (24 GB RAM total). These VMs are used to deploy our own Kubernetes cluster, providing a hands-on environment to learn cluster management, scaling, and deployment. Once developers master these skills, they can confidently deploy our agentic workflows to any cloud Kubernetes platform (e.g., AWS, GCP, Azure), ensuring portability and flexibility. This training bridges the gap between prototyping and production, empowering developers to handle real-world deployments.
+To equip developers with Kubernetes DevOps skills for production deployment, we leverage **Oracle Cloud Infrastructure (OCI)**, which offers a "free forever" tier which Offers 2 AMD VMs (1/8 OCPU, 1 GB RAM each) or up to 4 Arm-based VMs (24 GB RAM total). [These VMs are used to deploy our own Kubernetes cluster](https://github.com/nce/oci-free-cloud-k8s), providing a hands-on environment to learn cluster management, scaling, and deployment. Once developers master these skills, they can confidently deploy our agentic workflows to any cloud Kubernetes platform (e.g., AWS, GCP, Azure), ensuring portability and flexibility. This training bridges the gap between prototyping and production, empowering developers to handle real-world deployments.
+
+References:
+
+https://www.ronilsonalves.com/articles/how-to-deploy-a-free-kubernetes-cluster-with-oracle-cloud-always-free-tier
+
+https://medium.com/@Phoenixforge/a-weekend-project-with-k3s-and-oracle-cloud-free-tier-99eda1aa49a0
 
 ---
 
