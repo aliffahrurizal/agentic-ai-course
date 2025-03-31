@@ -52,7 +52,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
 
 6. **Flexible Container Invocation**  
    - **Purpose**: This allows containers to be triggered either on-demand (via HTTP requests) or on a schedule (via cron-like jobs), offering versatility in execution patterns.  
-   - **Choice**: For prototyping, you’re using **[cron-job.org](https://cron-job.org/en/)**, a free online scheduling service. For production, you’re opting for **[Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)**, which integrates with Kubernetes for robust scheduling.  
+   - **Choice**: For prototyping, you’re using **[cron-job.org](https://cron-job.org/en/)**, a free online scheduling service. For development use [python-crontab](https://pypi.org/project/python-crontab/). For production, you’re opting for **[Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)**, which integrates with Kubernetes for robust scheduling.  
    - **Why It Matters**: Flexible invocation supports both real-time and batch processing, accommodating diverse use cases efficiently.
 
 7. **Relational Managed Database Services**  
@@ -79,7 +79,7 @@ For development, both the prototype and production stacks are identical in terms
 - **REST APIs**: FastAPI (Open Source)
 - **Stateless Serverless Docker Containers**: Docker Containers (Open Source)
 - **Asynchronous Message Passing**: RabbitMQ (Free tier) 
-- **Flexible Container Invocation**: cron-job.org (Free forever)
+- **Flexible Container Invocation**: [python-crontab](https://pypi.org/project/python-crontab/).
 - **Relational Managed Database Services**: CockroachDB Serverless (Free tier) which is Postgres Compatible (Open Source) 
 
 ---
