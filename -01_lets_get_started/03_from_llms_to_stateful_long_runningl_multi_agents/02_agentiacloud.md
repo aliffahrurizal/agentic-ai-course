@@ -45,7 +45,37 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
    - **Choice**: We’re using **[Docker Containers](https://www.docker.com/resources/what-container/)**, which provide a lightweight, consistent runtime environment deployable across platforms. For container hosting we use **[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (free hosting with built-in CI/CD) for prototyping, and [Kubernetes](https://kubernetes.io/) on [always free Oracle VMs](https://github.com/nce/oci-free-cloud-k8s) for production training. 
    - **Why It Matters**: Containers support rapid deployment and efficient resource utilization, aligning with the lean framework’s focus on simplicity and scalability. Deploying AI agents using Docker containers is widely regarded as a best practice and is considered the de facto industry standard. Docker containers offer a lightweight, portable, and consistent environment, ensuring that AI applications run reliably across various platforms. Moreover, Docker's widespread adoption has led to a rich ecosystem of tools and services that further enhance its utility in deploying AI agents. In summary, Docker containers provide a standardized and efficient approach to deploying AI agents, making them a preferred choice in the industry. 
 
-   In addition, stateless containers, which do not retain data between sessions, enhance scalability by enabling rapid replication and distribution across multiple environments. It also allows them to be deployed as serverless containers.
+   In addition, stateless containers, which do not retain data between sessions, enhance scalability by enabling rapid replication and distribution across multiple environments. It also allows them to be deployed as serverless containers. We can deploy these stateless containers not in Hugging Face Container Spaces, and Kuberneties but also in most cloud services:
+
+
+   **Summary Table Across Providers**
+
+   | Provider/Service            | Event-Driven Containers | Scheduled Containers |
+   |-----------------------------|-------------------------|----------------------|
+   | **AWS ECS**                 | Yes                     | Yes                  |
+   | **AWS EKS**                 | Yes                     | Yes                  |
+   | **AWS Fargate**             | Yes                     | Yes                  |
+   | **AWS Lambda**              | Yes                     | Yes                  |
+   | **AWS Batch**               | Indirectly              | Yes                  |
+   | **Azure Container Apps**    | Yes                     | Yes                  |
+   | **Azure Container Jobs**    | Yes                     | Yes                  |
+   | **Azure AKS**               | Yes                     | Yes                  |
+   | **Azure Functions**         | Yes                     | Yes                  |
+   | **Azure ACI**               | Indirectly              | Indirectly           |
+   | **GCP GKE**                 | Yes                     | Yes                  |
+   | **GCP Cloud Run**           | Yes                     | Indirectly           |
+   | **GCP Cloud Functions**     | Yes                     | Yes                  |
+   | **GCP Cloud Scheduler**     | No                      | Yes                  |
+   | **IBM IKS**                 | Yes                     | Yes                  |
+   | **IBM Code Engine**         | Yes                     | Yes                  |
+   | **OCI OKE**                 | Yes                     | Yes                  |
+   | **OCI Functions**           | Yes                     | Yes                  |
+   | **OCI Container Instances** | Indirectly              | Indirectly           |
+   | **DO DOKS**                 | Yes                     | Yes                  |
+   | **DO App Platform**         | Limited                 | Yes                  |
+
+---
+
 
 5. **Asynchronous Message Passing**  
    - **Purpose**: This enables non-blocking, dynamic communication between containerized agents or system components, ideal for parallel or independent task processing.  
