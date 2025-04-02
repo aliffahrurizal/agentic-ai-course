@@ -1,16 +1,20 @@
-# Deploying AI Agents (OpenAI Agents SDK) for Prototyping and Production
+# AgentiaCloud: Simplified, Scalable AI for Prototyping and Production
 
 Below is the deployment strategy for AI agents using the OpenAI Agents SDK, refined to address both prototyping and production phases. This strategy considers scalability, maintainability, vendor lock-in, and the distinct needs of short-term (session-based) and long-term (persistent) agents.
 
 ---
 
-## Deployment Strategy for AI Agents using OpenAI Agents SDK
+## Deployment Strategy for AI Agents
 
 ### Objective
 Provide a clear, actionable deployment strategy for AI agents built with the OpenAI Agents SDK, enabling seamless progression from prototyping to production. The strategy ensures support for both short-term agents (active for minutes to hours) and long-term agents (persistent for weeks to months), while prioritizing scalability, maintainability, and minimizing vendor lock-in.
 
-### Core Library
+### Core Libraries
 - **OpenAI Agents SDK**
+- **Docker Containers**
+- **CockroachDB**
+- **CronJobs**
+- **RabbitMQ**
 
 ### Target User
 - **Agentic AI Developer**
@@ -26,14 +30,14 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
 - **[Hugging Face Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (utilizing free-tier [Docker container deployments](https://www.docker.com/resources/what-container/)).
 
 ### Agent Focus
-- Primarily short-term, session-based agents, with initial testing of long-term agent state persistence.
+- Short-term and long-term agent workflow and state persistence.
 
 ### Recommended Approach
-- **Multi-Tier Deployment**  
-  - **Why:** A single-tier setup (frontend and backend in one container) is simpler but risks architectural rework during the production transition. A multi-tier approach aligns with production architecture, easing the shift and validating separation of concerns early.
+- **Three-Tier Deployment**  
+  - **Why:** A single-tier setup (frontend and backend in one container) is simpler but risks architectural rework during the production transition. A three-tier approach aligns with production architecture, easing the shift and validating separation of concerns early.
 
 ### Architecture
-- **Two Docker Containers on Hugging Face Spaces:**
+- **Two Docker Containers on [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker):**
   1. **Frontend Container:**
      - **Framework:** [Streamlit](https://streamlit.io/) or [Chainlit](https://chainlit.io/)  
      - **Functionality:** User interface, making API calls to the backend  
@@ -42,6 +46,8 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
      - **Agent Logic:** OpenAI Agents SDK integrated within FastAPI endpoints  
      - **State Management:** [CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/) for user session state (short-term memory) and initial long-term memory structures. [SQLModel](https://github.com/fastapi/sqlmodel) for database integration in Python.
      - **Agent Memory:** [LangMem](https://langchain-ai.github.io/langmem/) with CockroachDB Serverless Store
+     - **Scheduling with CronJob** [Cron-Job.org](https://cron-job.org/en/) 
+     - **Asynchronous Message Passing** [RabbitMQ](https://www.cloudamqp.com/plans.html#rmq)
      - **Design Principle:** Backend API is **stateless**, relying on external databases for persistence to simplify scaling and production transition
 
 
@@ -56,26 +62,24 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
 
 ---
 
-## II. Production Phase
+## II. Production Phase: Cloud Native AI
 
 ### Goal
-Deliver a scalable, reliable, and maintainable deployment capable of handling numerous concurrent short-term agents and effectively managing persistent long-term agents.
+Deliver a scalable, reliable, and maintainable deployment capable of handling numerous concurrent agents and effectively managing persistent long-term agents.
 
 ### Transition Strategy
 - Migrate the containerized, stateless backend API from prototyping to a managed serverless container platform.
 
 ### Primary Compute Platform
-- **[Azure Container Apps (ACA)](https://azure.microsoft.com/en-us/products/container-apps)**  
-  - **Why:** Offers managed serverless Kubernetes, balancing scalability with operational simplicity. Provides flexibility for future migration to full Kubernetes if needed.
-
+- **[Kubernetes](https://kubernetes.io/)**  
+  - **Why:** Kubernetes, also known as K8s, is an open source system for automating deployment, scaling, and management of containerized applications. It is a Planet Scale solution. Designed on the same principles that allow Google to run billions of containers a week, Kubernetes can scale without increasing your operations team.
 ### Architecture
 - **Event-Driven Architecture (EDA)**  
   - **Why:** Decouples services, enhances resilience, and supports asynchronous processing, ideal for agentic workflows, especially long-term agents.
 
 ### Event Handling & Processing
 - **Event Bus:**  
-  - **Primary:** Kafka (e.g., Confluent Cloud) for robust event streaming  
-  - **Alternative:** For simpler deployments, consider lighter options like cloud-native services (e.g., Azure Service Bus, AWS Event Bridge) to reduce complexity  
+  - **Primary:** Kafka on Kubernetes for robust event streaming   
 - **Event Triggering/Scheduling:**  
   - **Scheduled Tasks:** Azure Container Apps Jobs for triggering agent actions or batch processing (e.g., long-term agent reactivation or periodic tasks)  
 - **Event Consumption:**  

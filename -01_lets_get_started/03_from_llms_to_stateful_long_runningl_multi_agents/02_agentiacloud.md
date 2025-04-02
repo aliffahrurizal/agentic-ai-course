@@ -103,16 +103,16 @@ Together, these constructs provide the versatility to handle virtually any agent
 
 ---
 
-### Development Stack: Open Source
+### Development Stack (Local): Open Source
 
-For development, both the prototype and production stacks are identical in terms of the tools and technologies used. The only difference lies in how they are deployed. This unified development approach ensures developers can build and test locally or in a cloud environment using the same stack, transitioning seamlessly to either prototyping or production deployment.  
+The development, prototype and production stacks are identical in terms of the tools and technologies used. The only difference lies in how they are deployed. This unified development approach ensures developers can build and test locally or in a cloud environment using the same stack, transitioning seamlessly to either prototyping or production deployment.  
 - **LLM APIs**: OpenAI Chat Completion (Google Gemini - Free Tier), Responses API 
 - **Lightweight Agents**: OpenAI Agents SDK (Open Source) 
 - **REST APIs**: FastAPI (Open Source)
-- **Stateless Serverless Docker Containers**: Docker Containers (Open Source)
-- **Asynchronous Message Passing**: RabbitMQ (Free tier) 
-- **Flexible Container Invocation**: [python-crontab](https://pypi.org/project/python-crontab/).
-- **Relational Managed Database Services**: CockroachDB Serverless (Free tier) which is Postgres Compatible (Open Source) 
+- **Stateless Serverless Docker Containers**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) (Free Tier and Open Source)
+- **Asynchronous Message Passing**: [RabbitMQ Docker Image](https://hub.docker.com/_/rabbitmq/) (Open Source) 
+- **Flexible Container Invocation**: [python-crontab](https://pypi.org/project/python-crontab/) (Open Source).
+- **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source)
 
 ---
 
