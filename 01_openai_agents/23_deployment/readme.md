@@ -48,6 +48,7 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
      - **Agent Memory:** [LangMem](https://langchain-ai.github.io/langmem/) with CockroachDB Serverless Store
      - **Scheduling with CronJob** [Cron-Job.org](https://cron-job.org/en/) 
      - **Asynchronous Message Passing** [RabbitMQ](https://www.cloudamqp.com/plans.html#rmq)
+     - **In Memory Datastore**: [Upstash Redis](https://upstash.com/pricing) 
      - **Design Principle:** Backend API is **stateless**, relying on external databases for persistence to simplify scaling and production transition
 
 
@@ -141,10 +142,11 @@ Externalize agent state and knowledge into specialized databases to support stat
 - **Document/Flexible State:**  
   - **MongoDB Atlas** (Managed NoSQL DB)  
   - **Use Case:** Unstructured or semi-structured data, configuration storage, or flexible agent state  
-  - **Recommendation:** Assess necessity; consolidate with CockroachDB if possible to reduce complexity
+  - **In Memory Data Store**: Redis on Kubernetes
+  - **Recommendation:** Assess necessity; consolidate with CockroachDB if possible to reduce complexity. Use Redis to improve performance.
 
 ### Database Consolidation
-- Where feasible, leverage CockroachDB for both relational and flexible state data to minimize managed services and operational overhead.
+- Where feasible, leverage CockroachDB for both relational and flexible state data to minimize managed services and operational overhead. Use Redis to improve performance.
 
 ---
 

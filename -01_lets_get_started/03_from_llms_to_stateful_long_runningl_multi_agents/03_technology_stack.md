@@ -11,6 +11,7 @@ By keeping predefined constructs to a minimum, we eliminate excess and empower d
 5. **Asynchronous Message Passing** to connect containerize AI agents dynamically.  
 6. **Flexible Container Invocation** via HTTP requests or scheduled CronJobs.  
 7. **Relational Managed Database Services** for robust data handling.
+8. **In-memory data structure store** frequently used as a cache to speed up application performance.
 
 With these core components, we enable the deployment of virtually any agentic workflow—striking a balance between simplicity and limitless potential.
 
@@ -92,6 +93,12 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
    - **Choice**: **[CockroachDB](https://www.cockroachlabs.com/)** is our selection. CockroachDB is a distributed SQL database compatiable with Postgres designed for scalability and resilience, with managed services to reduce operational burden. Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel for this.   
    - **Why It Matters**: It ensures robust data persistence, vital for tracking workflows or maintaining system integrity.
 
+8. **In-memory data structure store**
+   - **Purpose**: It's used as a database, cache, and message broker. Because it stores data in RAM, it offers exceptionally high performance.
+   - **Choice**: **[Upstash Redis](https://upstash.com/pricing)** Upstash is known for its serverless Redis offering and provides a free tier.
+   - **Why It Matters**: Because it stores data in RAM, it offers exceptionally high performance. Ideal for storing LLM session data. 
+
+
 ---
 
 ### Two Main Constructs Enabling the AgentiaCloud Framework
@@ -113,6 +120,7 @@ The development, prototype and production stacks are identical in terms of the t
 - **Asynchronous Message Passing**: [RabbitMQ Docker Image](https://hub.docker.com/_/rabbitmq/) (Open Source) 
 - **Scheduled Container Invocation**: [For development we use [python-crontab](https://pypi.org/project/python-crontab/) on Linux and Mac. [APSchedule](https://pypi.org/project/APScheduler/) for Windows. Or [Schedule](https://pypi.org/project/schedule/) for inprocess scheduling on any system.
 - **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
+- **Inmemory Datastore**: [Redis Docker Image](https://hub.docker.com/_/redis) (Open Source). In Python use [redis-py](https://pypi.org/project/redis/) or higher level [Redis OM Python](https://github.com/redis/redis-om-python) (Open Source). 
 - **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers)
 
 ### Prototype Stack: Free Deployment
@@ -124,7 +132,8 @@ The prototype stack is designed for rapid iteration and is completely free of ch
 - **Stateless Serverless Docker Containers**: Docker Containers deployed on **[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (free hosting with built-in CI/CD)  
 - **Asynchronous Message Passing**: RabbitMQ (Free tier).  
 - **Flexible Container Invocation**: cron-job.org (totally free online scheduling service)  
-- **Relational Managed Database Services**: CockroachDB Serverless (free tier). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source).  
+- **Relational Managed Database Services**: CockroachDB Serverless (free tier). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
+- **In Memory Datastore**: [Upstash Redis](https://upstash.com/pricing) 
 - **Cost**: Fully free for prototyping, minimizing financial barriers during development.
 
 ---
@@ -138,7 +147,8 @@ The production stack is optimized for scalability, reliability, and performance,
 - **Stateless Serverless Docker Containers**: Docker Containers orchestrated by **Kubernetes** (for auto-scaling and resilience)  
 - **Asynchronous Message Passing**: Kafka on Kubernetes (multi-broker, high-availability setup) or RabbitMQ on Kubernetes
 - **Flexible Container Invocation**: Kubernetes CronJob (natively integrated with Kubernetes) The developer will have to migrate from cron-job.org to Kubernetes CronJob.
-- **Relational Managed Database Services**: CockroachDB Serverless (fully managed, multi-region deployment) on Postgres for Kubernetes. Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source).  
+- **Relational Managed Database Services**: Postgres for Kubernetes. Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
+- **In Memory Data Store**: Redis on Kubernetes 
   
 ---
 
