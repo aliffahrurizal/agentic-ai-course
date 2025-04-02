@@ -136,7 +136,7 @@ The production stack is optimized for scalability, reliability, and performance,
 - **Lightweight Agents**: OpenAI Agents SDK  
 - **REST APIs**: FastAPI  
 - **Stateless Serverless Docker Containers**: Docker Containers orchestrated by **Kubernetes** (for auto-scaling and resilience)  
-- **Asynchronous Message Passing**: Kafka on Kubernetes (multi-broker, high-availability setup)  
+- **Asynchronous Message Passing**: Kafka on Kubernetes (multi-broker, high-availability setup) or RabbitMQ on Kubernetes
 - **Flexible Container Invocation**: Kubernetes CronJob (natively integrated with Kubernetes) The developer will have to migrate from cron-job.org to Kubernetes CronJob.
 - **Relational Managed Database Services**: CockroachDB Serverless (fully managed, multi-region deployment)  
   
