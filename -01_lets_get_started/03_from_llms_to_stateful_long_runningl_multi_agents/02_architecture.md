@@ -2,8 +2,6 @@
 
 A combination of **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, and **scheduled computing (CronJobs)** is used by AgentiaCloud for agentic AI development to meet the requirements of AI agents—such as their autonomy, real-time needs, scalability, and complexity. This mix can indeed be a powerful and practical approach for many agentic AI systems. Let’s break it down and evaluate how these paradigms align with agentic AI, which typically involves autonomous, goal-driven entities that perceive, decide, and act in an environment.
 
-[The Future of AI Agents: Why Event-Driven Architecture Is Essential](https://blog.spheron.network/the-future-of-ai-agents-why-event-driven-architecture-is-essential)
-
 ---
 
 ### What is Agentic AI?
@@ -20,6 +18,8 @@ Examples include multi-agent systems, autonomous chatbots, or robotic process au
 ### Analyzing the Components
 
 #### 1. Event-Driven Architecture (EDA)
+![Event-Driven](./events.png)
+[The Future of AI Agents: Why Event-Driven Architecture Is Essential](https://blog.spheron.network/the-future-of-ai-agents-why-event-driven-architecture-is-essential)
 - **Why It Fits Agentic AI**:
   - Agents often need to **react to events**—like a user command, a sensor trigger, or a state change in another agent. EDA’s asynchronous, reactive nature aligns perfectly with this.
   - Loose coupling allows agents to operate independently, publishing events (e.g., "TaskCompleted") and subscribing to others (e.g., "NewDataAvailable") without tight dependencies.
@@ -27,6 +27,7 @@ Examples include multi-agent systems, autonomous chatbots, or robotic process au
 - **Use Case**: An agent monitoring stock prices reacts to a "PriceDrop" event by executing a trade, while another agent logs the action—all triggered via an event bus.
 
 #### 2. Three-Tier Architecture
+![Three-Tier](three_tier.png)
 - **Why It Fits Agentic AI**:
   - Provides a **structured foundation**:
     - **Presentation Layer**: Interfaces for human-agent interaction (e.g., a UI for configuring agents).
@@ -37,6 +38,7 @@ Examples include multi-agent systems, autonomous chatbots, or robotic process au
 - **Use Case**: A customer support agent uses the presentation layer to interact with users, the business logic layer to process queries (possibly via events), and the data layer to retrieve customer history.
 
 #### 3. Stateless Computing
+![stateless](./stateless.png)
 - **Why It Fits Agentic AI**:
   - Statelessness (where each request or event is handled independently, without relying on prior state stored in memory) enhances **scalability** and **resilience**.
   - Agents can be deployed as stateless microservices or serverless functions (e.g., AWS Lambda), spinning up to handle events and shutting down when idle—ideal for unpredictable workloads.
@@ -45,6 +47,7 @@ Examples include multi-agent systems, autonomous chatbots, or robotic process au
 - **Use Case**: An agent handling incoming customer requests runs as a stateless function, fetching its context (e.g., conversation history) from a database per event.
 
 #### 4. Scheduled Computing (CronJobs)
+![cronjob](./cronjob.jpg)
 - **Why It Fits Agentic AI**:
   - Agents may need to perform **periodic tasks**, like data aggregation, model retraining, or status checks, which CronJobs handle efficiently.
   - Complements EDA by addressing proactive (time-based) rather than reactive (event-based) behavior.
