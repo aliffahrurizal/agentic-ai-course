@@ -89,7 +89,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
 
 7. **Relational Managed Database Services**  
    - **Purpose**: A relational database provides structured data storage with ACID compliance, handling user data, agent states, or logs reliably.  
-   - **Choice**: **[CockroachDB](https://www.cockroachlabs.com/)** is our selection. CockroachDB is a distributed SQL database compatiable with Postgres designed for scalability and resilience, with managed services to reduce operational burden.  
+   - **Choice**: **[CockroachDB](https://www.cockroachlabs.com/)** is our selection. CockroachDB is a distributed SQL database compatiable with Postgres designed for scalability and resilience, with managed services to reduce operational burden. Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel for this.   
    - **Why It Matters**: It ensures robust data persistence, vital for tracking workflows or maintaining system integrity.
 
 ---
@@ -112,7 +112,7 @@ The development, prototype and production stacks are identical in terms of the t
 - **Stateless Serverless Docker Containers**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) (Free Tier and Open Source)
 - **Asynchronous Message Passing**: [RabbitMQ Docker Image](https://hub.docker.com/_/rabbitmq/) (Open Source) 
 - **Flexible Container Invocation**: [python-crontab](https://pypi.org/project/python-crontab/) (Open Source).
-- **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source)
+- **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers)
 
 ### Prototype Stack: Free Deployment
@@ -124,7 +124,7 @@ The prototype stack is designed for rapid iteration and is completely free of ch
 - **Stateless Serverless Docker Containers**: Docker Containers deployed on **[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (free hosting with built-in CI/CD)  
 - **Asynchronous Message Passing**: RabbitMQ (Free tier).  
 - **Flexible Container Invocation**: cron-job.org (totally free online scheduling service)  
-- **Relational Managed Database Services**: CockroachDB Serverless (free tier)  
+- **Relational Managed Database Services**: CockroachDB Serverless (free tier). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source).  
 - **Cost**: Fully free for prototyping, minimizing financial barriers during development.
 
 ---
@@ -138,7 +138,7 @@ The production stack is optimized for scalability, reliability, and performance,
 - **Stateless Serverless Docker Containers**: Docker Containers orchestrated by **Kubernetes** (for auto-scaling and resilience)  
 - **Asynchronous Message Passing**: Kafka on Kubernetes (multi-broker, high-availability setup) or RabbitMQ on Kubernetes
 - **Flexible Container Invocation**: Kubernetes CronJob (natively integrated with Kubernetes) The developer will have to migrate from cron-job.org to Kubernetes CronJob.
-- **Relational Managed Database Services**: CockroachDB Serverless (fully managed, multi-region deployment)  
+- **Relational Managed Database Services**: CockroachDB Serverless (fully managed, multi-region deployment) on Postgres for Kubernetes. Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source).  
   
 ---
 
