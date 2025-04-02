@@ -222,3 +222,16 @@ In the context of the chatbot application described in the paragraph:
 
 Essentially, each request to the API is a fresh transaction, and the API relies on external storage (the database) for persistent data.
 
+
+## Development Stack (Local): Open Source
+
+The development, prototype and production stacks are identical in terms of the tools and technologies used. The only difference lies in how they are deployed. This unified development approach ensures developers can build and test locally or in a cloud environment using the same stack, transitioning seamlessly to either prototyping or production deployment.  
+- **LLM APIs**: OpenAI Chat Completion (Google Gemini - Free Tier), Responses API 
+- **Lightweight Agents**: OpenAI Agents SDK (Open Source) 
+- **REST APIs**: FastAPI (Open Source)
+- **Stateless Serverless Docker Containers**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) (Free Tier and Open Source)
+- **Asynchronous Message Passing**: [RabbitMQ Docker Image](https://hub.docker.com/_/rabbitmq/) (Open Source) 
+- **Scheduled Container Invocation**: [For development we use [python-crontab](https://pypi.org/project/python-crontab/) on Linux and Mac. [APSchedule](https://pypi.org/project/APScheduler/) for Windows. Or [Schedule](https://pypi.org/project/schedule/) for inprocess scheduling on any system.
+- **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
+- **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers)
+

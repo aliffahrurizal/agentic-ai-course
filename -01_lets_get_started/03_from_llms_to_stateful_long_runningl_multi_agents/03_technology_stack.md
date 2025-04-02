@@ -1,4 +1,4 @@
-# AgentiaCloud: Free Scalable Intelligence, Simplified
+# AgentiaCloud Stacks: Free Scalable Intelligence, Simplified
 
 Agentic AI is reshaping how we approach problem-solving, we’re harnessing its power to deliver scalable, adaptable intelligence solutions. Our focus is on providing developers with the tools to create tailored AI Agent-driven workflows without unnecessary complexity. By leveraging a minimalist yet powerful architecture, we enable everything from simple queries to sophisticated multi-agent systems.
 
@@ -82,9 +82,9 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
    - **Choice**: **[RabbitMQ](https://www.cloudamqp.com/plans.html#rmq)** for prototyping. **[Kafka for Kubernetes](https://www.redhat.com/en/topics/integration/why-run-apache-kafka-on-kubernetes) for production**. It is a distributed streaming platform optimized for high-throughput, fault-tolerant messaging, connecting agents in complex workflows.  
    - **Why It Matters**: Asynchronous messaging decouples components, enhancing resilience and supporting event-driven architectures.
 
-6. **Flexible Container Invocation**  
+6. **Scheduled Container Invocation**  
    - **Purpose**: This allows containers to be triggered either on-demand (via HTTP requests) or on a schedule (via cron-like jobs), offering versatility in execution patterns.  
-   - **Choice**: For development we use [python-crontab](https://pypi.org/project/python-crontab/). For prototyping, we’re using **[cron-job.org](https://cron-job.org/en/)**, a free online scheduling service.  For production, we’re opting for **[Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)**, which integrates with Kubernetes for robust scheduling.  
+   - **Choice**: For development we use [python-crontab](https://pypi.org/project/python-crontab/) on Linux and Mac. [APSchedule](https://pypi.org/project/APScheduler/) for Windows. Or [Schedule](https://pypi.org/project/schedule/) for inprocess scheduling on any system.  For prototyping, we’re using **[cron-job.org](https://cron-job.org/en/)**, a free online scheduling service.  For production, we’re opting for **[Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)**, which integrates with Kubernetes for robust scheduling.  
    - **Why It Matters**: Flexible invocation supports both real-time and batch processing, accommodating diverse use cases efficiently.
 
 7. **Relational Managed Database Services**  
@@ -111,7 +111,7 @@ The development, prototype and production stacks are identical in terms of the t
 - **REST APIs**: FastAPI (Open Source)
 - **Stateless Serverless Docker Containers**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) (Free Tier and Open Source)
 - **Asynchronous Message Passing**: [RabbitMQ Docker Image](https://hub.docker.com/_/rabbitmq/) (Open Source) 
-- **Flexible Container Invocation**: [python-crontab](https://pypi.org/project/python-crontab/) (Open Source).
+- **Scheduled Container Invocation**: [For development we use [python-crontab](https://pypi.org/project/python-crontab/) on Linux and Mac. [APSchedule](https://pypi.org/project/APScheduler/) for Windows. Or [Schedule](https://pypi.org/project/schedule/) for inprocess scheduling on any system.
 - **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers)
 
