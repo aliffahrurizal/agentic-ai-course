@@ -122,7 +122,7 @@ Let’s design an **Email Agent**, using the architecture combining **event-driv
   - Consumes `EmailFiltered` → Analyzes content → Generates suggestion → Updates data layer → `HumanReviewRequired {emailId, suggestion}`.
 
 ##### Step 3: HITL for Response Approval
-- **Tech**: Web app (React/Flask) + HITL Handler (Lambda).
+- **Tech**: Web app (Next.js/FastAPI) + HITL Handler (Lambda).
 - **Flow**:
   - HITL Handler pushes `HumanReviewRequired` to UI/notification (e.g., "Reply to boss: 'Yes, I’ll handle it' - Approve/Reject").
   - User responds → HITL Handler emits `HumanResponseReceived {emailId, approvedText}`.
