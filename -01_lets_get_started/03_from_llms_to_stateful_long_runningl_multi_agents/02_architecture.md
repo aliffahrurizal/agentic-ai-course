@@ -222,7 +222,7 @@ In a fraud detection system:
 ---
 
 ### Conclusion
-HITL fits beautifully into this architecture by leveraging EDA for real-time human triggers, the three-tier structure for clear separation (UI for humans, logic for agents, data for storage), stateless computing for scalable task handling, and CronJobs for periodic oversight. Implement it by defining HITL events, building a human interface, and closing the loop with feedback. It ensures your agentic AI remains autonomous yet accountable, with humans stepping in where needed. What’s your specific use case? I can tailor this further!
+HITL fits beautifully into this architecture by leveraging EDA for real-time human triggers, the three-tier structure for clear separation (UI for humans, logic for agents, data for storage), stateless computing for scalable task handling, and CronJobs for periodic oversight. Implement it by defining HITL events, building a human interface, and closing the loop with feedback. It ensures your agentic AI remains autonomous yet accountable, with humans stepping in where needed. 
 
 ### What is Event-Driven Architecure?
 
