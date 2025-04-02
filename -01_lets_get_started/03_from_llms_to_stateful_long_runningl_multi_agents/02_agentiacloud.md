@@ -113,8 +113,7 @@ The development, prototype and production stacks are identical in terms of the t
 - **Asynchronous Message Passing**: [RabbitMQ Docker Image](https://hub.docker.com/_/rabbitmq/) (Open Source) 
 - **Flexible Container Invocation**: [python-crontab](https://pypi.org/project/python-crontab/) (Open Source).
 - **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source)
-
----
+- **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers)
 
 ### Prototype Stack: Free Deployment
 
