@@ -128,7 +128,7 @@ Not necessarily. In agentic RAG, long-term memory retrieval can be:
 * **Implicit:** Built into the agent’s pipeline, where retrieval happens automatically (e.g., a retriever runs before the LLM processes the prompt) without the LLM explicitly calling a tool.
 * **Explicit (Tool Call):** The LLM decides to invoke a tool (e.g., `search_memory` or `retrieve_context`) to fetch long-term memory, treating retrieval as an action in its reasoning loop.
 
-In modern agentic RAG systems (e.g., built with LangChain or LangGraph), it’s common for retrieval to be a tool call when the agent has control over when and what to retrieve, aligning with the agent’s ability to dynamically choose actions.
+In modern agentic RAG systems, it’s common for retrieval to be a tool call when the agent has control over when and what to retrieve, aligning with the agent’s ability to dynamically choose actions.
 
 However, some implementations pre-fetch relevant long-term memory and inject it into the prompt without requiring the LLM to call a tool, especially in simpler RAG setups.
 
@@ -137,6 +137,8 @@ With more agentic designs, long-term memory retrieval has increasingly been trea
 **Example:** An agent might call `retrieve_past_interactions` as a tool to fetch long-term memory only when relevant, instead of having it always injected.
 
 To sum up, in modern agentic RAG, long-term memory is often implemented as a tool call to give the agent flexibility (e.g., "Should I check past data?"). But it’s not always a tool call—some systems still retrieve memory implicitly and inject it into the context. Previously in LangChain, retrieval was more commonly a built-in step rather than an explicit tool call, though the shift toward agentic designs has made tool calls more prevalent.
+
+**[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** standardizes tool calling. 
 
 ## Multi-Agent Systems
 

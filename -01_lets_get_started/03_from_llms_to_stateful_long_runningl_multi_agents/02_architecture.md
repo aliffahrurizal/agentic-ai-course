@@ -41,7 +41,7 @@ Examples include multi-agent systems, autonomous chatbots, or robotic process au
 ![stateless](./stateless.png)
 - **Why It Fits Agentic AI**:
   - Statelessness (where each request or event is handled independently, without relying on prior state stored in memory) enhances **scalability** and **resilience**.
-  - Agents can be deployed as stateless microservices or serverless functions (e.g., AWS Lambda), spinning up to handle events and shutting down when idle—ideal for unpredictable workloads.
+  - Agents can be deployed as stateless microservices or serverless containers, spinning up to handle events and shutting down when idle—ideal for unpredictable workloads.
   - Simplifies horizontal scaling: add more agent instances without worrying about shared state.
   - Caveat: Agents often need some state (e.g., memory of past actions). This can be offloaded to an external store (e.g., Postgres, a database) in the data layer, keeping the compute layer stateless.
 - **Use Case**: An agent handling incoming customer requests runs as a stateless function, fetching its context (e.g., conversation history) from a database per event.

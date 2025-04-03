@@ -12,6 +12,7 @@ By keeping predefined constructs to a minimum, we eliminate excess and empower d
 6. **Flexible Container Invocation** via HTTP requests or scheduled CronJobs.  
 7. **Relational Managed Database Services** for robust data handling.
 8. **In-memory data structure store** frequently used as a cache to speed up application performance.
+9. **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** standardizes agentic tool calling. 
 
 With these core components, we enable the deployment of virtually any agentic workflow—striking a balance between simplicity and limitless potential.
 
@@ -33,7 +34,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
 
 2. **Lightweight Agents**  
    - **Purpose**: These are modular AI units designed for specific tasks, equipped with guardrails (to ensure safe operation), tool integration (e.g., web search, file parsing, etc.), and handoff capabilities (to collaborate with other agents).  
-   - **Choice**: We’re using the **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)** to build these agents. This SDK offers a streamlined way to create lightweight agents with built-in features like memory management **([LangMem](https://langchain-ai.github.io/langmem/)** integration) and tool usage.  
+   - **Choice**: We’re using the **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)** to build these agents. This SDK offers a streamlined way to create lightweight agents with built-in features like memory management **([LangMem](https://langchain-ai.github.io/langmem/)** integration) and tool usage. **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** standardizes agentic tool calling.  
    - **Why It Matters**: Lightweight agents minimize resource use while enabling flexible, scalable workflows, whether deployed individually or as part of a crew.
 
 3. **REST APIs**  
@@ -42,7 +43,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
    - **Why It Matters**: It ensures low-latency, scalable communication, critical for user-facing applications and inter-agent coordination.
 
 4. **Stateless Serverless Docker Containers**  
-   - **Purpose**: These containers package our application logic (e.g., agents, APIs, MCP Servers) in a portable, stateless format, allowing automatic scaling and easy deployment without persistent internal state.  
+   - **Purpose**: These containers package our application logic (e.g., agents, APIs, [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) Servers) in a portable, stateless format, allowing automatic scaling and easy deployment without persistent internal state.  
    - **Choice**: We’re using **[Docker Containers](https://www.docker.com/resources/what-container/)**, which provide a lightweight, consistent runtime environment deployable across platforms. For container hosting we use **[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (free hosting with built-in CI/CD) for prototyping, and [Kubernetes](https://kubernetes.io/) on [always free Oracle VMs](https://github.com/nce/oci-free-cloud-k8s) for production training. 
    - **Why It Matters**: Containers support rapid deployment and efficient resource utilization, aligning with the lean framework’s focus on simplicity and scalability. Deploying AI agents using Docker containers is widely regarded as a best practice and is considered the de facto industry standard. Docker containers offer a lightweight, portable, and consistent environment, ensuring that AI applications run reliably across various platforms. Moreover, Docker's widespread adoption has led to a rich ecosystem of tools and services that further enhance its utility in deploying AI agents. In summary, Docker containers provide a standardized and efficient approach to deploying AI agents, making them a preferred choice in the industry. 
 
@@ -115,6 +116,7 @@ Together, these constructs provide the versatility to handle virtually any agent
 The development, prototype and production stacks are identical in terms of the tools and technologies used. The only difference lies in how they are deployed. This unified development approach ensures developers can build and test locally or in a cloud environment using the same stack, transitioning seamlessly to either prototyping or production deployment.  
 - **LLM APIs**: OpenAI Chat Completion (Google Gemini - Free Tier), Responses API 
 - **Lightweight Agents**: OpenAI Agents SDK (Open Source) 
+- **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** for standardizing agentic tool calling. 
 - **REST APIs**: FastAPI (Open Source)
 - **Stateless Serverless Docker Containers**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) (Free Tier and Open Source)
 - **Asynchronous Message Passing**: [RabbitMQ Docker Image](https://hub.docker.com/_/rabbitmq/) (Open Source) 
@@ -127,7 +129,8 @@ The development, prototype and production stacks are identical in terms of the t
 
 The prototype stack is designed for rapid iteration and is completely free of charge or uses free tiers, leveraging cost-effective tools for testing and validation.  
 - **LLM APIs**: OpenAI Chat Completion Compatible Google Gemini APIs which has a generious free tier, and Responses API  
-- **Lightweight Agents**: OpenAI Agents SDK  
+- **Lightweight Agents**: OpenAI Agents SDK
+- **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** Servers.   
 - **REST APIs**: FastAPI  
 - **Stateless Serverless Docker Containers**: Docker Containers deployed on **[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (free hosting with built-in CI/CD)  
 - **Asynchronous Message Passing**: RabbitMQ (Free tier).  
@@ -143,6 +146,7 @@ The prototype stack is designed for rapid iteration and is completely free of ch
 The production stack is optimized for scalability, reliability, and performance, using enterprise-grade tools while maintaining the same development stack, differing only in deployment.  
 - **LLM APIs**: Any LLM which is compatible with OpenAI Chat Completion API (most are), Responses API  
 - **Lightweight Agents**: OpenAI Agents SDK  
+- **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** in stateless containers. 
 - **REST APIs**: FastAPI  
 - **Stateless Serverless Docker Containers**: Docker Containers orchestrated by **Kubernetes** (for auto-scaling and resilience)  
 - **Asynchronous Message Passing**: Kafka on Kubernetes (multi-broker, high-availability setup) or RabbitMQ on Kubernetes
