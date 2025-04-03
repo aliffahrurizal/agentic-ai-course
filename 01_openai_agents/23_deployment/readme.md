@@ -15,6 +15,7 @@ Provide a clear, actionable deployment strategy for AI agents built with the Ope
 - **CockroachDB**
 - **CronJobs**
 - **RabbitMQ**
+- **MCP Server SDK**
 
 ### Target User
 - **Agentic AI Developer**
@@ -29,8 +30,8 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
 ### Primary Platform
 - **[Hugging Face Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (utilizing free-tier [Docker container deployments](https://www.docker.com/resources/what-container/)).
 
-### Agent Focus
-- Short-term and long-term agent workflow and state persistence.
+### Agent and MCP Focus
+- Short-term and long-term agent workflow and state persistence. **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** servers for standardizing agentic tool calling, in stateless containers. 
 
 ### Recommended Approach
 - **Three-Tier Deployment**  
@@ -43,7 +44,8 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
      - **Functionality:** User interface, making API calls to the backend  
   2. **Backend API Container:**
      - **Framework:** [FastAPI](https://fastapi.tiangolo.com/)  
-     - **Agent Logic:** OpenAI Agents SDK integrated within FastAPI endpoints  
+     - **Agent Logic:** OpenAI Agents SDK integrated within FastAPI endpoints
+    - **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** Servers in stateless containers for standardizing agentic tool calling.   
      - **State Management:** [CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/) for user session state (short-term memory) and initial long-term memory structures. [SQLModel](https://github.com/fastapi/sqlmodel) for database integration in Python.
      - **Agent Memory:** [LangMem](https://langchain-ai.github.io/langmem/) with CockroachDB Serverless Store
      - **Scheduling with CronJob** [Cron-Job.org](https://cron-job.org/en/) 
@@ -56,7 +58,7 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
   1.   **Architecture:** A single Hugging Face Spaces Docker container.
   2. **Components:**
     - **Frontend/UI:** Streamlit or Chainlit (integrated directly).
-    - **Backend/Agent Logic:** OpenAI Agents SDK running within the same container.
+    - **Backend/Agent Logic:** OpenAI Agents SDK running within the same container. MCP servers running independently.
     - **State Management:** CockroachDB (Serverless) with SQLModel for storing user session state (short-term memory) and potentially initial long-term memory structures.
     - **Agent Memory:** [LangMem](https://langchain-ai.github.io/langmem/) with CockroachDB Serverless Store
 
@@ -159,7 +161,7 @@ https://github.com/langchain-ai/agent-protocol
 - **Start FastAPI Development with Agent Protocol [Generated Stubs](https://github.com/langchain-ai/agent-protocol)**
 
 - **Vendor Lock-in Mitigation:**  
-  - Use containerization (Docker) and open standards (Kubernetes, Kafka, RabbitMQ, Postgres) for portability  
+  - Use containerization (Docker) and open standards (Kubernetes, Kafka, RabbitMQ, Postgres, MCP) for portability  
   - Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel for this. 
   - Periodically review component portability (e.g., event bus, compute platform)  
 

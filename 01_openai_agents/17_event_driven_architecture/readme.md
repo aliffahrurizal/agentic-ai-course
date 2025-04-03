@@ -218,7 +218,7 @@ In the context of the chatbot application described in the paragraph:
 * The front-end (Chainlit) will send requests to the middle-tier (FastAPI) containing all the necessary data, such as user input, authentication tokens, and any relevant context.
 * The middle-tier will process the request, interact with the database (CockroachDB Serverless) and the Agents SDK, and return a response.
 * The middle tier will not store any information about the conversation between requests. all needed information will be passed with each request.
-* The persistence of the chat history and user information will be handled by the relational database (CockroachDB), not in the middle tier API itself.
+* The persistence of the chat history and user information will be handled by the relational database (Redis and CockroachDB), not in the middle tier API itself.
 
 Essentially, each request to the API is a fresh transaction, and the API relies on external storage (the database) for persistent data.
 
@@ -227,7 +227,8 @@ Essentially, each request to the API is a fresh transaction, and the API relies 
 
 The development, prototype and production stacks are identical in terms of the tools and technologies used. The only difference lies in how they are deployed. This unified development approach ensures developers can build and test locally or in a cloud environment using the same stack, transitioning seamlessly to either prototyping or production deployment.  
 - **LLM APIs**: OpenAI Chat Completion (Google Gemini - Free Tier), Responses API 
-- **Lightweight Agents**: OpenAI Agents SDK (Open Source) 
+- **Lightweight Agents**: OpenAI Agents SDK (Open Source)
+- **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** Server in stateless containers for standardizing agentic tool calling (Open Source).  
 - **REST APIs**: FastAPI (Open Source)
 - **Stateless Serverless Docker Containers**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) (Free Tier and Open Source)
 - **Asynchronous Message Passing**: [RabbitMQ Docker Image](https://hub.docker.com/_/rabbitmq/) (Open Source) 
