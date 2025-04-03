@@ -4,6 +4,8 @@ This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](h
 
 ![Agentic AI Top Trend](./toptrend.webp)
 
+Complex Agentic AI Systems will be deployed on Cloud Native Technologies.
+
 ![Cloud Native](./cloud-native-platforms-market-size.webp)
 
 ## Watch The NVIDIA CEO Jensen Huang Keynote at CES 2025
