@@ -198,7 +198,17 @@ This deployment strategy ensures a smooth transition from prototyping to product
 
 ### Serverless Alternative for both Prototyping and Production 
 
-Those developer who have credit card and can register for the Azure free tier, have a option to use the serverless platform which are basically managed Kubernetes for both prototyping and production. Like [Azure Container Apps (ACA)](https://azure.microsoft.com/en-us/products/container-apps) (with [Dapr](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview) support) and [Jobs in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/jobs?tabs=azure-cli). They can get started with the [free tier](https://azure.microsoft.com/en-us/pricing/free-services): The first 180,000 vCPU per second, 360,000 GiB/s, and 2 million requests each month are free.
+Those developer who have credit card and can register for the Azure free tier, have a option to use the serverless platform which are basically managed Kubernetes for both prototyping and production. Like [Azure Container Apps (ACA)](https://azure.microsoft.com/en-us/products/container-apps) (with [Dapr](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview) support) and [Jobs in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/jobs?tabs=azure-cli). 
+
+They can get started with the [free tier](https://azure.microsoft.com/en-us/pricing/free-services): The first 180,000 vCPU per second, 360,000 GiB/s, and 2 million requests each month are free.
+
+**Real-World Example**
+
+Imagine a FastAPI Service running on ACA:
+
+With 0.5 vCPU and 1 GB RAM, it might handle 50-100 requests per minute comfortably, depending on the workload (e.g., database queries vs. static responses).
+
+If traffic spikes, ACA’s autoscaling could spin up another 0.5 vCPU replica rather than over-provisioning a full vCPU, keeping costs down.
 
 
 ## What does this mean? "Consider chaos engineering for EDA resilience"
