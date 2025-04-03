@@ -103,7 +103,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
 9. **[Distributed Application Runtime (Dapr)](https://dapr.io/)**
    - **Purpose**: Dapr (Distributed Application Runtime) simplifies the development of resilient, distributed systems by providing standardized building blocks—such as service invocation, state management, and publish/subscribe messaging—for agentic workflows. It abstracts away the complexities of distributed computing, enabling developers to focus on building intelligent, scalable AI solutions rather than wrestling with infrastructure challenges.
    - **Choice**: We chose Dapr for its lightweight, language-agnostic design and its ability to seamlessly integrate with our stateless serverless Docker containers and asynchronous message-passing systems. It enhances flexibility by supporting multiple programming languages and deployment environments, while aligning with our minimalist philosophy of reducing predefined constructs and empowering custom solutions.
-   - **Why It Matters**: In an agentic AI ecosystem, where dynamic interactions between agents and services are critical, Dapr ensures reliability and scalability without adding unnecessary overhead. By standardizing how agents communicate and manage state, it accelerates development, improves fault tolerance, and future-proofs our architecture—allowing us to adapt to evolving needs while maintaining simplicity and performance.
+   - **Why It Matters**: In an agentic AI ecosystem, where dynamic interactions between agents and services are critical, Dapr ensures reliability and scalability without adding unnecessary overhead. By standardizing how agents communicate and manage state, it accelerates development, improves fault tolerance, and future-proofs our architecture—allowing us to adapt to evolving needs while maintaining simplicity and performance. Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
 
 ---
 
@@ -129,7 +129,7 @@ The development, prototype and production stacks are identical in terms of the t
 - **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **Inmemory Datastore**: [Redis Docker Image](https://hub.docker.com/_/redis) (Open Source). In Python use [redis-py](https://pypi.org/project/redis/) or higher level [Redis OM Python](https://github.com/redis/redis-om-python) (Open Source). 
 - **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers) (Open Source)
-- **Run Darp Locally** [Run using Docker-Compose](https://docs.dapr.io/getting-started/install-dapr-selfhost/) (Open Source)
+- **Run Darp Locally** [Run using Docker-Compose](https://docs.dapr.io/getting-started/install-dapr-selfhost/) (Open Source) Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
 
 ### Prototype Stack: Free Deployment
 
@@ -143,7 +143,7 @@ The prototype stack is designed for rapid iteration and is completely free of ch
 - **Flexible Container Invocation**: cron-job.org (totally free online scheduling service)  
 - **Relational Managed Database Services**: CockroachDB Serverless (free tier). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **In Memory Datastore**: [Upstash Redis](https://upstash.com/pricing) 
-- **Darp** Treat Dapr Like Any Container. The daprio/daprd image is just a standard container you deploy alongside your app i.e. Dapr Sidecar (Open Source)
+- **Darp** Treat Dapr Like Any Container. The daprio/daprd image is just a standard container you deploy alongside your app i.e. Dapr Sidecar (Open Source). Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
 - **Cost**: Fully free for prototyping, minimizing financial barriers during development.
 
 ---
@@ -160,7 +160,7 @@ The production stack is optimized for scalability, reliability, and performance,
 - **Flexible Container Invocation**: Kubernetes CronJob (natively integrated with Kubernetes) The developer will have to migrate from cron-job.org to Kubernetes CronJob.
 - **Relational Managed Database Services**: Postgres for Kubernetes. Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **In Memory Data Store**: Redis on Kubernetes 
-- **Darp on Kubernetes** [Deploy Dapr on a Kubernetes cluster](https://docs.dapr.io/operations/hosting/kubernetes/) (Open Source)
+- **Darp on Kubernetes** [Deploy Dapr on a Kubernetes cluster](https://docs.dapr.io/operations/hosting/kubernetes/) (Open Source). Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
   
 ---
 

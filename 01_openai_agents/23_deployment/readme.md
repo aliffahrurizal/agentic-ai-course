@@ -53,7 +53,7 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
      - **In Memory Datastore**: [Upstash Redis](https://upstash.com/pricing) 
      - **Design Principle:** Backend API is **stateless**, relying on external databases for persistence to simplify scaling and production transition
   3. - **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** Servers in stateless containers for standardizing agentic tool calling. 
-  4. **Dapr Sidecar** Treat Dapr like nny Container. The daprio/daprd image is just a standard container.
+  4. **Dapr Sidecar** Treat Dapr like nny Container. The daprio/daprd image is just a standard container. Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
 
 
 - **Alternative Single-Tier Deployment (Simpler Setup for Quick Start Only, if possible avoid it)**
@@ -78,7 +78,7 @@ Deliver a scalable, reliable, and maintainable deployment capable of handling nu
 ### Primary Compute Platform
 - **[Kubernetes](https://kubernetes.io/)**  
   - **Why:** Kubernetes, also known as K8s, is an open source system for automating deployment, scaling, and management of containerized applications. It is a Planet Scale solution. Designed on the same principles that allow Google to run billions of containers a week, Kubernetes can scale without increasing your operations team.
-- **Darp on Kubernetes** [Deploy Dapr on a Kubernetes cluster](https://docs.dapr.io/operations/hosting/kubernetes/) (Open Source)
+- **Darp on Kubernetes** [Deploy Dapr on a Kubernetes cluster](https://docs.dapr.io/operations/hosting/kubernetes/) (Open Source) Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
 - **MCP Servers on Kubernetes**
 ### Architecture
 - **Event-Driven Architecture (EDA)**  
