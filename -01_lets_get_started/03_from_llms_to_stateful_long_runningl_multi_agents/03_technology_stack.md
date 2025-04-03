@@ -146,6 +146,10 @@ The prototype stack is designed for rapid iteration and is completely free of ch
 - **Darp** Treat Dapr Like Any Container. The daprio/daprd image is just a standard container you deploy alongside your app i.e. Dapr Sidecar (Open Source). Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
 - **Cost**: Fully free for prototyping, minimizing financial barriers during development.
 
+### Serverless Alternative for both Prototyping and Production 
+
+Those developer who have credit card and can register for the Azure free tier, have a option to use the serverless platform which are basically managed Kubernetes for both prototyping and production. Like [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) (with [Dapr](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview) support) and [Jobs in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/jobs?tabs=azure-cli). They can get started with the [free tier](https://azure.microsoft.com/en-us/pricing/free-services): The first 180,000 vCPU per second, 360,000 GiB/s, and 2 million requests each month are free. 
+
 ---
 
 ### Production Stack: Cloud Native and Open Source
@@ -161,6 +165,10 @@ The production stack is optimized for scalability, reliability, and performance,
 - **Relational Managed Database Services**: Postgres for Kubernetes. Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **In Memory Data Store**: Redis on Kubernetes 
 - **Darp on Kubernetes** [Deploy Dapr on a Kubernetes cluster](https://docs.dapr.io/operations/hosting/kubernetes/) (Open Source). Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
+
+### Serverless Alternative for both Prototyping and Production 
+
+Those developer who have credit card and can register for the Azure free tier, have a option to use the serverless platform which are basically managed Kubernetes for both prototyping and production. Like [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) (with [Dapr](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview) support) and [Jobs in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/jobs?tabs=azure-cli). They can get started with the [free tier](https://azure.microsoft.com/en-us/pricing/free-services): The first 180,000 vCPU per second, 360,000 GiB/s, and 2 million requests each month are free.
   
 ---
 

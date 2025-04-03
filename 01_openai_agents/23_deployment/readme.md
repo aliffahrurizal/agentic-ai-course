@@ -196,6 +196,10 @@ https://github.com/langchain-ai/agent-protocol
 ## Conclusion
 This deployment strategy ensures a smooth transition from prototyping to production, balancing scalability, maintainability, and flexibility. The three-tier prototyping approach on Hugging Face Spaces aligns with the production setup on Kubernetes, while the event-driven architecture with Kafka (or lighter alternatives like RabbitMQ) supports robust agent workflows. The database stack is optimized for diverse needs, with consolidation options to reduce complexity. Vendor lock-in is addressed through portable standards, and security, monitoring, and testing are prioritized. This approach effectively supports both short-term and long-term AI agents using the OpenAI Agents SDK.
 
+### Serverless Alternative for both Prototyping and Production 
+
+Those developer who have credit card and can register for the Azure free tier, have a option to use the serverless platform which are basically managed Kubernetes for both prototyping and production. Like [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) (with [Dapr](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview) support) and [Jobs in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/jobs?tabs=azure-cli). They can get started with the [free tier](https://azure.microsoft.com/en-us/pricing/free-services): The first 180,000 vCPU per second, 360,000 GiB/s, and 2 million requests each month are free.
+
 
 ## What does this mean? "Consider chaos engineering for EDA resilience"
 
