@@ -16,6 +16,7 @@ Provide a clear, actionable deployment strategy for AI agents built with the Ope
 - **CronJobs**
 - **RabbitMQ**
 - **MCP Server SDK**
+- **Dapr**
 
 ### Target User
 - **Agentic AI Developer**
@@ -38,20 +39,21 @@ Enable rapid iteration, validation of agent capabilities, and user experience te
   - **Why:** A single-tier setup (frontend and backend in one container) is simpler but risks architectural rework during the production transition. A three-tier approach aligns with production architecture, easing the shift and validating separation of concerns early.
 
 ### Architecture
-- **Two Docker Containers on [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker):**
+- **Four Docker Containers on [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker):**
   1. **Frontend Container:**
      - **Framework:** [Streamlit](https://streamlit.io/) or [Chainlit](https://chainlit.io/)  
      - **Functionality:** User interface, making API calls to the backend  
   2. **Backend API Container:**
      - **Framework:** [FastAPI](https://fastapi.tiangolo.com/)  
-     - **Agent Logic:** OpenAI Agents SDK integrated within FastAPI endpoints
-    - **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** Servers in stateless containers for standardizing agentic tool calling.   
+     - **Agent Logic:** OpenAI Agents SDK integrated within FastAPI endpoints  
      - **State Management:** [CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/) for user session state (short-term memory) and initial long-term memory structures. [SQLModel](https://github.com/fastapi/sqlmodel) for database integration in Python.
      - **Agent Memory:** [LangMem](https://langchain-ai.github.io/langmem/) with CockroachDB Serverless Store
      - **Scheduling with CronJob** [Cron-Job.org](https://cron-job.org/en/) 
      - **Asynchronous Message Passing** [RabbitMQ](https://www.cloudamqp.com/plans.html#rmq)
      - **In Memory Datastore**: [Upstash Redis](https://upstash.com/pricing) 
      - **Design Principle:** Backend API is **stateless**, relying on external databases for persistence to simplify scaling and production transition
+  3. - **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** Servers in stateless containers for standardizing agentic tool calling. 
+  4. **Dapr Sidecar** Treat Dapr like nny Container. The daprio/daprd image is just a standard container.
 
 
 - **Alternative Single-Tier Deployment (Simpler Setup for Quick Start Only, if possible avoid it)**
@@ -76,6 +78,8 @@ Deliver a scalable, reliable, and maintainable deployment capable of handling nu
 ### Primary Compute Platform
 - **[Kubernetes](https://kubernetes.io/)**  
   - **Why:** Kubernetes, also known as K8s, is an open source system for automating deployment, scaling, and management of containerized applications. It is a Planet Scale solution. Designed on the same principles that allow Google to run billions of containers a week, Kubernetes can scale without increasing your operations team.
+- **Darp on Kubernetes** [Deploy Dapr on a Kubernetes cluster](https://docs.dapr.io/operations/hosting/kubernetes/) (Open Source)
+- **MCP Servers on Kubernetes**
 ### Architecture
 - **Event-Driven Architecture (EDA)**  
   - **Why:** Decouples services, enhances resilience, and supports asynchronous processing, ideal for agentic workflows, especially long-term agents.
@@ -122,7 +126,7 @@ Deliver a scalable, reliable, and maintainable deployment capable of handling nu
 ---
 
 ### The Ultimate Cloud Platform: Kubernetes
-Deploy compute (stateless containers), messaging (Kafka), and databases (Postgres) all on Kubernetes, but this will require a lot of DevOps expertise. However, the good news is given our production stack it will not be too difficult to do. 
+Deploy compute (stateless containers), Dapr, messaging (Kafka), and databases (Postgres) all on Kubernetes, but this will require a lot of DevOps expertise. However, the good news is given our production stack it will not be too difficult to do. 
 ---
 
 ## III. Agentic AI Stack (State Management & Knowledge)

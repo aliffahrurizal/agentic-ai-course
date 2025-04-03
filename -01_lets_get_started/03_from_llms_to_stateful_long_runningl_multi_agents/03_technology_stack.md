@@ -13,6 +13,7 @@ By keeping predefined constructs to a minimum, we eliminate excess and empower d
 7. **Relational Managed Database Services** for robust data handling.
 8. **In-memory data structure store** frequently used as a cache to speed up application performance.
 9. **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)** standardizes agentic tool calling. 
+10. **[Distributed Application Runtime (Dapr)](https://dapr.io/)** simplifies building resilient, distributed systems by providing standardized building blocks for agentic workflows.
 
 With these core components, we enable the deployment of virtually any agentic workflow—striking a balance between simplicity and limitless potential.
 
@@ -43,7 +44,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
    - **Why It Matters**: It ensures low-latency, scalable communication, critical for user-facing applications and inter-agent coordination.
 
 4. **Stateless Serverless Docker Containers**  
-   - **Purpose**: These containers package our application logic (e.g., agents, APIs, [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) Servers) in a portable, stateless format, allowing automatic scaling and easy deployment without persistent internal state.  
+   - **Purpose**: These containers package our application logic (e.g., agents, APIs, Dapr, [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) Servers) in a portable, stateless format, allowing automatic scaling and easy deployment without persistent internal state.  
    - **Choice**: We’re using **[Docker Containers](https://www.docker.com/resources/what-container/)**, which provide a lightweight, consistent runtime environment deployable across platforms. For container hosting we use **[Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker)** (free hosting with built-in CI/CD) for prototyping, and [Kubernetes](https://kubernetes.io/) on [always free Oracle VMs](https://github.com/nce/oci-free-cloud-k8s) for production training. 
    - **Why It Matters**: Containers support rapid deployment and efficient resource utilization, aligning with the lean framework’s focus on simplicity and scalability. Deploying AI agents using Docker containers is widely regarded as a best practice and is considered the de facto industry standard. Docker containers offer a lightweight, portable, and consistent environment, ensuring that AI applications run reliably across various platforms. Moreover, Docker's widespread adoption has led to a rich ecosystem of tools and services that further enhance its utility in deploying AI agents. In summary, Docker containers provide a standardized and efficient approach to deploying AI agents, making them a preferred choice in the industry. 
 
@@ -99,6 +100,10 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
    - **Choice**: **[Upstash Redis](https://upstash.com/pricing)** Upstash is known for its serverless Redis offering and provides a free tier.
    - **Why It Matters**: Because it stores data in RAM, it offers exceptionally high performance. Ideal for storing LLM session data. 
 
+9. **[Distributed Application Runtime (Dapr)](https://dapr.io/)**
+   - **Purpose**: Dapr (Distributed Application Runtime) simplifies the development of resilient, distributed systems by providing standardized building blocks—such as service invocation, state management, and publish/subscribe messaging—for agentic workflows. It abstracts away the complexities of distributed computing, enabling developers to focus on building intelligent, scalable AI solutions rather than wrestling with infrastructure challenges.
+   - **Choice**: We chose Dapr for its lightweight, language-agnostic design and its ability to seamlessly integrate with our stateless serverless Docker containers and asynchronous message-passing systems. It enhances flexibility by supporting multiple programming languages and deployment environments, while aligning with our minimalist philosophy of reducing predefined constructs and empowering custom solutions.
+   - **Why It Matters**: In an agentic AI ecosystem, where dynamic interactions between agents and services are critical, Dapr ensures reliability and scalability without adding unnecessary overhead. By standardizing how agents communicate and manage state, it accelerates development, improves fault tolerance, and future-proofs our architecture—allowing us to adapt to evolving needs while maintaining simplicity and performance.
 
 ---
 
@@ -123,7 +128,8 @@ The development, prototype and production stacks are identical in terms of the t
 - **Scheduled Container Invocation**: [For development we use [python-crontab](https://pypi.org/project/python-crontab/) on Linux and Mac. [APSchedule](https://pypi.org/project/APScheduler/) for Windows. Or [Schedule](https://pypi.org/project/schedule/) for inprocess scheduling on any system.
 - **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **Inmemory Datastore**: [Redis Docker Image](https://hub.docker.com/_/redis) (Open Source). In Python use [redis-py](https://pypi.org/project/redis/) or higher level [Redis OM Python](https://github.com/redis/redis-om-python) (Open Source). 
-- **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers)
+- **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers) (Open Source)
+- **Run Darp Locally** [Run using Docker-Compose](https://docs.dapr.io/getting-started/install-dapr-selfhost/) (Open Source)
 
 ### Prototype Stack: Free Deployment
 
@@ -137,6 +143,7 @@ The prototype stack is designed for rapid iteration and is completely free of ch
 - **Flexible Container Invocation**: cron-job.org (totally free online scheduling service)  
 - **Relational Managed Database Services**: CockroachDB Serverless (free tier). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **In Memory Datastore**: [Upstash Redis](https://upstash.com/pricing) 
+- **Darp** Treat Dapr Like Any Container. The daprio/daprd image is just a standard container you deploy alongside your app i.e. Dapr Sidecar (Open Source)
 - **Cost**: Fully free for prototyping, minimizing financial barriers during development.
 
 ---
@@ -153,6 +160,7 @@ The production stack is optimized for scalability, reliability, and performance,
 - **Flexible Container Invocation**: Kubernetes CronJob (natively integrated with Kubernetes) The developer will have to migrate from cron-job.org to Kubernetes CronJob.
 - **Relational Managed Database Services**: Postgres for Kubernetes. Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **In Memory Data Store**: Redis on Kubernetes 
+- **Darp on Kubernetes** [Deploy Dapr on a Kubernetes cluster](https://docs.dapr.io/operations/hosting/kubernetes/) (Open Source)
   
 ---
 

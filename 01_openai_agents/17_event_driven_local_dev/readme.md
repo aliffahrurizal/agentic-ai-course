@@ -236,4 +236,5 @@ The development, prototype and production stacks are identical in terms of the t
 - **Relational Database**: [Postgres Docker Image](https://hub.docker.com/_/postgres) (Open Source). Implement abstraction layers (e.g., ORMs for databases) to ease provider switches, we will use SQLModel (Open Source). 
 - **Inmemory Datastore**: [Redis Docker Image](https://hub.docker.com/_/redis) (Open Source). In Python use [redis-py](https://pypi.org/project/redis/) or higher level [Redis OM Python](https://github.com/redis/redis-om-python) (Open Source). 
 - **Developing inside a Container** [Visual Studio Code Dev Containers Extension](https://code.visualstudio.com/docs/devcontainers/containers)
+- **Run Darp Locally** [Run using Docker-Compose](https://docs.dapr.io/getting-started/install-dapr-selfhost/) (Open Source)
 
