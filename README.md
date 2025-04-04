@@ -1,4 +1,4 @@
-# Learn Cloud Native Agentic AI
+# Learn Cloud Native Agentic AI: From Start to Scale
 
 This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201 and AI-202 courses.
 
