@@ -28,6 +28,7 @@ Examples include multi-agent systems, autonomous chatbots, or robotic process au
 
 #### 2. Three-Tier and Microservices Architecture
 ![Three-Tier](three_tier.png)
+![microservices](./Microservices-Architecture.png)
 - **Why It Fits Agentic AI**:
   - Provides a **structured yet flexible foundation**:
     - **Presentation Layer (or Service)**: Interfaces for human-agent interaction (e.g., a UI or API for configuring agents), often implemented as a lightweight microservice for scalability and responsiveness.
