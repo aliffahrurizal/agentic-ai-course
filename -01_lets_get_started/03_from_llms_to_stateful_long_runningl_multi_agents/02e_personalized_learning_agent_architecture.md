@@ -1,6 +1,6 @@
 # Personalized Learning Agent Architecture
 
-Let’s design a **Personalized Learning Agent** for an educational platform. This agent will monitor student progress, suggest tailored learning activities (e.g., quizzes, videos), and notify teachers or students for approval. It will also allow teachers to manually request specific assignments or interventions, which the agent optimizes based on student data before seeking approval. I’ll outline the requirements first, then detail the implementation using **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
+Let’s design a **Personalized Learning Agent** for an educational platform. This agent will monitor student progress, suggest tailored learning activities (e.g., quizzes, videos), and notify teachers or students for approval. It will also allow teachers to manually request specific assignments or interventions, which the agent optimizes based on student data before seeking approval. I’ll outline the requirements first, then detail the implementation using **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
 
 ---
 

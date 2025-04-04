@@ -1,6 +1,6 @@
 # Supply Chain Optimization Agent
 
-Let’s create an example of a **Supply Chain Optimization Agent** for a logistics company. This agent will monitor inventory levels, optimize delivery routes, and notify managers for approval on critical decisions, while also allowing managers to manually request route adjustments with agent-verified optimizations. I’ll first outline the requirements and then detail the implementation using the same architecture: **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
+Let’s create an example of a **Supply Chain Optimization Agent** for a logistics company. This agent will monitor inventory levels, optimize delivery routes, and notify managers for approval on critical decisions, while also allowing managers to manually request route adjustments with agent-verified optimizations. I’ll first outline the requirements and then detail the implementation using the same architecture: **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
 
 ---
 

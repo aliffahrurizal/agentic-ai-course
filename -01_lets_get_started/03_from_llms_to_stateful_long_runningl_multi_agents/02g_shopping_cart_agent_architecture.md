@@ -1,6 +1,6 @@
 # Shopping Cart and Inventory Management Agent Architecture
 
-Let’s design a **Shopping Cart and Inventory Management Agent** for an e-commerce platform. This agent will manage the shopping cart, track inventory in real-time, suggest actions based on stock levels, and notify staff or customers as needed. It will also allow staff to manually request inventory adjustments or promotions, optimized by the agent before approval. I’ll include additional automation features and identify where **Large Language Model (LLM) intelligence** can enhance functionality. First, I’ll outline the requirements, then detail the implementation using **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
+Let’s design a **Shopping Cart and Inventory Management Agent** for an e-commerce platform. This agent will manage the shopping cart, track inventory in real-time, suggest actions based on stock levels, and notify staff or customers as needed. It will also allow staff to manually request inventory adjustments or promotions, optimized by the agent before approval. I’ll include additional automation features and identify where **Large Language Model (LLM) intelligence** can enhance functionality. First, I’ll outline the requirements, then detail the implementation using **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
 
 ---
 

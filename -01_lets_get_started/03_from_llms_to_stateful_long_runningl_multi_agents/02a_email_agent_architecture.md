@@ -1,6 +1,6 @@
 # Email Management Agent Architecture
 
-Let’s design an **Email Agent**, using the architecture combining **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**. I’ll first outline the requirements and then detail the implementation.
+Let’s design an **Email Agent**, using the architecture combining **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**. I’ll first outline the requirements and then detail the implementation.
 
 ---
 

@@ -1,6 +1,6 @@
 # Financial Trading Agent Architecture
 
-Let’s design a **Financial Trading Agent** for an investment platform. This agent will monitor market data, suggest trades based on trends or predefined strategies, and notify traders for approval. It will also allow traders to manually request trades, which the agent analyzes for risk and optimizes before seeking approval. I’ll outline the requirements first, then detail the implementation using **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
+Let’s design a **Financial Trading Agent** for an investment platform. This agent will monitor market data, suggest trades based on trends or predefined strategies, and notify traders for approval. It will also allow traders to manually request trades, which the agent analyzes for risk and optimizes before seeking approval. I’ll outline the requirements first, then detail the implementation using **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
 
 ---
 

@@ -1,6 +1,6 @@
 # Blood Bank ERP Agent Architecture
 
-Let’s design an enhanced **Blood Bank ERP Agent** for a blood bank management system, incorporating barcode-based blood tracking, donor relationship management, and additional automation features. This agent will track blood units, inform donors of safe donation times, and automate processes like inventory optimization, demand forecasting, and donor engagement campaigns. I’ll also identify where **Large Language Model (LLM) intelligence** can be applied. First, I’ll outline the requirements, then detail the implementation using **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
+Let’s design an enhanced **Blood Bank ERP Agent** for a blood bank management system, incorporating barcode-based blood tracking, donor relationship management, and additional automation features. This agent will track blood units, inform donors of safe donation times, and automate processes like inventory optimization, demand forecasting, and donor engagement campaigns. I’ll also identify where **Large Language Model (LLM) intelligence** can be applied. First, I’ll outline the requirements, then detail the implementation using **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
 
 ---
 

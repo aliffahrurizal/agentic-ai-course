@@ -1,6 +1,6 @@
 # Healthcare Patient Monitoring Agent Architecture
 
-Let’s design a **Healthcare Patient Monitoring Agent** for a hospital or telemedicine system. This agent will monitor patient vitals in real-time, detect anomalies, suggest interventions, and notify healthcare professionals for approval. It will also allow doctors to manually request follow-up actions (e.g., tests or medication adjustments), which the agent verifies and optimizes before seeking approval. I’ll outline the requirements first, then detail the implementation using **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
+Let’s design a **Healthcare Patient Monitoring Agent** for a hospital or telemedicine system. This agent will monitor patient vitals in real-time, detect anomalies, suggest interventions, and notify healthcare professionals for approval. It will also allow doctors to manually request follow-up actions (e.g., tests or medication adjustments), which the agent verifies and optimizes before seeking approval. I’ll outline the requirements first, then detail the implementation using **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, **scheduled computing (CronJobs)**, and **human-in-the-loop (HITL)**.
 
 ---
 

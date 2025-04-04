@@ -1,6 +1,6 @@
 # Other Focus Areas for Agentic AI
 
-We've explored a variety of domains with the examples, each showcasing how the combination of **event-driven architecture (EDA)**, **three-tier architecture**, **stateless computing**, **scheduled computing (CronJobs)**, **human-in-the-loop (HITL)**, and **LLM intelligence** can be applied. However, there are still many exciting areas and domains we can cover to demonstrate the versatility of this architecture. Below, I’ll suggest additional domains and provide a brief overview of potential examples we could develop, along with unique aspects they might highlight. Let me know if you'd like me to flesh out any of these into full examples!
+We've explored a variety of domains with the examples, each showcasing how the combination of **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, **scheduled computing (CronJobs)**, **human-in-the-loop (HITL)**, and **LLM intelligence** can be applied. However, there are still many exciting areas and domains we can cover to demonstrate the versatility of this architecture. Below, I’ll suggest additional domains and provide a brief overview of potential examples we could develop, along with unique aspects they might highlight. Let me know if you'd like me to flesh out any of these into full examples!
 
 ---
 
