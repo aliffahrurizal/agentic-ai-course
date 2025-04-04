@@ -87,7 +87,7 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
 
 6. **Scheduled Container Invocation**  
    - **Purpose**: This allows containers to be triggered either on-demand (via HTTP requests) or on a schedule (via cron-like jobs), offering versatility in execution patterns.  
-   - **Choice**: For development we use [python-crontab](https://pypi.org/project/python-crontab/) on Linux and Mac. [APSchedule](https://pypi.org/project/APScheduler/) for Windows. Or [Schedule](https://pypi.org/project/schedule/) for inprocess scheduling on any system.  For prototyping, we’re using **[cron-job.org](https://cron-job.org/en/)**, a free online scheduling service.  For production, we’re opting for **[Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)**, which integrates with Kubernetes for robust scheduling.  
+   - **Choice**: For development we use [python-crontab](https://pypi.org/project/python-crontab/) on Linux and Mac. [APSchedule](https://pypi.org/project/APScheduler/) for Windows. Or [Schedule](https://pypi.org/project/schedule/) for inprocess scheduling on any system.  For prototyping, we’re using **[cron-job.org](https://cron-job.org/en/)**, a free online scheduling service.  For production, we’re opting for **[Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)**, which integrates with Kubernetes for robust scheduling. Dapr also provides scheduling services in its recent update. 
    - **Why It Matters**: Flexible invocation supports both real-time and batch processing, accommodating diverse use cases efficiently.
 
 7. **Relational Managed Database Services**  
@@ -97,13 +97,13 @@ The OpenAI Responses API serves as a key foundation for developing agentic AI sy
 
 8. **In-memory data structure store**
    - **Purpose**: It's used as a database, cache, and message broker. Because it stores data in RAM, it offers exceptionally high performance.
-   - **Choice**: **[Upstash Redis](https://upstash.com/pricing)** Upstash is known for its serverless Redis offering and provides a free tier.
+   - **Choice**: **[Upstash Redis](https://upstash.com/pricing)** Upstash is known for its serverless Redis offering and provides a free tier. 
    - **Why It Matters**: Because it stores data in RAM, it offers exceptionally high performance. Ideal for storing LLM session data. 
 
 9. **[Distributed Application Runtime (Dapr)](https://dapr.io/)**
    - **Purpose**: Dapr (Distributed Application Runtime) simplifies the development of resilient, distributed systems by providing standardized building blocks—such as service invocation, state management, and publish/subscribe messaging—for agentic workflows. It abstracts away the complexities of distributed computing, enabling developers to focus on building intelligent, scalable AI solutions rather than wrestling with infrastructure challenges.
    - **Choice**: We chose Dapr for its lightweight, language-agnostic design and its ability to seamlessly integrate with our stateless serverless Docker containers and asynchronous message-passing systems. It enhances flexibility by supporting multiple programming languages and deployment environments, while aligning with our minimalist philosophy of reducing predefined constructs and empowering custom solutions.
-   - **Why It Matters**: In an agentic AI ecosystem, where dynamic interactions between agents and services are critical, Dapr ensures reliability and scalability without adding unnecessary overhead. By standardizing how agents communicate and manage state, it accelerates development, improves fault tolerance, and future-proofs our architecture—allowing us to adapt to evolving needs while maintaining simplicity and performance. Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
+   - **Why It Matters**: In an agentic AI ecosystem, where dynamic interactions between agents and services are critical, Dapr ensures reliability and scalability without adding unnecessary overhead. By standardizing how agents communicate and manage state, it accelerates development, improves fault tolerance, and future-proofs our architecture—allowing us to adapt to evolving needs while maintaining simplicity and performance. Optionally, you can use [Dapr Agents](https://dapr.github.io/dapr-agents/) and [Dapr Workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/). When you initialize Dapr locally using the dapr init command in self-hosted mode, it does set up a Redis instance as a default component for certain functionalities, such as state management and pub/sub messaging.
 
 ---
 
