@@ -4,6 +4,8 @@ A combination of **event-driven architecture (EDA)**, **three-tier microservices
 
 ![arch](./architecture.png)
 
+**[State of Dapr 2025 Research Report](https://pages.diagrid.io/download-the-state-of-dapr-2025-report)**
+
 ---
 
 ### What is Agentic AI?
