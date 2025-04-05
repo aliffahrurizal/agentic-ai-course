@@ -1,8 +1,6 @@
-# Development will use a Combination of Stateless Computing, and Event-Driven and Three-Tier Micrservices Architecture (Dapr Agentic Cloud Ascent (DACA))
+#  Dapr Agentic Cloud Ascent (DACA) Local Development
 
-Let's understand and learn about ""Dapr Agentic Cloud Ascent" (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems:
-
-https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294
+Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems:
 
 ![daca](./architecture.png)
 
