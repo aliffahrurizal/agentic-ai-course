@@ -389,7 +389,11 @@ https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294
 
 ## Appendix II: Cost Estimates for a Basic Kubernetes Cluster:
 
-https://grok.com/share/bGVnYWN5_7e6a748c-43c1-46d6-9119-be62c6582294
+https://grok.com/share/bGVnYWN5_1bb223b7-26d5-4e9e-bdbc-4aab3b78d1c3
+
+Civo Kubernetes is the best option, they also give $250 credit for signup (Free 1-2 months of service):
+
+https://www.civo.com/pricing
 
 ---
 
