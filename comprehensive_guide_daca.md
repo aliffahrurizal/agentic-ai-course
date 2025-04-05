@@ -269,7 +269,12 @@ Imagine a content moderation system using DACA:
 ## Conclusion
 **Dapr Agentic Cloud Ascent (DACA)** is a powerful design pattern for agentic AI, blending the OpenAI Agents SDK’s simplicity with Dapr’s distributed resilience and a cost-efficient ascent from local to planetary scale. Its event-driven, stateless, three-tier architecture—enhanced by CronJobs and HITL—ensures scalability, flexibility, and accountability. Whether you’re prototyping for free or deploying to Kubernetes, DACA provides a unified, adaptable framework for building the next generation of intelligent systems.
 
-## Appendix: DACA a Design Patter or Framework?
+
+## Appendix I: LLM Research (It might help you understand the basics)
+
+https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294
+
+## Appendix II: DACA a Design Patter or Framework?
 
 The **Dapr Agentic Cloud Ascent (DACA)** is best classified as a **design pattern**, though it has elements that might make it feel framework-like in certain contexts. Let’s break this down to clarify its nature and why it fits the design pattern label, while also addressing the nuances that might lead to confusion.
 
