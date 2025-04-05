@@ -12,11 +12,12 @@ This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](h
 
 Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems:
 
+**[Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)**
+
 https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294 
 
 ![DACA](./architecture.png)
 
-**[Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)**
 
 ### Core Libraries
 - **OpenAI Agents SDK and Responses API**
@@ -54,7 +55,7 @@ Kickstart your journey into Agentic AI! This foundational course provides an int
 
 Note: These videos are for additional learning, and do not cover all the material taught in the onsite classes.
 
-
+Prerequisite: Successful completion of [AI-101: Modern AI Python Programming - Your Launchpad into Intelligent Systems](https://github.com/panaversity/learn-modern-ai-python)
 
 ### AI-202: AI-202: DACA Medium Enterprise Scale Distributed Agents: Managed Serverless Platforms
 Building directly upon the foundational principles learned in AI-201, AI-202 propels students into the forefront of Advanced Agentic AI Engineering. In this course our main focus will be to use Dapr Agentic Cloud Ascent (DACA) Design Pattern in the Medium Enterprise Scale: Azure Container Apps (ACA). This intensive course focuses on utilizing sophisticated libraries and frameworks, to design, develop, and deploy complex, enterprise-ready AI agent systems. Students will learn to create agents capable of sophisticated reasoning, intricate task execution, and collaborative problem-solving within multi-agent ecosystems.
