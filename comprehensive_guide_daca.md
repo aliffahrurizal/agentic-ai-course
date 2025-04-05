@@ -370,11 +370,5 @@ Classifying DACA as a design pattern highlights its flexibility and reusability:
 - You can apply DACA to new projects, swapping out components (e.g., using AWS Lambda instead of ACA, or LangGraph instead of OpenAI Agents SDK) while following the same architectural principles.
 - It positions DACA as a conceptual tool for the broader AI community, not a rigid framework tied to specific libraries or runtimes.
 
----
 
-### What’s Next?
-Now that we’ve settled on DACA as a design pattern, do you want to:
-- Document it further for sharing (e.g., a blog post or GitHub repo)?
-- Create a sample implementation (e.g., a `docker-compose.yml` or Dapr component config)?
-- Explore how to present DACA to a team or community as a pattern? Let me know!
 
