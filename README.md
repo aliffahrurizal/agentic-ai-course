@@ -16,6 +16,23 @@ https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294
 
 ![DACA](./architecture.png)
 
+**[Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)**
+
+### Core Libraries
+- **OpenAI Agents SDK and Responses API**
+- **Docker Containers**
+- **Docker Compose**
+- **CockroachDB**
+- **CronJobs**
+- **RabbitMQ**
+- **MCP Server SDK**
+- **Dapr**
+- **Azure Container Apps**
+- **Kubernetes**
+
+### Target User
+- **Agentic AI Developer and AgentOps Professionals**
+
 **[OpenAI Agents SDK vs LangGraph vs Autogen vs CrewAI](https://composio.dev/blog/openai-agents-sdk-vs-langgraph-vs-autogen-vs-crewai/)**
 
 The following chart clearly identifies why we are using OpenAI Agents SDK as our main framework for Agentic development:
