@@ -6,7 +6,6 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework
 
 ## What is DACA?
 
-![daca](./architecture.png)
 **Dapr Agentic Cloud Ascent (DACA)** is a design pattern for building and scaling agentic AI systems using a minimalist, cloud-first approach. It integrates the OpenAI Agents SDK for agent logic, Dapr for distributed resilience, and a staged deployment pipeline that ascends from local development to planetary-scale production. DACA emphasizes:
 - **Agentic AI**: Autonomous AI agents that perceive, decide, and act to achieve goals.
 - **Stateless Design**: Containers that scale efficiently without retaining state.
@@ -27,6 +26,9 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework
 The DACA architecture is a layered, event-driven, stateless system that integrates human-in-the-loop (HITL) capabilities. It’s built on a **three-tier microservices architecture**, enhanced by Dapr, and supports both real-time and scheduled agentic workflows.
 
 ### Architecture Diagram Breakdown
+
+![daca](./architecture.png)
+
 The provided architecture diagram illustrates the DACA framework:
 - **Presentation Layer**: Next.js, Streamlit, or Chainlit for user interaction.
 - **Business Logic Layer**:
@@ -198,7 +200,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
   - **Scheduling**: ACA Jobs for scheduled tasks.
   - **Database**: CockroachDB Serverless (scale to paid tier if needed).
   - **In-Memory Store**: Upstash Redis (scale to paid tier if needed).
-- **Scalability**: Thousands of users (e.g., 10,000 req/min), capped by OpenAI API limits (10,000 RPM = 166 req/s).
+- **Scalability**: Thousands of users (e.g., 10,000 req/min), capped by OpenAI API limits (10,000 RPM = 166 req/s). Using Google Gemini will more economical. 
 - **Cost**: Free tier covers light traffic; paid tier ~$0.02/vCPU-s beyond that.
 
 ### 4. Planet-Scale: Kubernetes with Self-Hosted LLMs
@@ -214,6 +216,16 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 - **Training**: Use Oracle Cloud’s free tier to train devs on Kubernetes DevOps, ensuring skills for any cloud (AWS, GCP, Azure).
 - **Scalability**: Millions of users (e.g., 10,000 req/s on 10 nodes with GPUs), limited by cluster size.
 - **Cost**: Compute-focused ($1-2/hour/node), no API fees.
+
+### Training Developers for DACA Production Deployment
+
+To equip developers with Kubernetes DevOps skills for production deployment, we may leverage **Oracle Cloud Infrastructure (OCI)**, which offers a "free forever" tier which Offers 2 AMD VMs (1/8 OCPU, 1 GB RAM each) or up to 4 Arm-based VMs (24 GB RAM total). [These VMs are used to deploy our own Kubernetes cluster](https://github.com/nce/oci-free-cloud-k8s), providing a hands-on environment to learn cluster management, scaling, and deployment. Once developers master these skills, they can confidently deploy our agentic workflows to any cloud Kubernetes platform (e.g., AWS, GCP, Azure), ensuring portability and flexibility. This training bridges the gap between prototyping and production, empowering developers to handle real-world deployments.
+
+References:
+
+https://www.ronilsonalves.com/articles/how-to-deploy-a-free-kubernetes-cluster-with-oracle-cloud-always-free-tier 
+
+https://medium.com/@Phoenixforge/a-weekend-project-with-k3s-and-oracle-cloud-free-tier-99eda1aa49a0
 
 ---
 
