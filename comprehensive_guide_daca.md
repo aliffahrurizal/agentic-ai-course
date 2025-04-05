@@ -266,17 +266,6 @@ DACA’s combination of EDA, three-tier microservices, stateless computing, sche
   - Simple, single-agent apps where a monolithic setup suffices.
   - Resource-constrained environments unable to handle Dapr’s overhead.
 
----
-
-Let’s expand the **Dapr Agentic Cloud Ascent (DACA)** comprehensive report by adding more real-world examples to illustrate its versatility across different agentic AI use cases. These examples will demonstrate how DACA’s architecture—combining event-driven architecture (EDA), three-tier microservices, stateless computing, scheduled computing (CronJobs), and human-in-the-loop (HITL)—applies to diverse scenarios. I’ll add three new examples to complement the existing **Content Moderation Agent** example, showing DACA’s adaptability in healthcare, e-commerce, and IoT domains.
-
-Below, I’ll append these new examples to the relevant section of the comprehensive report, ensuring they align with DACA’s principles and deployment stages.
-
----
-
-# Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern
-
-*(Note: The following is an updated version of the "Real-World Examples" section from the original comprehensive report, with three additional examples added. The rest of the report remains unchanged for brevity, but I can provide the full updated document if needed.)*
 
 ---
 
