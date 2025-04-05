@@ -389,7 +389,7 @@ https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294
 
 ## Appendix II: Cost Estimates for a Basic Kubernetes Cluster:
 
-https://grok.com/share/bGVnYWN5_75da921b-5e26-403c-ab51-1c7add649d5f
+https://grok.com/share/bGVnYWN5_7e6a748c-43c1-46d6-9119-be62c6582294
 
 ---
 
