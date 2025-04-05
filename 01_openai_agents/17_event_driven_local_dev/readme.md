@@ -1,8 +1,8 @@
-# Development will use a Combination of Stateless Computing, and Event-Driven and Three-Tier Micrservices Architecture (Dapr-Driven Cloud Ascent)
+# Development will use a Combination of Stateless Computing, and Event-Driven and Three-Tier Micrservices Architecture (Dapr Agentic Cloud Ascent (DACA))
 
-Let's understand and learn about **Dapr-Driven Cloud Ascent (DDCA)**, our winning design pattern for developing and deploying planet scale multi-agent systems:
+Let's understand and learn about ""Dapr Agentic Cloud Ascent" (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems:
 
-https://grok.com/share/bGVnYWN5_c9b5ae94-d70a-44e0-9e28-7244edb4ed1d
+https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294
 
 In the [05_chatbot](https://github.com/panaversity/learn-agentic-ai/tree/main/01_openai_agents/05_chatbot/chatbot) section, we created a basic monolithic chatbot which we have moved to topic 00 as is. Now, in this section, we will construct three-tier, full-stack chatbots. These will be developed using the [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) and designed to support multiple tenants with user authentication. They will feature both long-term memory ([LangMem](https://langchain-ai.github.io/langmem/)) and short-term memory, with state persistence handled by a relational database ([CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/)). The front-end user interface (UI) will be crafted with [Chainlit](https://chainlit.io/), while the middle tier will leverage [FastAPI](https://fastapi.tiangolo.com/) to define REST APIs. We will use [SQLModel](https://sqlmodel.tiangolo.com/) to integrate with [CockroachDB Serverless](https://www.cockroachlabs.com/lp/serverless/). The Agents API will adhere to standards outlined in LangChain's [Agent Protocol](https://github.com/langchain-ai/agent-protocol). Both the front-end and middle-tier components will be deployed in separate [Docker Containers](https://www.docker.com/resources/what-container/), hosted on [Hugging Face Docker Spaces](https://huggingface.co/docs/hub/en/spaces-sdks-docker). The middle-tier REST API will be stateless. These chatbots will serve as foundational templates for future product development.
 
