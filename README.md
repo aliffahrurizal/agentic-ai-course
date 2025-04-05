@@ -8,14 +8,13 @@ This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](h
 
 ![Cloud Native](./cloud-native-platforms-market-size.webp)
 
-## Watch The NVIDIA CEO Jensen Huang Keynote at CES 2025
+## Our Dapr Agentic Cloud Ascent (DACA) Design Pattern
 
-[![HR for Agents](hr.jpeg)](https://www.youtube.com/watch?v=k82RwXqZHY8 "NVIDIA CEO Jensen Huang Keynote at CES 2025")
+Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems:
 
+https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294 
 
-Reference:
-
-https://www.linkedin.com/posts/alexwang2911_aiagents-robotics-technology-activity-7282829390445453314-QLeS
+![DACA](./architecture.png)
 
 **[OpenAI Agents SDK vs LangGraph vs Autogen vs CrewAI](https://composio.dev/blog/openai-agents-sdk-vs-langgraph-vs-autogen-vs-crewai/)**
 
