@@ -1,5 +1,7 @@
 # Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern
 
+![DACA Report Cover](./daca_report.png)
+
 The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework for developing and deploying scalable, resilient, and cost-effective agentic AI systems. It leverages the simplicity of the OpenAI Agents SDK, the distributed capabilities of Dapr, and a progressive deployment strategy across free-tier cloud services and Kubernetes to achieve planetary-scale intelligence. DACA combines **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, and **scheduled computing (CronJobs)** to meet the autonomy, real-time needs, scalability, and complexity of AI agents. This document consolidates all aspects of DACA, including its architecture, components, deployment stages, and benefits.
 
 ---
