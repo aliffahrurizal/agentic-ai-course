@@ -387,9 +387,9 @@ https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294
 
 ---
 
-## Appendix II: Pricing for a basic Kubernetes cluster:
+## Appendix II: Cost Estimates for a Basic Kubernetes Cluster:
 
-https://grok.com/share/bGVnYWN5_e310487b-d8ca-4cb4-b07c-9245097beb05
+https://grok.com/share/bGVnYWN5_17900073-d270-45bd-bbfe-d5565a84f1e2
 
 ---
 
