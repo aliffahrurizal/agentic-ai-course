@@ -57,7 +57,7 @@ dependencies = [
     "pytest>=8.3.3",
     "pytest-asyncio>=0.24.0",
     "httpx>=0.27.2",
-    "openai-agents>=0.1.0",  # Added
+    "openai-agents>=0.0.8",  # Added
 ]
 ```
 
