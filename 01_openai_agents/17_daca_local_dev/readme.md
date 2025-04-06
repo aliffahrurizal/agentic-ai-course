@@ -26,10 +26,17 @@ We will learn DACA in Baby Steps for Local Cloud Native Multi-Agent Development:
 18. 18_rabbitmq
 19. 19_scheduled_container_invocation (We will use [Dapr Scheduler](https://docs.dapr.io/concepts/dapr-services/scheduler/), these scheduled containers will pull RabbitMQ messages and call the required microservices). 
 20. 20_async_inter_containerized_microservices_communication_using_rabbitmq_dapr_scheduled_containers
-21. 21_daca_testing
-22. 22_daca_chatbot_with_ui
-23. 23_custom_fastapi_dapr_gateway (This gateway will act as a single entry point, routing requests to your FastAPI microservices based on a path prefix, using Dapr’s service invocation API via its sidecar)
-24. [24_dapr_workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
-25. [25_dapr_agents](https://dapr.github.io/dapr-agents/)
-26. 26_comprehensive_daca_multi_agent_example_with_workflows_agents_with_ui
-27. 27_daca_template
+21. 21_human_in_the_loop_integration
+22. 21_daca_testing
+23. 22_daca_chatbot_with_ui
+24. 23_custom_fastapi_dapr_gateway (This gateway will act as a single entry point, routing requests to your FastAPI microservices based on a path prefix, using Dapr’s service invocation API via its sidecar)
+25. [24_dapr_workflows](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/)
+26. [25_dapr_agents](https://dapr.github.io/dapr-agents/)
+27. 27_comprehensive_daca_multi_agent_example_with_workflows_agents_with_ui
+28. 28_daca_dapr_observability
+29. 29_daca_dapr_security
+30. 30_daca_template
+
+We will use this Grok session to write these baby steps:
+
+https://grok.com/share/bGVnYWN5_b7bef9ea-cea5-4865-87c0-1f869c6237f4
