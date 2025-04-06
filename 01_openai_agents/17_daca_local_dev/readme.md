@@ -8,3 +8,4 @@ Each tutorial builds on the previous one, introducing new tools, services, and s
 
 The Deployment Tutorials are available here:
 
+https://github.com/panaversity/learn-agentic-ai/tree/main/06_daca_deployments

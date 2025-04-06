@@ -8,3 +8,7 @@ The DACA series has progressed from local development to planetary-scale deploym
 
 Each tutorial builds on the previous one, introducing new tools, services, and scaling strategies while maintaining the core DACA application (`chat_service`, `analytics_service`, `review_ui`).
 
+The Local Development Tutorials are available here:
+
+https://github.com/panaversity/learn-agentic-ai/tree/main/01_openai_agents/17_daca_local_dev
+
