@@ -693,10 +693,8 @@ Output:
 
 ---
 
-## Step 7: Next Steps
-You’ve successfully integrated SQLModel with Dapr and CockroachDB Serverless in the DACA application! The `chat_service` now uses SQLModel to store conversations in CockroachDB, while Dapr uses CockroachDB as its state store for workflow metadata. In the next tutorial, we’ll explore deploying this application to a production environment, such as a Kubernetes cluster, using Dapr’s Kubernetes integration.
 
-### Optional Exercises
+### Exercises for Students
 1. Add more fields to the `Conversation` model (e.g., `tags`, `metadata`) and update the workflow to store them.
 2. Implement a REST endpoint in `chat_service` to retrieve a user’s conversation history using SQLModel.
 3. Enhance the Dapr state store configuration to use CockroachDB’s TTL features more effectively for human review decisions.
@@ -704,7 +702,7 @@ You’ve successfully integrated SQLModel with Dapr and CockroachDB Serverless i
 ---
 
 ## Conclusion
-In this tutorial, we integrated SQLModel with Dapr and CockroachDB Serverless in the DACA application. We set up a CockroachDB Serverless cluster, configured Dapr to use CockroachDB as its state store, and updated the `chat_service` to use SQLModel for managing conversation history. The application now combines relational data management with distributed state management, running seamlessly with Docker Compose. We’re now ready to explore production deployment in the next tutorial!
+In this tutorial, we integrated SQLModel with Dapr and CockroachDB Serverless in the DACA application. We set up a CockroachDB Serverless cluster, configured Dapr to use CockroachDB as its state store, and updated the `chat_service` to use SQLModel for managing conversation history. The application now combines relational data management with distributed state management, running seamlessly with Docker Compose. We’re now ready to explore prototype and production deployment in the next tutorials!
 
 ---
 
@@ -989,4 +987,4 @@ spec:
 
 ---
 
-This tutorial successfully integrates SQLModel with Dapr and CockroachDB Serverless, providing a robust foundation for relational data management in a distributed application. Would you like to proceed with the deployment to Kubernetes, or explore additional features like advanced querying with SQLModel?
+This tutorial successfully integrates SQLModel with Dapr and CockroachDB Serverless, providing a robust foundation for relational data management in a distributed application. 
