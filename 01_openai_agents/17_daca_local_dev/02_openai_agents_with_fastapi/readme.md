@@ -245,6 +245,36 @@ Expected response:
 }
 ```
 
+### Streaming Endpoint
+
+Now let's add another streaming endpoint:
+
+```python
+# POST endpoint for chatting
+async def stream_response(message: Message):
+    result = Runner.run_streamed(chat_agent, input=message.text, run_config=config)
+    async for event in result.stream_events():
+        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
+            print(event.data.delta, end="", flush=True)
+            # Serialize dictionary to JSON string
+            chunk = json.dumps({"chunk": event.data.delta})
+            yield f"data: {chunk}\n\n"
+            
+@app.post("/chat/stream", response_model=Response)
+async def chat_stream(message: Message):
+    if not message.text.strip():
+        raise HTTPException(
+            status_code=400, detail="Message text cannot be empty")
+
+    return StreamingResponse(
+        stream_response(message),
+        media_type="text/event-stream"
+    )
+
+```
+
+Call it in PostMan to see the streaming response.
+
 ---
 
 ## Step 5: Updating Unit Tests
