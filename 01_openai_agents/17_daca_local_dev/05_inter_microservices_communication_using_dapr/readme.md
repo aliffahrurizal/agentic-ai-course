@@ -1,4 +1,4 @@
-# Inter-Microservices Communication Using Dapr
+# [Inter-Microservices Communication Using Dapr](https://docs.dapr.io/reference/api/service_invocation_api/)
 
 Welcome to the fifth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll enhance the stateless microservices we built in **03_microservices_with_fastapi** by integrating **Dapr** for inter-service communication. Previously, the Chat Service called the Agent Memory Service synchronously using `httpx`. Now, we’ll use Dapr’s **Service Invocation** building block to handle this communication, leveraging Dapr’s sidecar architecture for service discovery, retries, and observability. This tutorial will demonstrate how Dapr simplifies microservices communication while preparing our system for scalability and resilience. Let’s get started!
 
@@ -10,6 +10,7 @@ Welcome to the fifth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series
 - Replacing direct `httpx` calls with Dapr-managed communication.
 - Running microservices with Dapr sidecars using the Dapr CLI.
 - Updating unit tests to account for Dapr integration.
+
 
 ## Prerequisites
 - Completion of **03_microservices_with_fastapi** (codebase with Chat Service and Agent Memory Service).
