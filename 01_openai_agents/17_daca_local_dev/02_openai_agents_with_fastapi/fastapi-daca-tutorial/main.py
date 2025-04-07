@@ -1,13 +1,19 @@
+import json
 import os
-from dotenv import load_dotenv
+from uuid import uuid4
 from typing import cast
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+
+from dotenv import load_dotenv
+
 from pydantic import BaseModel, Field
 from datetime import datetime, UTC
-from uuid import uuid4
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 
 # Import OpenAI Agents SDK
+from openai.types.responses import ResponseTextDeltaEvent
 from agents import Agent, Runner, function_tool, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
 
 # Load the environment variables from the .env file
@@ -54,8 +60,6 @@ app.add_middleware(
 )
 
 # Pydantic models
-
-
 class Metadata(BaseModel):
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     session_id: str = Field(default_factory=lambda: str(uuid4()))
@@ -74,8 +78,6 @@ class Response(BaseModel):
     metadata: Metadata
 
 # Create a tool to fetch the current time
-
-
 @function_tool
 def get_current_time() -> str:
     """Returns the current time in UTC."""
@@ -122,4 +124,26 @@ async def chat(message: Message):
         user_id=message.user_id,
         reply=reply_text,
         metadata=Metadata()
+    )
+
+
+# POST endpoint for chatting
+async def stream_response(message: Message):
+    result = Runner.run_streamed(chat_agent, input=message.text, run_config=config)
+    async for event in result.stream_events():
+        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
+            print(event.data.delta, end="", flush=True)
+            # Serialize dictionary to JSON string
+            chunk = json.dumps({"chunk": event.data.delta})
+            yield f"data: {chunk}\n\n"
+            
+@app.post("/chat/stream", response_model=Response)
+async def chat_stream(message: Message):
+    if not message.text.strip():
+        raise HTTPException(
+            status_code=400, detail="Message text cannot be empty")
+
+    return StreamingResponse(
+        stream_response(message),
+        media_type="text/event-stream"
     )
