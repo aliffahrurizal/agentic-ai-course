@@ -1,4 +1,4 @@
-# Integrating OpenAI Agents SDK with FastAPI
+# Integrating [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) with FastAPI
 
 Welcome to the second tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll enhance our FastAPI-based chatbot by integrating the **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)**, a powerful toolkit released by OpenAI in March 2025. This SDK allows us to build autonomous AI agents that can make decisions, use tools, and coordinate workflows. We’ll transform our simple chatbot into an agentic system capable of processing user messages intelligently and responding with context-aware replies. Let’s dive in!
 
@@ -35,10 +35,18 @@ In this tutorial, we’ll create a simple agent that processes user messages and
 ## Step 2: Setting Up the OpenAI Agents SDK
 Let’s add the OpenAI Agents SDK to our existing FastAPI project.
 
-### Navigate to the Project Directory
+### Navigate to the Project Directory or Create New
+
+Quick Setup for Project
+
 If you’re continuing from the previous tutorial, navigate to your project directory:
 ```bash
+uv init fastapi-daca-tutorial
 cd fastapi-daca-tutorial
+uv venv
+source .venv/bin/activate
+
+uv add "fastapi[standard]" pytest pytest-asyncio
 ```
 
 ### Add the OpenAI Agents SDK Dependency
@@ -51,27 +59,22 @@ This updates `pyproject.toml` with the new dependency:
 [project]
 name = "fastapi-daca-tutorial"
 version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
 dependencies = [
-    "fastapi>=0.115.0",
-    "uvicorn>=0.30.6",
-    "pytest>=8.3.3",
-    "pytest-asyncio>=0.24.0",
-    "httpx>=0.27.2",
-    "openai-agents>=0.0.8",  # Added
+    "fastapi[standard]>=0.115.12",
+    "openai-agents>=0.0.8",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
 ]
 ```
 
 ### Set Up the OpenAI API Key
-The OpenAI Agents SDK requires an API key to interact with OpenAI models. Set it as an environment variable:
+The OpenAI Agents SDK requires an API key to interact with AI models. Create a .env file and add environment variable:
 ```bash
-export OPENAI_API_KEY="your-openai-api-key-here"
+GEMINI_API_KEY="your-api-key-here"
 ```
-On Windows, use:
-```cmd
-set OPENAI_API_KEY=your-openai-api-key-here
-```
-
-Alternatively, you can store it in a `.env` file and use `python-dotenv` to load it (we’ll add this in a future tutorial for better security).
 
 ---
 
@@ -82,11 +85,10 @@ Let’s create an agent that processes user messages and responds in a helpful w
 Modify `main.py` to integrate the OpenAI Agents SDK. We’ll create an agent, add a tool, and update the `/chat/` endpoint to use the agent for processing messages.
 
 ```python
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, UTC
 from uuid import uuid4
 
 # Import OpenAI Agents SDK
@@ -110,35 +112,31 @@ app.add_middleware(
 
 # Pydantic models
 class Metadata(BaseModel):
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     session_id: str = Field(default_factory=lambda: str(uuid4()))
 
 class Message(BaseModel):
     user_id: str
     text: str
-    metadata: Metadata
-    tags: Optional[List[str]] = None
+    metadata: Metadata | None = None
+    tags: list[str] | None = None
 
 class Response(BaseModel):
     user_id: str
     reply: str
     metadata: Metadata
 
-# Simulate a database dependency
-async def get_db():
-    return {"connection": "Mock DB Connection"}
-
 # Create a tool to fetch the current time
 @function_tool
 def get_current_time() -> str:
     """Returns the current time in UTC."""
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
 
 # Create an AI agent using OpenAI Agents SDK
 chat_agent = Agent(
     name="ChatAgent",
     instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool.",
-    model="gpt-4o",  # Use GPT-4o model
+    model="gemini-1.5-flash",  # Use Gemini 1.5 Flash model
     tools=[get_current_time],  # Add the time tool
 )
 
@@ -155,10 +153,9 @@ async def get_user(user_id: str, role: str | None = None):
 
 # POST endpoint for chatting
 @app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
+async def chat(message: Message):
     if not message.text.strip():
         raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    print(f"DB Connection: {db['connection']}")
 
     # Use the OpenAI Agents SDK to process the message
     result = await Runner.run(chat_agent, input=message.text)
@@ -197,6 +194,11 @@ async def chat(message: Message, db: dict = Depends(get_db)):
 ## Step 4: Running and Testing the API
 ### Start the Server
 ```bash
+fastapi dev main.py
+```
+ OR
+ 
+```bash
 uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
@@ -205,23 +207,19 @@ uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 Use Swagger UI (`http://localhost:8000/docs`) to send a request:
 ```json
 {
-  "user_id": "alice",
+  "user_id": "junaid",
   "text": "Hello, how are you?",
-  "metadata": {
-    "timestamp": "2025-04-06T12:00:00Z",
-    "session_id": "123e4567-e89b-12d3-a456-426614174000"
-  },
   "tags": ["greeting"]
 }
 ```
 Expected response (actual reply may vary based on the model):
 ```json
 {
-  "user_id": "alice",
-  "reply": "Hi Alice! I'm doing great, thanks for asking. How about you?",
+  "user_id": "junaid",
+  "reply": "I am doing well, thank you for asking! How can I help you today?\n",
   "metadata": {
-    "timestamp": "2025-04-06T04:01:00Z",
-    "session_id": "some-uuid"
+    "timestamp": "2025-04-07T00:26:17.731540Z",
+    "session_id": "4475b689-6cfb-495d-9149-3d01f8e71003"
   }
 }
 ```
@@ -230,23 +228,19 @@ Expected response (actual reply may vary based on the model):
 Send a request asking for the time:
 ```json
 {
-  "user_id": "bob",
+  "user_id": "junaid",
   "text": "What time is it?",
-  "metadata": {
-    "timestamp": "2025-04-06T12:00:00Z",
-    "session_id": "123e4567-e89b-12d3-a456-426614174001"
-  },
-  "tags": ["question"]
+  "tags": ["greeting"]
 }
 ```
 Expected response:
 ```json
 {
-  "user_id": "bob",
-  "reply": "The current time is 2025-04-06 04:01:23 UTC.",
+  "user_id": "junaid",
+  "reply": "It is 2025-04-07 00:28:11 UTC.\n",
   "metadata": {
-    "timestamp": "2025-04-06T04:01:23Z",
-    "session_id": "some-uuid"
+    "timestamp": "2025-04-07T00:28:12.183175Z",
+    "session_id": "656462d5-4126-497e-b14a-660a13620269"
   }
 }
 ```
@@ -256,7 +250,7 @@ Expected response:
 ## Step 5: Updating Unit Tests
 Let’s update our unit tests to cover the agentic functionality. Since the agent’s responses depend on an external API (OpenAI), we’ll mock the agent’s behavior for consistent testing.
 
-### Update `tests/test_main.py`
+### Update `test_main.py`
 ```python
 import pytest
 from fastapi.testclient import TestClient
@@ -341,7 +335,7 @@ async def test_chat():
 
 ### Run the Tests
 ```bash
-uv run pytest tests/test_main.py -v
+uv run pytest test_main.py -v
 ```
 Output:
 ```
@@ -389,21 +383,53 @@ In this tutorial, we integrated the OpenAI Agents SDK with our FastAPI app, tran
 
 ### Final Code for `main.py`
 ```python
-from fastapi import FastAPI, HTTPException, Depends
+import os
+from dotenv import load_dotenv
+from typing import cast
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, UTC
 from uuid import uuid4
 
-from agents import Agent, Runner, function_tool
+# Import OpenAI Agents SDK
+from agents import Agent, Runner, function_tool, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
 
+# Load the environment variables from the .env file
+load_dotenv()
+
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+# Check if the API key is present; if not, raise an error
+if not gemini_api_key:
+    raise ValueError(
+        "GEMINI_API_KEY is not set. Please ensure it is defined in your .env file.")
+
+# Reference: https://ai.google.dev/gemini-api/docs/openai
+external_client = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+model = OpenAIChatCompletionsModel(
+    model="gemini-2.0-flash",
+    openai_client=external_client
+)
+
+config = RunConfig(
+    model=model,
+    model_provider=cast(ModelProvider, external_client), # satisfy type checker
+    tracing_disabled=True
+)
+
+# Initialize the FastAPI app
 app = FastAPI(
     title="DACA Chatbot API",
     description="A FastAPI-based API for a chatbot in the DACA tutorial series",
     version="0.1.0",
 )
 
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -412,53 +438,70 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Pydantic models
+
+
 class Metadata(BaseModel):
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     session_id: str = Field(default_factory=lambda: str(uuid4()))
+
 
 class Message(BaseModel):
     user_id: str
     text: str
-    metadata: Metadata
-    tags: Optional[List[str]] = None
+    metadata: Metadata | None = None
+    tags: list[str] | None = None
+
 
 class Response(BaseModel):
     user_id: str
     reply: str
     metadata: Metadata
 
-async def get_db():
-    return {"connection": "Mock DB Connection"}
+# Create a tool to fetch the current time
+
 
 @function_tool
 def get_current_time() -> str:
     """Returns the current time in UTC."""
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
 
+
+# Create an AI agent using OpenAI Agents SDK
 chat_agent = Agent(
     name="ChatAgent",
     instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool.",
-    model="gpt-4o",
-    tools=[get_current_time],
+    tools=[get_current_time],  # Add the time tool
+    model=model
 )
+
+# Root endpoint
+
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to the DACA Chatbot API! Access /docs for the API documentation."}
+
+# GET endpoint with query parameters
+
 
 @app.get("/users/{user_id}")
 async def get_user(user_id: str, role: str | None = None):
     user_info = {"user_id": user_id, "role": role if role else "guest"}
     return user_info
 
-@app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
-    if not message.text.strip():
-        raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    print(f"DB Connection: {db['connection']}")
+# POST endpoint for chatting
 
-    result = await Runner.run(chat_agent, input=message.text)
-    reply_text = result.final_output
+
+@app.post("/chat/", response_model=Response)
+async def chat(message: Message):
+    if not message.text.strip():
+        raise HTTPException(
+            status_code=400, detail="Message text cannot be empty")
+
+    # Use the OpenAI Agents SDK to process the message
+    result = await Runner.run(chat_agent, input=message.text, run_config=config)
+    reply_text = result.final_output  # Get the agent's response
 
     return Response(
         user_id=message.user_id,
@@ -466,7 +509,6 @@ async def chat(message: Message, db: dict = Depends(get_db)):
         metadata=Metadata()
     )
 ```
-
 ---
 
 ### Final Code for `tests/test_main.py`
@@ -476,7 +518,11 @@ from fastapi.testclient import TestClient
 from main import app
 from unittest.mock import AsyncMock, patch
 
+# Create a test client
 client = TestClient(app)
+
+# Test the root endpoint
+
 
 def test_root():
     response = client.get("/")
@@ -484,6 +530,9 @@ def test_root():
     assert response.json() == {
         "message": "Welcome to the DACA Chatbot API! Access /docs for the API documentation."
     }
+
+# Test the /users/{user_id} endpoint
+
 
 def test_get_user():
     response = client.get("/users/alice?role=admin")
@@ -494,11 +543,17 @@ def test_get_user():
     assert response.status_code == 200
     assert response.json() == {"user_id": "bob", "role": "guest"}
 
+# Mock the OpenAI Agents SDK Runner
+
+
 @pytest.mark.asyncio
 async def test_chat():
+    # Mock the Runner.run method
     with patch("main.Runner.run", new_callable=AsyncMock) as mock_run:
+        # Mock a simple chat response
         mock_run.return_value.final_output = "Hi Alice! I'm doing great, thanks for asking. How about you?"
-        
+
+        # Valid request
         request_data = {
             "user_id": "alice",
             "text": "Hello, how are you?",
@@ -511,9 +566,11 @@ async def test_chat():
         response = client.post("/chat/", json=request_data)
         assert response.status_code == 200
         assert response.json()["user_id"] == "alice"
-        assert response.json()["reply"] == "Hi Alice! I'm doing great, thanks for asking. How about you?"
+        assert response.json()[
+            "reply"] == "Hi Alice! I'm doing great, thanks for asking. How about you?"
         assert "metadata" in response.json()
 
+        # Mock a tool-using response (asking for the time)
         mock_run.return_value.final_output = "The current time is 2025-04-06 04:01:23 UTC."
         request_data = {
             "user_id": "bob",
@@ -527,9 +584,11 @@ async def test_chat():
         response = client.post("/chat/", json=request_data)
         assert response.status_code == 200
         assert response.json()["user_id"] == "bob"
-        assert response.json()["reply"] == "The current time is 2025-04-06 04:01:23 UTC."
+        assert response.json()[
+            "reply"] == "The current time is 2025-04-06 04:01:23 UTC."
         assert "metadata" in response.json()
 
+        # Invalid request (empty text)
         request_data = {
             "user_id": "bob",
             "text": "",
@@ -541,8 +600,8 @@ async def test_chat():
         response = client.post("/chat/", json=request_data)
         assert response.status_code == 400
         assert response.json() == {"detail": "Message text cannot be empty"}
-```
 
+```
 ---
 
 This tutorial successfully integrates the OpenAI Agents SDK with FastAPI, laying the groundwork for more advanced agentic features in the DACA series. 
