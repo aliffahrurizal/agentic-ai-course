@@ -271,7 +271,7 @@ DACA’s combination of EDA, three-tier microservices, stateless computing, sche
 
 ---
 
-## DACE Real-World Examples
+## DACA Real-World Examples
 
 DACA’s flexibility makes it applicable to a wide range of agentic AI systems, from content moderation to healthcare, e-commerce, and IoT. Below are four examples showcasing how DACA can be implemented across different domains, following its progressive deployment stages (local → prototyping → medium scale → planet-scale) and leveraging its core components (EDA, three-tier architecture, stateless computing, CronJobs, HITL).
 
