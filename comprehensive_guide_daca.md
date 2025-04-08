@@ -555,16 +555,16 @@ Natural language offers flexibility and reduced integration overhead but demands
 Addressing these challenges requires a multi-faceted approach, integrating the following strategies:
 
 1. **Standardized Communication Protocols**:
-   - Universal protocols ensure agents process messages uniformly. The Open Voice Network (OVON) proposes a framework for interoperable conversational AI, using natural language-based APIs to enable seamless interactions [cite: turn0academia22]. This could complement natural language communication by providing a structured foundation.
+   - Universal protocols ensure agents process messages uniformly. The Open Voice Network (OVON) proposes a framework for interoperable conversational AI, using natural language-based APIs to enable seamless interactions. This could complement natural language communication by providing a structured foundation.
 
 2. **Decentralized Coordination Frameworks**:
-   - Transitioning to decentralized systems enhances scalability and fault tolerance. Frameworks like AgentNet enable autonomous collaboration without central orchestration, supporting dynamic specialization and task routing [cite: turn0academia21].
+   - Transitioning to decentralized systems enhances scalability and fault tolerance. Frameworks like AgentNet enable autonomous collaboration without central orchestration, supporting dynamic specialization and task routing.
 
 3. **Security and Compliance Measures**:
    - Robust encryption (e.g., TLS) and authentication (e.g., Decentralized Identifiers - DIDs) protect data integrity and confidentiality. Compliance with international regulations is critical for legal operation across borders.
 
 4. **Middleware Solutions**:
-   - Middleware abstracts communication complexities, offering standardized interfaces. PwC’s ‘agent OS’ acts as a switchboard for enterprise AI, enabling customization and connection of agents across boundaries [cite: turn0news26].
+   - Middleware abstracts communication complexities, offering standardized interfaces. PwC’s ‘agent OS’ acts as a switchboard for enterprise AI, enabling customization and connection of agents across boundaries.
 
 5. **Collaborative Governance Frameworks**:
    - Inter-organizational agreements on data sharing, agent roles, and standards facilitate smoother collaboration, ensuring trust and operational alignment.
@@ -599,10 +599,10 @@ Agents acting as MCP servers can expose conversational capabilities, integrating
    - Agents send and interpret requests (e.g., “Update me on shipment XY123”) via LLMs, framed by MCP’s JSON structure.
 
 3. **Integration with Strategies**:
-   - **Standardized Protocols**: MCP aligns with OVON-like frameworks by providing a structured envelope for natural language [cite: turn0academia22].
-   - **Decentralized Coordination**: MCP servers enable AgentNet-style autonomy [cite: turn0academia21].
+   - **Standardized Protocols**: MCP aligns with OVON-like frameworks by providing a structured envelope for natural language.
+   - **Decentralized Coordination**: MCP servers enable AgentNet-style autonomy.
    - **Security**: DIDs enhance MCP’s authentication for compliance.
-   - **Middleware**: MCP could integrate with platforms like PwC’s agent OS [cite: turn0news26].
+   - **Middleware**: MCP could integrate with platforms like PwC’s agent OS.
    - **Governance**: Manifests support collaborative agreements by defining capabilities.
 
 4. **Discovery**:
@@ -635,9 +635,9 @@ Cross-organizational natural language communication demands solutions beyond API
 
 #### 8. Recommendations
 - **Extend MCP**: Add dialogue state and security features.
-- **Adopt Standards**: Integrate OVON or similar protocols [cite: turn0academia22].
-- **Test Frameworks**: Pilot AgentNet-style coordination [cite: turn0academia21].
-- **Leverage Middleware**: Explore agent OS solutions [cite: turn0news26].
+- **Adopt Standards**: Integrate OVON or similar protocols.
+- **Test Frameworks**: Pilot AgentNet-style coordination.
+- **Leverage Middleware**: Explore agent OS solutions.
 - **Establish Governance**: Define inter-organizational standards.
 
 ---
