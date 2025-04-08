@@ -2,6 +2,8 @@
 
 Let's proceed with the fourth tutorial in the **Dapr Agentic Cloud Ascent (DACA)** series. In this tutorial, we’ll focus on introducing **Dapr** (Distributed Application Runtime), a key component of DACA, and provide a comprehensive guide to the **Dapr CLI**. We’ll cover the theory behind Dapr, its building blocks, and how it simplifies building distributed systems. Then, we’ll dive into the Dapr CLI, exploring its commands with practical examples. We won’t carry forward the code examples from previous tutorials here, but we’ll set the stage for integrating Dapr with our microservices in the next tutorial.
 
+[Join Dapr University](https://www.diagrid.io/dapr-university)
+
 ---
 
 ## Understanding Dapr, Mastering the Dapr CLI, and Exploring the Dapr Scheduler
