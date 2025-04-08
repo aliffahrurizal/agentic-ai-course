@@ -184,7 +184,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 
 ### 3. Medium Enterprise Scale: Azure Container Apps (ACA)
 
-#### Classification on the Spectrum of Managed Services
+#### Classification of the Spectrum of Managed Services
 
 ![](./spectrum-cloud-service.png)
 
