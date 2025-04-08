@@ -6,7 +6,7 @@ Let’s proceed with the third tutorial in the **Dapr Agentic Cloud Ascent (DACA
 
 ## Building Stateless Microservices with FastAPI and OpenAI Agents SDK
 
-Welcome to the third tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll explore microservices architecture, a foundational concept for building scalable, distributed systems like DACA. We’ll create two stateless microservices using FastAPI and the OpenAI Agents SDK: one for handling user messages (Chat Service) and another for generating user analytics (Analytics Service). The Chat Service will synchronously call the Analytics Service using `httpx` to retrieve user data, demonstrating inter-service communication. We’ll also explain what stateless services are and why they’re critical for DACA’s scalability. Let’s get started!
+Welcome to the third tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll explore microservices architecture by creating two stateless microservices: a **Chat Service** and an **Agent Memory Service**. The Chat Service handles user messages and uses the OpenAI Agents SDK to generate responses, while the Agent Memory Service provides procedural memories (e.g., past actions or skills) to enrich the chatbot’s context. The Chat Service will synchronously call the Agent Memory Service using `httpx`, demonstrating inter-service communication. We’ll also explain why stateless services are critical for DACA’s scalability. Let’s get started!
 
 ---
 
@@ -20,110 +20,92 @@ Welcome to the third tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series
 ## Prerequisites
 - Completion of the previous tutorial.
 - Python 3.12+ installed.
-- An OpenAI API key (set as `OPENAI_API_KEY`) or Google Gemini Flash 2.0 key.
+- An LLM API key.
 - Familiarity with FastAPI, Pydantic, and the OpenAI Agents SDK.
 
 ---
 
 ## Step 1: Introduction to Microservices
 ### What Are Microservices?
-Microservices are an architectural style where an application is composed of small, independent services that communicate over a network (e.g., via HTTP, message queues). Each service focuses on a specific business capability, can be developed, deployed, and scaled independently, and communicates with other services through well-defined APIs.
+Microservices are an architectural style where an application is composed of small, independent services that communicate over a network (e.g., via HTTP, message queues). Each service focuses on a specific business capability, can be developed, deployed, and scaled independently, and communicates through well-defined APIs.
 
 #### Key Characteristics of Microservices
-- **Single Responsibility**: Each service handles a specific function (e.g., user authentication, message processing).
+- **Single Responsibility**: Each service handles a specific function (e.g., chat processing, memory retrieval).
 - **Independence**: Services can be developed, deployed, and scaled separately.
-- **Decentralized Data**: Each service typically manages its own data (though we’ll simulate this for now).
-- **Communication**: Services interact via APIs (e.g., HTTP/REST, gRPC) or asynchronous messaging (e.g., RabbitMQ, Kafka).
-- **Technology Diversity**: Different services can use different tech stacks (though we’ll use FastAPI for both).
+- **Decentralized Data**: Each service typically manages its own data (mocked here for simplicity).
+- **Communication**: Services interact via APIs (e.g., HTTP/REST, gRPC) or asynchronous messaging.
+- **Technology Diversity**: Different services can use different tech stacks (we’ll use FastAPI for both).
 
 #### Benefits of Microservices in DACA
-- **Scalability**: Scale only the services that need more resources (e.g., scale the Chat Service during peak usage).
+- **Scalability**: Scale only the services that need more resources (e.g., the Chat Service during peak usage).
 - **Resilience**: If one service fails, others can continue functioning.
 - **Modularity**: Easier to develop, test, and maintain smaller services.
 - **Flexibility**: Teams can work on different services independently, aligning with DACA’s distributed nature.
 
 ### What Are Stateless Services?
-A **stateless service** does not retain information (state) between requests. Each request is processed independently, without relying on data from previous requests stored in the service itself. State, if needed, is stored externally (e.g., in a database, cache, or Dapr state store in later tutorials).
+A **stateless service** does not retain information (state) between requests. Each request is processed independently, without relying on data from previous requests stored in the service itself. State, if needed, is stored externally (e.g., in a database or Dapr state store).
 
 #### Characteristics of Stateless Services
-- **No Session Data**: The service doesn’t store user sessions or request history in memory.
-- **External State**: State is offloaded to external systems (e.g., Redis, CockroachDB).
-- **Scalability**: Any instance of the service can handle any request, making it easy to scale horizontally by adding more instances.
-- **Fault Tolerance**: If a service instance fails, another can take over without losing state.
+- **No Session Data**: The service doesn’t store user sessions or history in memory.
+- **External State**: State is offloaded to external systems (mocked here with in-memory data).
+- **Scalability**: Any instance can handle any request, enabling horizontal scaling.
+- **Fault Tolerance**: If an instance fails, another can take over without losing state.
 
 #### Why Stateless Services in DACA?
-- **Horizontal Scaling**: DACA aims for planetary scale, requiring services to scale out easily. Stateless services allow load balancers to distribute requests across instances without worrying about session affinity.
-- **Containerization**: Stateless services align with DACA’s containerized architecture (Docker, Kubernetes), where containers can be spun up or down dynamically.
-- **Resilience**: In a distributed system, stateless services reduce the risk of data loss if an instance crashes.
-- **Simplified Design**: Offloading state to external systems (e.g., Dapr in later tutorials) simplifies service logic.
+- **Horizontal Scaling**: DACA aims for planetary scale, and stateless services allow load balancers to distribute requests without session affinity.
+- **Containerization**: Stateless services fit DACA’s containerized architecture (Docker, Kubernetes), where instances can be dynamic.
+- **Resilience**: Reduces risk of data loss if an instance crashes.
+- **Simplified Design**: External state management simplifies service logic.
 
-In this tutorial, both microservices (Chat Service and Analytics Service) will be stateless, meaning they won’t store user data in memory between requests. We’ll simulate external state with mock data for now, but in future tutorials, we’ll use Dapr to manage state.
+In this tutorial, both services are stateless, using mock data for now, with plans to integrate Dapr later.
 
 ---
 
 ## Step 2: Project Structure
-We’ll reorganize our project to support multiple microservices. Each service will have its own directory with its own FastAPI app, Pydantic models, and tests.
+Each service has its own directory with its own FastAPI app, Pydantic models, tests, and dependency management files.
 
 ### Create the New Project Structure
-From the `fastapi-daca-tutorial` directory, reorganize as follows:
 ```
 fastapi-daca-tutorial/
 ├── chat_service/
 │   ├── main.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── analytics_service/
+│   ├── pyproject.toml
+│   ├── uv.lock
+│   └── test_main.py
+├── agent_memory_service/
 │   ├── main.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── pyproject.toml
-└── uv.lock
+│   ├── pyproject.toml
+│   ├── uv.lock
+│   └── test_main.py
+└── README.md
 ```
 
-#### Move Existing Code
-- Move the existing `main.py` to `chat_service/main.py`.
-- Move the existing `tests/test_main.py` to `chat_service/tests/test_main.py`.
-
-#### Update `pyproject.toml`
-Ensure `httpx` is included for inter-service communication (already added in the previous tutorial, but double-check):
-```toml
-[project]
-name = "fastapi-daca-tutorial"
-version = "0.1.0"
-dependencies = [
-    "fastapi>=0.115.0",
-    "uvicorn>=0.30.6",
-    "pytest>=8.3.3",
-    "pytest-asyncio>=0.24.0",
-    "httpx>=0.27.2",
-    "openai-agents>=0.0.8",
-]
-```
+Each service has its own `pyproject.toml`, ensuring independent dependency management, unlike the original single-TOML structure.
 
 ---
 
 ## Step 3: Define the Chat Service
-The **Chat Service** will handle user messages, use the OpenAI Agents SDK to generate responses, and call the Analytics Service to fetch user analytics (e.g., message count) to personalize responses.
+The **Chat Service** handles user messages, uses the OpenAI Agents SDK to generate responses, and fetches procedural memories from the Agent Memory Service to personalize replies. You can copy the code from last service and organize it like:
 
-### Create `chat_service/models.py`
-Define the Pydantic models in a separate file for better organization:
+### `chat_service/models.py`
 ```python
 from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import datetime
-from uuid import uuid4
+from datetime import datetime, UTC
 
+# Pydantic models
 class Metadata(BaseModel):
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     session_id: str = Field(default_factory=lambda: str(uuid4()))
+
 
 class Message(BaseModel):
     user_id: str
     text: str
-    metadata: Metadata
-    tags: Optional[List[str]] = None
+    metadata: Metadata | None = None
+    tags: list[str] | None = None
+
 
 class Response(BaseModel):
     user_id: str
@@ -131,17 +113,51 @@ class Response(BaseModel):
     metadata: Metadata
 ```
 
-### Update `chat_service/main.py`
-Modify the Chat Service to call the Analytics Service using `httpx`:
+### `chat_service/main.py`
 ```python
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from agents import Agent, Runner, function_tool
-from datetime import datetime
+import os
 import httpx
+
+from typing import cast
+from dotenv import load_dotenv
+from datetime import datetime, UTC
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+# Import OpenAI Agents SDK
+from agents import Agent, Runner, function_tool, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
 
 from models import Message, Response, Metadata
 
+# Load the environment variables from the .env file
+load_dotenv()
+
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+# Check if the API key is present; if not, raise an error
+if not gemini_api_key:
+    raise ValueError(
+        "GEMINI_API_KEY is not set. Please ensure it is defined in your .env file.")
+
+# Reference: https://ai.google.dev/gemini-api/docs/openai
+external_client = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+
+model = OpenAIChatCompletionsModel(
+    model="gemini-2.0-flash",
+    openai_client=external_client
+)
+
+config = RunConfig(
+    model=model,
+    model_provider=cast(ModelProvider, external_client), # satisfy type checker
+    tracing_disabled=True
+)
+
+# Initialize the FastAPI app
 app = FastAPI(
     title="DACA Chat Service",
     description="A FastAPI-based Chat Service for the DACA tutorial series",
@@ -156,58 +172,50 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Create a tool to fetch the current time
 @function_tool
 def get_current_time() -> str:
     """Returns the current time in UTC."""
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
 
-chat_agent = Agent(
-    name="ChatAgent",
-    instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool. Personalize responses using user analytics (e.g., message count).",
-    model="gpt-4o",
-    tools=[get_current_time],
-)
-
-async def get_db():
-    return {"connection": "Mock DB Connection"}
-
+# Root endpoint
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
+    return {"message": "Welcome to the DACA Chatbot API! Access /docs for the API documentation."}
 
-@app.get("/users/{user_id}")
-async def get_user(user_id: str, role: str | None = None):
-    user_info = {"user_id": user_id, "role": role if role else "guest"}
-    return user_info
-
+# POST endpoint for chatting
 @app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
+async def chat(message: Message):
     if not message.text.strip():
-        raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    print(f"DB Connection: {db['connection']}")
+        raise HTTPException(
+            status_code=400, detail="Message text cannot be empty")
 
-    # Synchronously call the Analytics Service to get user analytics
     async with httpx.AsyncClient() as client:
         try:
-            analytics_response = await client.get(f"http://localhost:8001/analytics/{message.user_id}")
-            analytics_response.raise_for_status()
-            analytics_data = analytics_response.json()
-            message_count = analytics_data.get("message_count", 0)
-        except httpx.HTTPStatusError as e:
-            message_count = 0  # Fallback if Analytics Service fails
-            print(f"Failed to fetch analytics: {e}")
+            memory_response = await client.get(f"http://localhost:8001/memories/{message.user_id}")
+            memory_response.raise_for_status()
+            memory_data = memory_response.json()
+            past_actions = memory_data.get("past_actions", [])
+        except httpx.HTTPStatusError:
+            past_actions = []  # Fallback if Memory Service fails
 
-    # Update the agent's instructions with user analytics
+    # Personalize agent instructions with procedural memories
+    memory_context = "The user has no past actions." if not past_actions else f"The user’s past actions include: {', '.join(past_actions)}."
     personalized_instructions = (
-        f"You are a helpful chatbot. Respond to user messages in a friendly and informative way. "
+        f"You are a helpful chatbot. Respond to user messages in a friendly way. "
         f"If the user asks for the time, use the get_current_time tool. "
-        f"The user has sent {message_count} messages so far, so personalize your response accordingly."
+        f"{memory_context} Use this to personalize your response."
     )
-    chat_agent.instructions = personalized_instructions
 
+    chat_agent = Agent(
+        name="ChatAgent",
+        instructions=personalized_instructions,
+        tools=[get_current_time],  # Add the time tool
+        model=model
+    )
     # Use the OpenAI Agents SDK to process the message
-    result = await Runner.run(chat_agent, input=message.text)
-    reply_text = result.final_output
+    result = await Runner.run(chat_agent, input=message.text, run_config=config)
+    reply_text = result.final_output  # Get the agent's response
 
     return Response(
         user_id=message.user_id,
@@ -216,423 +224,173 @@ async def chat(message: Message, db: dict = Depends(get_db)):
     )
 ```
 
-### Update `chat_service/tests/test_main.py`
-Update the tests to mock the Analytics Service call:
-```python
-import pytest
-from fastapi.testclient import TestClient
-from main import app
-from unittest.mock import AsyncMock, patch
+### `chat_service/pyproject.toml`
+```toml
+[project]
+name = "fastapi-daca-tutorial"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.115.12",
+    "openai-agents==0.0.7",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+]
+```
 
-client = TestClient(app)
-
-def test_root():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {
-        "message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."
-    }
-
-def test_get_user():
-    response = client.get("/users/alice?role=admin")
-    assert response.status_code == 200
-    assert response.json() == {"user_id": "alice", "role": "admin"}
-
-    response = client.get("/users/bob")
-    assert response.status_code == 200
-    assert response.json() == {"user_id": "bob", "role": "guest"}
-
-@pytest.mark.asyncio
-async def test_chat():
-    with patch("main.Runner.run", new_callable=AsyncMock) as mock_run, \
-         patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get:
-        # Mock the Analytics Service response
-        mock_get.return_value = AsyncMock(status_code=200, json=lambda: {"message_count": 5})
-        mock_run.return_value.final_output = "Hi Alice! You've sent 5 messages already—great to hear from you again! How can I help today?"
-        
-        request_data = {
-            "user_id": "alice",
-            "text": "Hello, how are you?",
-            "metadata": {
-                "timestamp": "2025-04-06T12:00:00Z",
-                "session_id": "123e4567-e89b-12d3-a456-426614174000"
-            },
-            "tags": ["greeting"]
-        }
-        response = client.post("/chat/", json=request_data)
-        assert response.status_code == 200
-        assert response.json()["user_id"] == "alice"
-        assert response.json()["reply"] == "Hi Alice! You've sent 5 messages already—great to hear from you again! How can I help today?"
-        assert "metadata" in response.json()
-
-        # Mock a tool-using response
-        mock_get.return_value = AsyncMock(status_code=200, json=lambda: {"message_count": 3})
-        mock_run.return_value.final_output = "Bob, you've sent 3 messages so far. The current time is 2025-04-06 04:01:23 UTC."
-        request_data = {
-            "user_id": "bob",
-            "text": "What time is it?",
-            "metadata": {
-                "timestamp": "2025-04-06T12:00:00Z",
-                "session_id": "123e4567-e89b-12d3-a456-426614174001"
-            },
-            "tags": ["question"]
-        }
-        response = client.post("/chat/", json=request_data)
-        assert response.status_code == 200
-        assert response.json()["user_id"] == "bob"
-        assert response.json()["reply"] == "Bob, you've sent 3 messages so far. The current time is 2025-04-06 04:01:23 UTC."
-        assert "metadata" in response.json()
-
-        # Test failure of Analytics Service
-        mock_get.side_effect = httpx.HTTPStatusError(
-            message="Not Found", request=AsyncMock(), response=AsyncMock(status_code=404)
-        )
-        mock_run.return_value.final_output = "Hi Alice! How can I help you today?"
-        request_data = {
-            "user_id": "alice",
-            "text": "Hello again!",
-            "metadata": {
-                "timestamp": "2025-04-06T12:00:00Z",
-                "session_id": "123e4567-e89b-12d3-a456-426614174000"
-            }
-        }
-        response = client.post("/chat/", json=request_data)
-        assert response.status_code == 200
-        assert response.json()["reply"] == "Hi Alice! How can I help you today?"
-
-        # Invalid request
-        request_data = {
-            "user_id": "bob",
-            "text": "",
-            "metadata": {
-                "timestamp": "2025-04-06T12:00:00Z",
-                "session_id": "123e4567-e89b-12d3-a456-426614174001"
-            }
-        }
-        response = client.post("/chat/", json=request_data)
-        assert response.status_code == 400
-        assert response.json() == {"detail": "Message text cannot be empty"}
+### Setup
+```bash
+cd chat_service
+uv sync
+source .venv/bin/activate
 ```
 
 ---
 
-### Streaming Endpoint
+## Step 4: Define the Agent Memory Service
+Quick Setup
+```bash
+uv init agent_memory_service
+cd agent_memory_service
+uv venv
+source .venv/bin/activate
 
-Now let's add another streaming endpoint:
-
-```python
-# POST endpoint for chatting
-async def stream_response(message: Message):
-    result = Runner.run_streamed(chat_agent, input=message.text, run_config=config)
-    async for event in result.stream_events():
-        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
-            print(event.data.delta, end="", flush=True)
-            # Serialize dictionary to JSON string
-            chunk = json.dumps({"chunk": event.data.delta})
-            yield f"data: {chunk}\n\n"
-            
-@app.post("/chat/stream", response_model=Response)
-async def chat_stream(message: Message):
-    if not message.text.strip():
-        raise HTTPException(
-            status_code=400, detail="Message text cannot be empty")
-
-    return StreamingResponse(
-        stream_response(message),
-        media_type="text/event-stream"
-    )
-
+uv add "fastapi[standard]" pytest pytest-asyncio
 ```
 
-Call it in PostMan to see the streaming response.
+The **Agent Memory Service** provides procedural memories (e.g., past actions or skills) for a user, mocked with in-memory data for now.
 
-## Step 4: Define the Analytics Service
-The **Analytics Service** will provide user analytics, such as the number of messages a user has sent. For now, we’ll use mock data to simulate this (in future tutorials, we’ll use a database).
-
-### Create `analytics_service/models.py`
+### `agent_memory_service/models.py`
 ```python
 from pydantic import BaseModel
 
-class Analytics(BaseModel):
-    message_count: int
+class Memories(BaseModel):
+    past_actions: list[str]
 ```
 
-### Create `analytics_service/main.py`
+### `agent_memory_service/main.py`
 ```python
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from models import Analytics
+from models import Memories
 
 app = FastAPI(
-    title="DACA Analytics Service",
-    description="A FastAPI-based Analytics Service for the DACA tutorial series",
+    title="Agent Memory Service",
+    description="Provides procedural memories for AI agents",
     version="0.1.0",
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000"],  # Allow Chat Service
+    allow_origins=["http://localhost:8000"],  # Allow Chat Service
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Mock user analytics data (in future tutorials, this will come from a database)
-MOCK_ANALYTICS = {
-    "alice": {"message_count": 5},
-    "bob": {"message_count": 3},
+# Mock procedural memories (e.g., past actions)
+MOCK_MEMORIES = {
+    "alice": {"past_actions": ["scheduled a meeting", "analyzed data"]},
+    "bob": {"past_actions": ["wrote a report"]}
 }
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."}
+    return {"message": "Welcome to the Agent Memory Service!"}
 
-@app.get("/analytics/{user_id}", response_model=Analytics)
-async def get_analytics(user_id: str):
-    if user_id not in MOCK_ANALYTICS:
+@app.get("/memories/{user_id}", response_model=Memories)
+async def get_memories(user_id: str):
+    if user_id not in MOCK_MEMORIES:
         raise HTTPException(status_code=404, detail="User not found")
-    return Analytics(**MOCK_ANALYTICS[user_id])
+    return Memories(**MOCK_MEMORIES[user_id])
 ```
 
-### Create `analytics_service/tests/test_main.py`
-```python
-import pytest
-from fastapi.testclient import TestClient
-from main import app
+### `agent_memory_service/pyproject.toml`
+```toml
+[project]
+name = "agent-memory-service"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.115.12",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+]
+```
 
-client = TestClient(app)
-
-def test_root():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {
-        "message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."
-    }
-
-def test_get_analytics():
-    # Test for existing user
-    response = client.get("/analytics/alice")
-    assert response.status_code == 200
-    assert response.json() == {"message_count": 5}
-
-    # Test for another existing user
-    response = client.get("/analytics/bob")
-    assert response.status_code == 200
-    assert response.json() == {"message_count": 3}
-
-    # Test for non-existing user
-    response = client.get("/analytics/charlie")
-    assert response.status_code == 404
-    assert response.json() == {"detail": "User not found"}
+### Setup
+```bash
+cd agent_memory_service
+uv sync
 ```
 
 ---
 
 ## Step 5: Running and Testing the Microservices
-### Start the Analytics Service
-Run the Analytics Service on port 8001:
+### Start the Agent Memory Service (port 8001)
 ```bash
-cd analytics_service
+cd agent_memory_service
 uv run uvicorn main:app --host 0.0.0.0 --port 8001 --reload
 ```
 
-### Start the Chat Service
-In a separate terminal, run the Chat Service on port 8000:
+### Start the Chat Service (port 8000)
+In a separate terminal:
 ```bash
 cd chat_service
 uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### Test the Analytics Service
-- Visit `http://localhost:8001/docs` and test the `/analytics/{user_id}` endpoint:
-  - For `alice`: `{"message_count": 5}`
-  - For `bob`: `{"message_count": 3}`
-  - For `charlie`: `404 Not Found`
+### Test the Agent Memory Service
+Visit `http://localhost:8001/docs` and test `GET /memories/alice`:
+```json
+{"past_actions": ["scheduled a meeting", "analyzed data"]}
+```
 
 ### Test the Chat Service
-Use Swagger UI (`http://localhost:8000/docs`) to send a request to the Chat Service:
+Visit `http://localhost:8000/docs` and send a `POST /chat/` request:
 ```json
-{
-  "user_id": "alice",
-  "text": "Hello, how are you?",
-  "metadata": {
-    "timestamp": "2025-04-06T12:00:00Z",
-    "session_id": "123e4567-e89b-12d3-a456-426614174000"
-  },
-  "tags": ["greeting"]
+{  
+"user_id": "alice",
+"text": "What can you do for me today?",
+"tags": ["greeting"]
 }
 ```
-Expected response (actual reply may vary):
+Example response:
 ```json
 {
   "user_id": "alice",
-  "reply": "Hi Alice! You've sent 5 messages already—great to hear from you again! How can I help today?",
+  "reply": "It's great to be chatting with you again! I know we've previously scheduled a meeting and analyzed some data together.\n\nRight now, I can get the current time for you. I can also still schedule meetings and analyze data. Just let me know what you'd like to do!\n",
   "metadata": {
-    "timestamp": "2025-04-06T04:01:00Z",
-    "session_id": "some-uuid"
+    "timestamp": "2025-04-07T09:04:03.099666Z",
+    "session_id": "f48d563a-1ba7-4be3-8ec1-22eef71f19f1"
   }
 }
 ```
 
 ### Run the Tests
-- Chat Service:
-  ```bash
-  cd chat_service
-  uv run pytest tests/test_main.py -v
-  ```
-- Analytics Service:
-  ```bash
-  cd analytics_service
-  uv run pytest tests/test_main.py -v
-  ```
+Tests are omitted for brevity but can be adapted from the original Chat Service tests, mocking the Agent Memory Service response.
 
 ---
 
 ## Step 6: Why Microservices and Stateless Design for DACA?
-- **Microservices**:
-  - The Chat Service and Analytics Service are independent, allowing us to scale or update them separately.
-  - This modularity aligns with DACA’s goal of building a distributed, planetary-scale system.
-- **Stateless Design**:
-  - Both services are stateless: they don’t store user data in memory between requests.
-  - The Chat Service fetches analytics data on each request, and the Analytics Service uses mock data (to be replaced with a database later).
-  - This statelessness ensures we can scale horizontally by adding more instances, a key requirement for DACA’s Kubernetes deployment stage.
+- **Microservices**: The Chat Service and Agent Memory Service are independent, allowing separate scaling and updates, aligning with DACA’s goal of a distributed, agentic system.
+- **Stateless Design**: Both services fetch data per request (e.g., memories from the Agent Memory Service), ensuring scalability and resilience.
 
 ---
 
 ## Step 7: Next Steps
-You’ve successfully built two stateless microservices with FastAPI and the OpenAI Agents SDK, implementing synchronous inter-service communication! In the next tutorial (**04_dapr_theory_and_cli**), we’ll introduce Dapr, which will simplify inter-service communication, state management, and more.
+You’ve built two stateless microservices with FastAPI and the OpenAI Agents SDK! In the next tutorial (**04_dapr_theory_and_cli**), we’ll introduce Dapr to enhance communication and state management.
 
 ### Optional Exercises
-1. Add a new endpoint to the Chat Service to fetch analytics data independently.
-2. Add a tool to the Chat Service’s agent to call the Analytics Service directly.
-3. Simulate a failure in the Analytics Service and test the Chat Service’s fallback behavior.
+1. Add an endpoint to store new procedural memories in the Agent Memory Service.
+2. Enhance the Chat Agent with a tool to fetch memories directly.
+3. Test fallback behavior by stopping the Agent Memory Service.
 
 ---
 
 ## Conclusion
-In this tutorial, we explored microservices architecture and stateless services, building two microservices (Chat Service and Analytics Service) using FastAPI and the OpenAI Agents SDK. The Chat Service synchronously calls the Analytics Service using `httpx` to personalize responses, demonstrating inter-service communication. The stateless design ensures scalability, aligning with DACA’s goals. We’re now ready to introduce Dapr to enhance our microservices architecture!
-
----
-
-### Final Code for `chat_service/main.py`
-```python
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from agents import Agent, Runner, function_tool
-from datetime import datetime
-import httpx
-
-from models import Message, Response, Metadata
-
-app = FastAPI(
-    title="DACA Chat Service",
-    description="A FastAPI-based Chat Service for the DACA tutorial series",
-    version="0.1.0",
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@function_tool
-def get_current_time() -> str:
-    """Returns the current time in UTC."""
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-
-chat_agent = Agent(
-    name="ChatAgent",
-    instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool. Personalize responses using user analytics (e.g., message count).",
-    model="gpt-4o",
-    tools=[get_current_time],
-)
-
-async def get_db():
-    return {"connection": "Mock DB Connection"}
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
-
-@app.get("/users/{user_id}")
-async def get_user(user_id: str, role: str | None = None):
-    user_info = {"user_id": user_id, "role": role if role else "guest"}
-    return user_info
-
-@app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
-    if not message.text.strip():
-        raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    print(f"DB Connection: {db['connection']}")
-
-    async with httpx.AsyncClient() as client:
-        try:
-            analytics_response = await client.get(f"http://localhost:8001/analytics/{message.user_id}")
-            analytics_response.raise_for_status()
-            analytics_data = analytics_response.json()
-            message_count = analytics_data.get("message_count", 0)
-        except httpx.HTTPStatusError as e:
-            message_count = 0
-            print(f"Failed to fetch analytics: {e}")
-
-    personalized_instructions = (
-        f"You are a helpful chatbot. Respond to user messages in a friendly and informative way. "
-        f"If the user asks for the time, use the get_current_time tool. "
-        f"The user has sent {message_count} messages so far, so personalize your response accordingly."
-    )
-    chat_agent.instructions = personalized_instructions
-
-    result = await Runner.run(chat_agent, input=message.text)
-    reply_text = result.final_output
-
-    return Response(
-        user_id=message.user_id,
-        reply=reply_text,
-        metadata=Metadata()
-    )
-```
-
----
-
-### Final Code for `analytics_service/main.py`
-```python
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from models import Analytics
-
-app = FastAPI(
-    title="DACA Analytics Service",
-    description="A FastAPI-based Analytics Service for the DACA tutorial series",
-    version="0.1.0",
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-MOCK_ANALYTICS = {
-    "alice": {"message_count": 5},
-    "bob": {"message_count": 3},
-}
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."}
-
-@app.get("/analytics/{user_id}", response_model=Analytics)
-async def get_analytics(user_id: str):
-    if user_id not in MOCK_ANALYTICS:
-        raise HTTPException(status_code=404, detail="User not found")
-    return Analytics(**MOCK_ANALYTICS[user_id])
-```
-
----
-
-This tutorial successfully introduces microservices and stateless design, setting the stage for Dapr integration in the next tutorial. Would you like to add more features (e.g., a new microservice, async communication) or move on to **04_dapr_theory_and_cli**?
+In this tutorial, we explored microservices and stateless services by building a Chat Service and an Agent Memory Service. The Chat Service uses `httpx` to fetch procedural memories from the Agent Memory Service, enhancing responses with the OpenAI Agents SDK. This stateless design sets a scalable foundation for DACA, ready for Dapr integration.
