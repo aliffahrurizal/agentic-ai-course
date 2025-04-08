@@ -42,12 +42,15 @@ fastapi-daca-tutorial/
 │   ├── main.py
 │   ├── models.py
 │   └── test_main.py
+│   ├── pyproject.toml
+│   └── uv.lock
 ├── agent_memory_service/
 │   ├── main.py
 │   ├── models.py
 │   └── test_main.py
-├── pyproject.toml
-└── uv.lock
+│   ├── pyproject.toml
+│   └── uv.lock
+└── README.md
 ```
 
 ---
