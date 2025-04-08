@@ -1,41 +1,42 @@
 # Event-Driven Communication with Dapr Pub/Sub
 
-Welcome to the seventh tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll enhance the microservices from **06_dapr_state_management** by integrating Dapr’s **Pub/Sub Messaging** building block. Currently, the Chat Service uses Dapr’s Service Invocation to fetch the user’s message count synchronously from the Analytics Service, but there’s no mechanism to update the message count when a new message is sent. We’ll address this by having the Chat Service publish a “MessageSent” event after processing a message, and the Analytics Service will subscribe to this event to increment the message count in the Dapr state store. This event-driven approach will decouple the services and improve scalability. Let’s get started!
+Welcome to the seventh tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll enhance the microservices from **06_dapr_state_management**, where the Chat Service synchronously updates conversation history in the Agent Memory Service using Dapr’s Service Invocation. Now, we’ll integrate Dapr’s **Pub/Sub Messaging** building block to:
+- Publish a “ConversationUpdated” event from the Chat Service to update conversation history asynchronously.
+- Dynamically update user metadata (`user_summary`) in the Agent Memory Service using an LLM, triggered by conversation events.
+This event-driven approach decouples the services, improves scalability, and makes metadata adaptive. Let’s dive in!
 
 ---
 
 ## What You’ll Learn
-- How to use Dapr’s Pub/Sub Messaging building block for asynchronous, event-driven communication.
-- Configuring the Chat Service to publish a “MessageSent” event after processing a user message.
-- Configuring the Analytics Service to subscribe to the “MessageSent” event and update the message count in the state store.
-- Setting up Dapr subscriptions to route events to the correct endpoint.
+- How to use Dapr’s Pub/Sub Messaging for asynchronous, event-driven communication.
+- Configuring the Chat Service to publish “ConversationUpdated” events after processing messages.
+- Configuring the Agent Memory Service to subscribe to these events, update conversation history, and generate a dynamic `user_summary` with an LLM.
+- Setting up Dapr subscriptions to route events.
 - Running microservices with Dapr sidecars and testing pub/sub messaging.
-- Updating unit tests to account for Dapr Pub/Sub integration.
+- Updating unit tests for Pub/Sub integration.
 
 ## Prerequisites
-- Completion of **06_dapr_state_management** (codebase with Chat Service and Analytics Service using Dapr Service Invocation and State Management).
-- Dapr CLI and runtime installed (from **04_dapr_theory_and_cli**).
-- Docker installed (Dapr uses Docker for its sidecars and components).
-- Python 3.8+ installed.
-- An OpenAI API key (set as `OPENAI_API_KEY`).
+- Completion of **06_dapr_state_management** (Chat Service and Agent Memory Service with Dapr State Management).
+- Dapr CLI and runtime installed (v1.15 recommended, per **04_dapr_theory_and_cli**).
+- Docker installed (for Dapr sidecars and Redis).
+- Python 3.12+ installed (compatible with Python 3.13 as used in prior examples).
+- A Gemini API key (set as `GEMINI_API_KEY` in `chat_service/.env`).
 
 ---
 
 ## Step 1: Recap of the Current Setup
-In **06_dapr_state_management**, we integrated Dapr’s State Management into the Analytics Service:
-- The **Chat Service** uses Dapr Service Invocation to fetch the user’s message count from the Analytics Service (`http://localhost:3500/v1.0/invoke/analytics-service/method/analytics/{user_id}`).
-- The **Analytics Service** stores message counts in a Dapr-managed state store (Redis) and retrieves them when requested.
-- We added a temporary `/analytics/{user_id}/initialize` endpoint to set initial message counts for testing.
+In **06_dapr_state_management**, we implemented:
+- The **Chat Service**, which invokes the Agent Memory Service via Dapr (`http://localhost:3500/v1.0/invoke/agent-memory-service/method/memories/{user_id}`) to fetch static user metadata and updates conversation history synchronously.
+- The **Agent Memory Service**, storing static metadata (`name`, `preferred_style`, `goal`) and conversation history in a Dapr state store (Redis).
 
 ### Current Limitations
-- **No Update Mechanism**: The message count in the state store is static; there’s no way to increment it when a user sends a new message.
-- **Synchronous Dependency**: The Chat Service relies on synchronous calls to the Analytics Service, which introduces coupling and potential latency.
+- **Synchronous Updates**: The Chat Service directly updates conversation history, coupling it to the Agent Memory Service and introducing latency.
+- **Static Metadata**: User metadata is static and doesn’t evolve with conversations, limiting personalization.
 
 ### Goal for This Tutorial
-We’ll use Dapr’s Pub/Sub Messaging to enable asynchronous communication:
-- The Chat Service will publish a “MessageSent” event to a Dapr pub/sub topic after processing a user message.
-- The Analytics Service will subscribe to this topic and increment the user’s message count in the state store.
-- This decouples the services, allowing the Analytics Service to update message counts asynchronously, improving scalability and resilience.
+We’ll use Dapr Pub/Sub to:
+- **Decouple History Updates**: The Chat Service will publish “ConversationUpdated” events to a `conversations` topic, and the Agent Memory Service will subscribe to update the history.
+- **Dynamic Metadata**: The Agent Memory Service will use an LLM to generate a `user_summary` string (e.g., “Junaid enjoys coding and scheduling tasks”) based on conversation history, updated via Pub/Sub.
 
 ### Current Project Structure
 ```
@@ -43,37 +44,33 @@ fastapi-daca-tutorial/
 ├── chat_service/
 │   ├── main.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── analytics_service/
+│   └── test_main.py
+├── agent_memory_service/
 │   ├── main.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
+│   └── test_main.py
 ├── pyproject.toml
 └── uv.lock
+└── README.md
 ```
 
 ---
 
 ## Step 2: Why Use Dapr Pub/Sub Messaging?
-Dapr’s **Pub/Sub Messaging** building block enables asynchronous, event-driven communication between services. It offers several advantages over synchronous communication (e.g., Service Invocation):
-- **Decoupling**: The publisher (Chat Service) doesn’t need to know about the subscriber (Analytics Service), reducing dependencies.
-- **Scalability**: Subscribers can process events at their own pace, allowing the system to handle high event volumes.
-- **Resilience**: Dapr handles message delivery, retries, and dead-letter queues (configurable), ensuring events are processed reliably.
-- **Event-Driven Architecture**: Aligns with DACA’s goal of building an agentic AI system that reacts to events (e.g., user messages, agent responses).
-- **Pluggability**: Dapr supports multiple message brokers (e.g., Redis, RabbitMQ, Kafka) via components, making it easy to switch brokers.
+Dapr’s **Pub/Sub Messaging** enables:
+- **Decoupling**: Publishers don’t need to know subscribers, reducing dependencies.
+- **Scalability**: Asynchronous processing handles high event volumes.
+- **Resilience**: Dapr manages delivery, retries, and dead-letter queues.
+- **Event-Driven Design**: Aligns with DACA’s agentic goals.
 
-In DACA, Pub/Sub Messaging is crucial for:
-- Notifying the Analytics Service of new messages without blocking the Chat Service.
-- Enabling an event-driven architecture where services react to events, supporting scalability and fault tolerance.
+For DACA, Pub/Sub:
+- Decouples conversation history updates.
+- Enables dynamic metadata generation based on events.
 
 ---
 
 ## Step 3: Configure Dapr Pub/Sub Component
-Dapr uses a pub/sub component to handle messaging. The `dapr init` command already set up a default Redis-based pub/sub component in `~/.dapr/components/pubsub.yaml`. Let’s verify its configuration.
-
-### Check the Default Pub/Sub Component
+Verify the default Redis pub/sub component:
 ```bash
 cat ~/.dapr/components/pubsub.yaml
 ```
@@ -92,28 +89,66 @@ spec:
   - name: redisPassword
     value: ""
 ```
-- `name: pubsub`: The name of the pub/sub component (we’ll use this in our code).
-- `type: pubsub.redis`: Uses Redis as the message broker.
-- `redisHost`: Points to the Redis instance running on `localhost:6379`.
-
-This component is ready to use. In a production environment, you might configure a cloud-hosted message broker (e.g., CloudAMQP for RabbitMQ) and secure it with credentials.
+This component is ready to use. In a production environment, you might configure a cloud-hosted message broker (e.g., CloudAMQP for RabbitMQ) and secure it with credentials. This is ready for local use.
 
 ---
 
 ## Step 4: Update the Chat Service to Publish Events
-The Chat Service will publish a “MessageSent” event to the `messages` topic after processing a user message. This event will notify the Analytics Service to update the message count.
+The last tutorial is our starter code here.
+
+The Chat Service will publish a “ConversationUpdated” event instead of directly updating history.
+
+### Update `chat_service/models.py`
+```python
+from pydantic import BaseModel, Field
+from datetime import datetime, UTC
+from uuid import uuid4
+
+class Metadata(BaseModel):
+    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+    session_id: str = Field(default_factory=lambda: str(uuid4()))
+
+class Message(BaseModel):
+    user_id: str
+    text: str
+    metadata: Metadata | None = None
+    tags: list[str] = []
+
+class Response(BaseModel):
+    user_id: str
+    reply: str
+    metadata: Metadata
+
+class ConversationEntry(BaseModel):
+    role: str
+    content: str
+    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+```
 
 ### Modify `chat_service/main.py`
-Add a function to publish an event using Dapr’s Pub/Sub API and call it in the `/chat/` endpoint.
-
 ```python
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from agents import Agent, Runner, function_tool
-from datetime import datetime
+import os
 import httpx
+from typing import cast
+from dotenv import load_dotenv
+from datetime import datetime, UTC
+from uuid import uuid4
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from agents import Agent, Runner, function_tool, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
+from models import Message, Response, Metadata, ConversationEntry
 
-from models import Message, Response, Metadata
+load_dotenv()
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+if not gemini_api_key:
+    raise ValueError("GEMINI_API_KEY not set in .env file.")
+
+external_client = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+model = OpenAIChatCompletionsModel(model="gemini-1.5-flash", openai_client=external_client)
+config = RunConfig(model=model, model_provider=cast(ModelProvider, external_client), tracing_disabled=True)
 
 app = FastAPI(
     title="DACA Chat Service",
@@ -131,92 +166,90 @@ app.add_middleware(
 
 @function_tool
 def get_current_time() -> str:
-    """Returns the current time in UTC."""
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
 
-chat_agent = Agent(
-    name="ChatAgent",
-    instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool. Personalize responses using user analytics (e.g., message count).",
-    model="gpt-4o",
-    tools=[get_current_time],
-)
-
-async def get_db():
-    return {"connection": "Mock DB Connection"}
-
-async def publish_message_sent_event(user_id: str, dapr_port: int = 3500):
-    """Publish a MessageSent event to the messages topic."""
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/publish/pubsub/messages"
-    event_data = {"user_id": user_id, "event_type": "MessageSent"}
+async def publish_conversation_event(user_id: str, session_id: str, user_text: str, reply_text: str, dapr_port: int = 3500):
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/publish/pubsub/conversations"
+    event_data = {
+        "user_id": user_id,
+        "session_id": session_id,
+        "event_type": "ConversationUpdated",
+        "user_message": user_text,
+        "assistant_reply": reply_text
+    }
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(dapr_url, json=event_data)
             response.raise_for_status()
-            print(f"Published MessageSent event for user {user_id}")
+            print(f"Published ConversationUpdated event for {user_id}, session {session_id}")
         except httpx.HTTPStatusError as e:
-            print(f"Failed to publish MessageSent event: {e}")
+            print(f"Failed to publish event: {e}")
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
 
-@app.get("/users/{user_id}")
-async def get_user(user_id: str, role: str | None = None):
-    user_info = {"user_id": user_id, "role": role if role else "guest"}
-    return user_info
-
 @app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
+async def chat(message: Message):
     if not message.text.strip():
         raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    print(f"DB Connection: {db['connection']}")
 
-    # Use Dapr Service Invocation to call the Analytics Service
-    dapr_port = 3500
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/invoke/analytics-service/method/analytics/{message.user_id}"
+    session_id = message.metadata.session_id if message.metadata and message.metadata.session_id else str(uuid4())
+    dapr_port = os.getenv("DAPR_HTTP_PORT", "3500")
+
+    metadata_url = f"http://localhost:{dapr_port}/v1.0/invoke/agent-memory-service/method/memories/{message.user_id}"
     async with httpx.AsyncClient() as client:
         try:
-            analytics_response = await client.get(dapr_url)
-            analytics_response.raise_for_status()
-            analytics_data = analytics_response.json()
-            message_count = analytics_data.get("message_count", 0)
+            memory_response = await client.get(metadata_url)
+            memory_response.raise_for_status()
+            memory_data = memory_response.json()
         except httpx.HTTPStatusError as e:
-            message_count = 0
-            print(f"Failed to fetch analytics via Dapr: {e}")
+            memory_data = {"name": message.user_id, "preferred_style": "casual", "user_summary": f"{message.user_id} is a new user."}
+            print(f"Failed to fetch metadata: {e}")
 
-    # Update the agent's instructions with user analytics
+    history_url = f"http://localhost:{dapr_port}/v1.0/invoke/agent-memory-service/method/conversations/{session_id}"
+    async with httpx.AsyncClient() as client:
+        try:
+            history_response = await client.get(history_url)
+            history_response.raise_for_status()
+            history = history_response.json()["history"]
+        except httpx.HTTPStatusError:
+            history = []
+            print(f"No prior history for session {session_id}")
+
+    name = memory_data.get("name", message.user_id)
+    style = memory_data.get("preferred_style", "casual")
+    summary = memory_data.get("user_summary", f"{name} is a new user.")
+    context = "No prior conversation." if not history else f"Recent chat: {history[-1]['content']}"
     personalized_instructions = (
-        f"You are a helpful chatbot. Respond to user messages in a friendly and informative way. "
+        f"You are a helpful chatbot. Respond in a {style} way. "
         f"If the user asks for the time, use the get_current_time tool. "
-        f"The user has sent {message_count} messages so far, so personalize your response accordingly."
+        f"The user’s name is {name}. User summary: {summary}. {context}"
     )
-    chat_agent.instructions = personalized_instructions
 
-    # Process the message with the OpenAI Agents SDK
-    result = await Runner.run(chat_agent, input=message.text)
+    chat_agent = Agent(
+        name="ChatAgent",
+        instructions=personalized_instructions,
+        tools=[get_current_time],
+        model=model
+    )
+    result = await Runner.run(chat_agent, input=message.text, run_config=config)
     reply_text = result.final_output
 
-    # Publish a MessageSent event
-    await publish_message_sent_event(message.user_id, dapr_port)
+    await publish_conversation_event(message.user_id, session_id, message.text, reply_text, dapr_port)
 
     return Response(
         user_id=message.user_id,
         reply=reply_text,
-        metadata=Metadata()
+        metadata=Metadata(session_id=session_id)
     )
 ```
 
-#### Explanation of Changes
-1. **Publish Function**:
-   - Added `publish_message_sent_event` to publish an event to the `messages` topic using Dapr’s Pub/Sub API (`http://localhost:3500/v1.0/publish/pubsub/messages`).
-   - The event payload includes the `user_id` and `event_type` (`MessageSent`).
+#### Changes
+1. **Publish Function**: Publishes a “ConversationUpdated” event with `user_id`, `session_id`, `user_message`, and `assistant_reply`.
+2. **Removed Direct Update**: No longer calls `/conversations/{session_id}` directly.
 
-2. **Event Publishing**:
-   - After processing the message and generating a reply, the `/chat/` endpoint calls `publish_message_sent_event` to notify other services (e.g., Analytics Service) that a message was sent.
-
-### Update `chat_service/tests/test_main.py`
-Update the tests to mock the pub/sub event publishing.
-
+### Update `chat_service/test_main.py`
 ```python
 import pytest
 from fastapi.testclient import TestClient
@@ -232,203 +265,205 @@ def test_root():
         "message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."
     }
 
-def test_get_user():
-    response = client.get("/users/alice?role=admin")
-    assert response.status_code == 200
-    assert response.json() == {"user_id": "alice", "role": "admin"}
-
-    response = client.get("/users/bob")
-    assert response.status_code == 200
-    assert response.json() == {"user_id": "bob", "role": "guest"}
-
 @pytest.mark.asyncio
 async def test_chat():
     with patch("main.Runner.run", new_callable=AsyncMock) as mock_run, \
          patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get, \
-         patch("main.publish_message_sent_event", new_callable=AsyncMock) as mock_publish:
-        # Mock the Dapr Service Invocation response
-        mock_get.return_value = AsyncMock(status_code=200, json=lambda: {"message_count": 5})
-        mock_run.return_value.final_output = "Hi Alice! You've sent 5 messages already—great to hear from you again! How can I help today?"
-        
-        request_data = {
-            "user_id": "alice",
-            "text": "Hello, how are you?",
-            "metadata": {
-                "timestamp": "2025-04-06T12:00:00Z",
-                "session_id": "123e4567-e89b-12d3-a456-426614174000"
-            },
-            "tags": ["greeting"]
-        }
+         patch("main.publish_conversation_event", new_callable=AsyncMock) as mock_publish:
+        mock_get.side_effect = [
+            AsyncMock(status_code=200, json=lambda: {"name": "Junaid", "preferred_style": "formal", "user_summary": "Junaid is a new user."}),
+            AsyncMock(status_code=200, json=lambda: {"history": []})
+        ]
+        mock_run.return_value.final_output = "Greetings, Junaid! How may I assist you today?"
+        request_data = {"user_id": "junaid", "text": "Hello", "tags": ["greeting"]}
         response = client.post("/chat/", json=request_data)
         assert response.status_code == 200
-        assert response.json()["user_id"] == "alice"
-        assert response.json()["reply"] == "Hi Alice! You've sent 5 messages already—great to hear from you again! How can I help today?"
-        assert "metadata" in response.json()
-        mock_publish.assert_called_once_with("alice", 3500)
-
-        # Mock a tool-using response
-        mock_get.return_value = AsyncMock(status_code=200, json=lambda: {"message_count": 3})
-        mock_run.return_value.final_output = "Bob, you've sent 3 messages so far. The current time is 2025-04-06 04:01:23 UTC."
-        request_data = {
-            "user_id": "bob",
-            "text": "What time is it?",
-            "metadata": {
-                "timestamp": "2025-04-06T12:00:00Z",
-                "session_id": "123e4567-e89b-12d3-a456-426614174001"
-            },
-            "tags": ["question"]
-        }
-        response = client.post("/chat/", json=request_data)
-        assert response.status_code == 200
-        assert response.json()["user_id"] == "bob"
-        assert response.json()["reply"] == "Bob, you've sent 3 messages so far. The current time is 2025-04-06 04:01:23 UTC."
-        assert "metadata" in response.json()
-        mock_publish.assert_called_with("bob", 3500)
-
-        # Test failure of Analytics Service via Dapr
-        mock_get.side_effect = httpx.HTTPStatusError(
-            message="Not Found", request=AsyncMock(), response=AsyncMock(status_code=404)
-        )
-        mock_run.return_value.final_output = "Hi Alice! How can I help you today?"
-        request_data = {
-            "user_id": "alice",
-            "text": "Hello again!",
-            "metadata": {
-                "timestamp": "2025-04-06T12:00:00Z",
-                "session_id": "123e4567-e89b-12d3-a456-426614174000"
-            }
-        }
-        response = client.post("/chat/", json=request_data)
-        assert response.status_code == 200
-        assert response.json()["reply"] == "Hi Alice! How can I help you today?"
-        mock_publish.assert_called_with("alice", 3500)
-
-        # Invalid request
-        request_data = {
-            "user_id": "bob",
-            "text": "",
-            "metadata": {
-                "timestamp": "2025-04-06T12:00:00Z",
-                "session_id": "123e4567-e89b-12d3-a456-426614174001"
-            }
-        }
-        response = client.post("/chat/", json=request_data)
-        assert response.status_code == 400
-        assert response.json() == {"detail": "Message text cannot be empty"}
-        assert mock_publish.call_count == 3  # Not called for invalid request
+        assert response.json()["reply"] == "Greetings, Junaid! How may I assist you today?"
+        mock_publish.assert_called_once()
 ```
-
-#### Explanation of Test Changes
-- Added a mock for `publish_message_sent_event` to verify that the Chat Service publishes the “MessageSent” event after processing a message.
-- Ensured the event is not published for invalid requests (e.g., empty message text).
 
 ---
 
-## Step 5: Update the Analytics Service to Subscribe to Events
-The Analytics Service will subscribe to the `messages` topic and increment the user’s message count in the state store when a “MessageSent” event is received.
+## Step 5: Update the Agent Memory Service to Subscribe to Events
+The Agent Memory Service will subscribe to the `conversations` topic, update history, and generate a dynamic `user_summary`.
 
-### Modify `analytics_service/main.py`
-Add a subscription endpoint to handle incoming pub/sub events and update the message count in the state store.
-
+### Update `agent_memory_service/models.py`
 ```python
+from pydantic import BaseModel, Field
+from datetime import datetime, UTC
+
+class UserMetadata(BaseModel):
+    name: str
+    preferred_style: str
+    user_summary: str
+
+class ConversationEntry(BaseModel):
+    role: str
+    content: str
+    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+
+class ConversationHistory(BaseModel):
+    history: list[ConversationEntry] = []
+```
+
+### Modify `agent_memory_service/main.py`
+```python
+import logging
+import httpx
+import os
+from dotenv import load_dotenv
+from typing import cast
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import httpx
 
-from models import Analytics
+from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
+
+from models import UserMetadata, ConversationHistory, ConversationEntry
+
+load_dotenv()
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+external_client = AsyncOpenAI(
+    api_key=os.getenv("GEMINI_API_KEY"),
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+model = OpenAIChatCompletionsModel(model="gemini-1.5-flash", openai_client=external_client)
+config = RunConfig(model=model, model_provider=cast(ModelProvider, external_client), tracing_disabled=True)
 
 app = FastAPI(
-    title="DACA Analytics Service",
-    description="A FastAPI-based Analytics Service for the DACA tutorial series",
+    title="DACA Agent Memory Service",
+    description="A FastAPI-based service for user metadata and conversation history",
     version="0.1.0",
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000"],
+    allow_origins=["http://localhost:3000", "http://localhost:8010"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-async def get_message_count(user_id: str, dapr_port: int = 3501) -> int:
-    """Retrieve the message count for a user from the Dapr state store."""
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/{user_id}"
+async def get_user_metadata(user_id: str, dapr_port: int = 3501) -> dict:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/user:{user_id}"
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get(dapr_url)
             response.raise_for_status()
-            state_data = response.json()
-            return state_data.get("message_count", 0) if state_data else 0
-        except httpx.HTTPStatusError as e:
-            print(f"Failed to retrieve state for {user_id}: {e}")
-            return 0
+            return response.json()
+        except httpx.HTTPStatusError:
+            return {}
 
-async def set_message_count(user_id: str, message_count: int, dapr_port: int = 3501):
-    """Set the message count for a user in the Dapr state store."""
+async def set_user_metadata(user_id: str, metadata: dict, dapr_port: int = 3501) -> None:
     dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
-    state_data = [
-        {
-            "key": user_id,
-            "value": {"message_count": message_count}
-        }
-    ]
+    state_data = [{"key": f"user:{user_id}", "value": metadata}]
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(dapr_url, json=state_data)
             response.raise_for_status()
-            print(f"Set message count for {user_id}: {message_count}")
+            logger.info(f"Stored metadata for {user_id}: {metadata}")
         except httpx.HTTPStatusError as e:
-            print(f"Failed to set state for {user_id}: {e}")
+            logger.error(f"Failed to store metadata: {e}")
+            raise HTTPException(status_code=500, detail="Failed to store metadata")
 
-async def increment_message_count(user_id: str, dapr_port: int = 3501):
-    """Increment the message count for a user in the Dapr state store."""
-    current_count = await get_message_count(user_id, dapr_port)
-    new_count = current_count + 1
-    await set_message_count(user_id, new_count, dapr_port)
+async def get_conversation_history(session_id: str, dapr_port: int = 3501) -> list[dict]:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/session:{session_id}"
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(dapr_url)
+            response.raise_for_status()
+            if response.status_code == 204:  # No content means no history
+                return []
+            state_data = response.json()
+            return state_data.get("history", [])
+        except httpx.HTTPStatusError:
+            return []  # Return empty list if key doesn't exist or other errors
+
+async def set_conversation_history(session_id: str, history: list[dict], dapr_port: int = 3501) -> None:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
+    state_data = [{"key": f"session:{session_id}", "value": {"history": history}}]
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(dapr_url, json=state_data)
+            response.raise_for_status()
+            logger.info(f"Stored conversation history for session {session_id}")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Failed to store conversation history: {e}")
+            raise HTTPException(status_code=500, detail="Failed to store conversation")
+
+async def generate_user_summary(user_id: str, history: list[dict]) -> str:
+    summary_agent = Agent(
+        name="SummaryAgent",
+        instructions="Generate a concise summary of the user based on their conversation history (e.g., 'Junaid enjoys coding and scheduling tasks'). Use only the provided history.",
+        model=model
+    )
+    history_text = "\n".join([f"{entry['role']}: {entry['content']}" for entry in history[-5:]])  # Last 5 entries
+    result = await Runner.run(summary_agent, input=history_text, run_config=config)
+    return result.final_output
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."}
+    return {"message": "Welcome to the DACA Agent Memory Service! Access /docs for the API documentation."}
 
-@app.get("/analytics/{user_id}", response_model=Analytics)
-async def get_analytics(user_id: str):
-    message_count = await get_message_count(user_id)
-    if message_count == 0 and user_id not in ["alice", "bob"]:
-        raise HTTPException(status_code=404, detail="User not found")
-    return Analytics(message_count=message_count)
+@app.get("/memories/{user_id}", response_model=UserMetadata)
+async def get_memories(user_id: str):
+    metadata = await get_user_metadata(user_id)
+    if not metadata:
+        return UserMetadata(name=user_id, preferred_style="casual", goal="chat")
+    return UserMetadata(**metadata)
 
-@app.post("/analytics/{user_id}/initialize")
-async def initialize_message_count(user_id: str, message_count: int):
-    await set_message_count(user_id, message_count)
-    return {"status": "success", "user_id": user_id, "message_count": message_count}
+@app.post("/memories/{user_id}/initialize", response_model=dict)
+async def initialize_memories(user_id: str, metadata: UserMetadata):
+    await set_user_metadata(user_id, metadata.dict())
+    return {"status": "success", "user_id": user_id, "metadata": metadata.dict()}
 
-@app.post("/messages")
-async def handle_message_sent(event: dict):
-    """Handle MessageSent events from the messages topic."""
+@app.get("/conversations/{session_id}", response_model=ConversationHistory)
+async def get_conversation(session_id: str):
+    history = await get_conversation_history(session_id)
+    return ConversationHistory(history=[ConversationEntry(**entry) for entry in history])
+
+# NEW
+@app.post("/conversations")
+async def handle_conversation_updated(event: dict):
     print(f"Received event: {event}")
-    event_type = event.get("event_type")
-    user_id = event.get("user_id")
+    # Extract the actual event data from the "data" field
+    event_data = event.get("data", {})
+    event_type = event_data.get("event_type")
+    user_id = event_data.get("user_id")
+    session_id = event_data.get("session_id")
+    user_message = event_data.get("user_message")
+    assistant_reply = event_data.get("assistant_reply")
 
-    if event_type != "MessageSent" or not user_id:
+    logger.info(f"Event validation: type={event_type}, user_id={user_id}, session_id={session_id}, user_message={user_message}, assistant_reply={assistant_reply}")
+
+    if event_type != "ConversationUpdated" or not all([user_id, session_id, user_message, assistant_reply]):
+        logger.warning("Event ignored due to invalid structure")
         return {"status": "ignored"}
 
-    # Increment the message count in the state store
-    await increment_message_count(user_id)
-    return {"status": "success"}
+    history = await get_conversation_history(session_id)
+    history.extend([
+        ConversationEntry(role="user", content=user_message).dict(),
+        ConversationEntry(role="assistant", content=assistant_reply).dict()
+    ])
+    await set_conversation_history(session_id, history)
+
+    metadata = await get_user_metadata(user_id)
+    if not metadata:
+        metadata = {"name": user_id, "preferred_style": "casual", "user_summary": f"{user_id} is a new user."}
+    metadata["user_summary"] = await generate_user_summary(user_id, history)
+    await set_user_metadata(user_id, metadata)
+
+    return {"status": "SUCCESS"}  # Uppercase to match Dapr’s expectation
 ```
 
-#### Explanation of Changes
-1. **Increment Function**:
-   - Added `increment_message_count` to fetch the current message count, increment it, and save it back to the state store.
+#### Changes
+1. **Subscription Endpoint**: Handles “ConversationUpdated” events, updates history, and regenerates `user_summary`.
+2. **Dynamic Metadata**: Uses an LLM to update `user_summary` based on history.
 
-2. **Subscription Endpoint**:
-   - Added a `/messages` POST endpoint to handle events from the `messages` topic.
-   - The endpoint checks the `event_type` and `user_id`, then calls `increment_message_count` to update the state.
-
-### Update `analytics_service/tests/test_main.py`
-Update the tests to include the new `/messages` endpoint and mock the state management operations.
-
+### Update `agent_memory_service/test_main.py`
 ```python
 import pytest
 from fastapi.testclient import TestClient
@@ -441,468 +476,274 @@ def test_root():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {
-        "message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."
+        "message": "Welcome to the DACA Agent Memory Service! Access /docs for the API documentation."
     }
 
 @pytest.mark.asyncio
-async def test_get_analytics():
-    with patch("main.get_message_count", new_callable=AsyncMock) as mock_get:
-        # Test for existing user
-        mock_get.return_value = 5
-        response = client.get("/analytics/alice")
+async def test_get_memories():
+    with patch("main.get_user_metadata", new_callable=AsyncMock) as mock_get:
+        mock_get.return_value = {"name": "Junaid", "preferred_style": "formal", "user_summary": "Junaid enjoys coding."}
+        response = client.get("/memories/junaid")
         assert response.status_code == 200
-        assert response.json() == {"message_count": 5}
-
-        # Test for another existing user
-        mock_get.return_value = 3
-        response = client.get("/analytics/bob")
-        assert response.status_code == 200
-        assert response.json() == {"message_count": 3}
-
-        # Test for non-existing user
-        mock_get.return_value = 0
-        response = client.get("/analytics/charlie")
-        assert response.status_code == 404
-        assert response.json() == {"detail": "User not found"}
+        assert response.json() == {"name": "Junaid", "preferred_style": "formal", "user_summary": "Junaid enjoys coding."}
 
 @pytest.mark.asyncio
-async def test_initialize_message_count():
-    with patch("main.set_message_count", new_callable=AsyncMock) as mock_set:
-        response = client.post("/analytics/alice/initialize", json={"message_count": 5})
+async def test_initialize_memories():
+    with patch("main.set_user_metadata", new_callable=AsyncMock) as mock_set:
+        metadata = {"name": "Junaid", "preferred_style": "casual", "user_summary": "Junaid is a new user."}
+        response = client.post("/memories/junaid/initialize", json=metadata)
         assert response.status_code == 200
-        assert response.json() == {"status": "success", "user_id": "alice", "message_count": 5}
-        mock_set.assert_called_once_with("alice", 5)
+        assert response.json() == {"status": "success", "user_id": "junaid", "metadata": metadata}
 
 @pytest.mark.asyncio
-async def test_handle_message_sent():
-    with patch("main.increment_message_count", new_callable=AsyncMock) as mock_increment:
-        # Test valid MessageSent event
-        event_data = {"event_type": "MessageSent", "user_id": "alice"}
-        response = client.post("/messages", json=event_data)
+async def test_conversation():
+    with patch("main.get_conversation_history", new_callable=AsyncMock) as mock_get_history, \
+         patch("main.set_conversation_history", new_callable=AsyncMock) as mock_set_history, \
+         patch("main.get_user_metadata", new_callable=AsyncMock) as mock_get_meta, \
+         patch("main.set_user_metadata", new_callable=AsyncMock) as mock_set_meta, \
+         patch("main.generate_user_summary", new_callable=AsyncMock) as mock_summary:
+        mock_get_history.return_value = [{"role": "user", "content": "Hi", "timestamp": "2025-04-07T15:00:00Z"}]
+        mock_get_meta.return_value = {"name": "Junaid", "preferred_style": "formal", "user_summary": "Junaid is a new user."}
+        mock_summary.return_value = "Junaid enjoys coding."
+        response = client.get("/conversations/session123")
         assert response.status_code == 200
-        assert response.json() == {"status": "success"}
-        mock_increment.assert_called_once_with("alice")
+        assert len(response.json()["history"]) == 1
 
-        # Test invalid event (wrong event_type)
-        event_data = {"event_type": "OtherEvent", "user_id": "bob"}
-        response = client.post("/messages", json=event_data)
+        event = {
+            "event_type": "ConversationUpdated",
+            "user_id": "junaid",
+            "session_id": "session123",
+            "user_message": "Hello",
+            "assistant_reply": "Hi Junaid!"
+        }
+        response = client.post("/conversations", json=event)
         assert response.status_code == 200
-        assert response.json() == {"status": "ignored"}
-        mock_increment.assert_called_once()  # Not called again
-
-        # Test invalid event (missing user_id)
-        event_data = {"event_type": "MessageSent"}
-        response = client.post("/messages", json=event_data)
-        assert response.status_code == 200
-        assert response.json() == {"status": "ignored"}
-        mock_increment.assert_called_once()  # Not called again
+        assert response.json()["status"] == "ignored"
 ```
-
-#### Explanation of Test Changes
-- Added a test for the `/messages` endpoint to verify it handles “MessageSent” events correctly and ignores invalid events.
-- Mocked `increment_message_count` to ensure it’s called only for valid events.
 
 ---
 
 ## Step 6: Configure Dapr Subscription
-Dapr requires a subscription configuration to map topics to endpoints. We’ll create a `subscriptions.yaml` file to define the subscription for the `messages` topic.
+We manage all Dapr components (state store, pub/sub, and subscriptions) in `fastapi-daca-tutorial/components/`, overriding defaults with `--components-path` when running services. First, ensure a Redis instance is available for these components to use.
 
-### Create the Components Directory
+Since the components/ directory doesn’t yet exist in the project structure, create it in the project root and add the subscription file.
+
 ```bash
-mkdir -p components
-cd components
-touch subscriptions.yaml
+cd fastapi-daca-tutorial
+mkdir components
+touch components/subscriptions.yaml
 ```
 
-### Define the Subscription in `components/subscriptions.yaml`
+Edit components/subscriptions.yaml with:
 ```yaml
 apiVersion: dapr.io/v1alpha1
 kind: Subscription
 metadata:
-  name: message-subscription
+  name: conversation-subscription
 spec:
   pubsubname: pubsub
-  topic: messages
-  route: /messages
+  topic: conversations
+  route: /conversations
 ```
-- `pubsubname: pubsub`: The name of the pub/sub component (matches the default `pubsub.yaml`).
-- `topic: messages`: The topic to subscribe to.
-- `route: /messages`: The endpoint in the Analytics Service to call when an event is received.
+This file links the conversations topic to the /conversations endpoint in the Agent Memory Service, using the "pubsub" component defined in ~/.dapr/components/pubsub.yaml.
 
-When running the Analytics Service with Dapr, we’ll specify this components directory so Dapr loads the subscription.
+### Get Other Components here as well
+Now statestore.yaml and pubsub.yaml are missing from this directory, so Dapr has no state store or pub/sub component configured, causing the failures.
+
+#### statestore.yaml
+Create statestore.yaml in components directory with following config
+```yaml
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statestore
+spec:
+  type: state.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: localhost:6379
+  - name: redisPassword
+    value: ""
+  - name: actorStateStore
+    value: "true"
+```
+
+#### pubsub.yaml
+```yaml
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+spec:
+  type: pubsub.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: localhost:6379
+  - name: redisPassword
+    value: ""
+```
 
 ---
 
 ## Step 7: Run the Microservices with Dapr
-### Start the Analytics Service with Dapr
-In a terminal, navigate to the Analytics Service directory and run it with Dapr, specifying the components directory:
+
+## Setup Dapr
 ```bash
-cd analytics_service
-dapr run --app-id analytics-service --app-port 8001 --dapr-http-port 3501 --components-path ../components -- uv run uvicorn main:app --host 0.0.0.0 --port 8001
+dapr init
 ```
-- `--components-path ../components`: Points to the directory containing `subscriptions.yaml`.
-- The Analytics Service will subscribe to the `messages` topic and handle events at the `/messages` endpoint.
+- It ensures a Redis container is running at localhost:6379 (which our statestore.yaml and pubsub.yaml in fastapi-daca-tutorial/components/ depend on).
+- It creates default components in ~/.dapr/components/, but we ignore those because we override them with --components-path in dapr run.
 
-Output:
-```
-ℹ  Starting Dapr with id analytics-service. HTTP Port: 3501  gRPC Port: 50002
-ℹ  Dapr sidecar is up and running.
-ℹ  You're up and running! Both Dapr and your app logs will appear here.
-== APP == INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+### Start the Agent Memory Service
+Note: Now here you will first install openai agents sdk and create a .env file with Gemini Key like in chat-service
+```bash
+cd fastapi-daca-tutorial/agent_memory_service
+
+uv venv
+source .venv/bin/activate
+uv sync
+
+uv add openai-agents
+
+dapr run --app-id agent-memory-service --app-port 8001 --dapr-http-port 3501 --resources-path ../components -- uv run uvicorn main:app --host 0.0.0.0 --port 8001 --reload
 ```
 
-### Start the Chat Service with Dapr
-In a separate terminal, navigate to the Chat Service directory and run it with Dapr:
+### Start the Chat Service
 ```bash
 cd chat_service
-dapr run --app-id chat-service --app-port 8000 --dapr-http-port 3500 -- uv run uvicorn main:app --host 0.0.0.0 --port 8000
-```
-Output:
-```
-ℹ  Starting Dapr with id chat-service. HTTP Port: 3500  gRPC Port: 50001
-ℹ  Dapr sidecar is up and running.
-ℹ  You're up and running! Both Dapr and your app logs will appear here.
-== APP == INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+uv venv
+source .venv/bin/activate
+uv sync
+
+cd fastapi-daca-tutorial/chat_service
+dapr run --app-id chat-service --app-port 8010 --dapr-http-port 3500 --resources-path ../components -- uv run uvicorn main:app --host 0.0.0.0 --port 8010 --reload
+
 ```
 
 ### Verify Running Services
 ```bash
 dapr list
 ```
-Output:
-```
-  APP ID            HTTP PORT  GRPC PORT  APP PORT  COMMAND                          AGE  CREATED              STATUS
-  chat-service      3500       50001      8000      uv run uvicorn main:app --ho...  10s  2025-04-06 04:01:00  Running
-  analytics-service 3501       50002      8001      uv run uvicorn main:app --ho...  15s  2025-04-06 04:00:55  Running
-```
 
 ---
 
 ## Step 8: Test the Microservices with Dapr Pub/Sub
-### Initialize State for Testing
-Let’s initialize message counts for `alice` and `bob` using the `/analytics/{user_id}/initialize` endpoint:
-- For `alice`:
+### Initialize State
+- For `junaid`:
   ```bash
-  curl -X POST http://localhost:8001/analytics/alice/initialize -H "Content-Type: application/json" -d '{"message_count": 5}'
-  ```
-  Output:
-  ```json
-  {"status": "success", "user_id": "alice", "message_count": 5}
-  ```
-- For `bob`:
-  ```bash
-  curl -X POST http://localhost:8001/analytics/bob/initialize -H "Content-Type: application/json" -d '{"message_count": 3}'
-  ```
-  Output:
-  ```json
-  {"status": "success", "user_id": "bob", "message_count": 3}
+  curl -X POST http://localhost:8001/memories/junaid/initialize -H "Content-Type: application/json" -d '{"name": "Junaid", "preferred_style": "formal", "user_summary": "Junaid is a new user."}'
   ```
 
-### Test the Analytics Service
-#### Test State Retrieval
-Test the `/analytics/{user_id}` endpoint to verify it retrieves data from the state store:
-- Visit `http://localhost:8001/docs` and test:
-  - For `alice`: `{"message_count": 5}`
-  - For `bob`: `{"message_count": 3}`
-  - For `charlie`: `404 Not Found`
-
-#### Test Pub/Sub Subscription
-Use the Dapr CLI to publish a test event to the `messages` topic:
+Successful Output:
 ```bash
-dapr publish --pubsub pubsub --topic messages --data '{"event_type": "MessageSent", "user_id": "alice"}'
+{"status":"success","user_id":"junaid","metadata":{"name":"Junaid","preferred_style":"formal","user_summary":"Junaid is a new user."}}%
 ```
-Output in the Analytics Service terminal:
-```
-== APP == Received event: {'event_type': 'MessageSent', 'user_id': 'alice'}
-== APP == Set message count for alice: 6
-```
-
-Check the updated message count for `alice`:
-- Visit `http://localhost:8001/docs` and test `/analytics/alice`:
-  - Expected: `{"message_count": 6}`
 
 ### Test the Chat Service
-Send a request to the Chat Service to trigger the full flow (Service Invocation + Pub/Sub):
+First request:
 ```json
 {
-  "user_id": "bob",
-  "text": "Hello, how are you?",
-  "metadata": {
-    "timestamp": "2025-04-06T12:00:00Z",
-    "session_id": "123e4567-e89b-12d3-a456-426614174001"
-  },
-  "tags": ["greeting"]
+  "user_id": "junaid",
+  "text": "I need to schedule a coding session."
 }
 ```
-Expected response (actual reply may vary):
+Response:
 ```json
 {
-  "user_id": "bob",
-  "reply": "Hi Bob! You've sent 3 messages so far. How can I help you today?",
+  "user_id": "junaid",
+  "reply": "Certainly, Junaid.  To schedule your coding session, I require some additional information. Please specify the topic, date, time, duration, and any preferred coding tools or technologies.\n",
   "metadata": {
-    "timestamp": "2025-04-06T04:01:00Z",
-    "session_id": "some-uuid"
+    "timestamp": "2025-04-08T23:33:48.142950+00:00",
+    "session_id": "90f6242e-7dae-494f-a919-e47b0bd8815e"
+  }
+}
+```
+Second request:
+```json
+{
+  "user_id": "junaid",
+  "text": "What time is it?",
+  "metadata": {
+    "session_id": "90f6242e-7dae-494f-a919-e47b0bd8815e"
+  }
+}
+```
+Response:
+```json
+{
+  "user_id": "junaid",
+  "reply": "The current time is 2025-04-08 23:34:53 UTC.\n",
+  "metadata": {
+    "timestamp": "2025-04-08T23:34:54.244633+00:00",
+    "session_id": "90f6242e-7dae-494f-a919-e47b0bd8815e"
+  }
+}
+```
+Check metadata:
+Open http://localhost:8001/ and try this endpoint
+- `http://localhost:8001/memories/junaid`
+- Expected: `{"name": "Junaid", "preferred_style": "formal", "user_summary": "Junaid enjoys coding and scheduling tasks."}`
+
+#### What Happens?
+1. Chat Service publishes “ConversationUpdated”.
+2. Agent Memory Service updates history and regenerates `user_summary`.
+
+#### VIBE: Try Background Memories Feature you have already implemented
+Another Req in same session.
+```json
+{
+  "user_id": "junaid",
+  "text": "Tomorrow we will pack for SF?",
+  "metadata": {
+    "session_id": "90f6242e-7dae-494f-a919-e47b0bd8815e"
   }
 }
 ```
 
-#### What Happens During the Request?
-1. The Chat Service receives the request and uses Service Invocation to fetch `bob`’s message count (3) from the Analytics Service.
-2. The Chat Service processes the message and generates a reply.
-3. The Chat Service publishes a “MessageSent” event to the `messages` topic.
-4. The Analytics Service’s Dapr sidecar receives the event and calls the `/messages` endpoint.
-5. The Analytics Service increments `bob`’s message count in the state store (from 3 to 4).
+Now ask about it in another session
 
-Check the updated message count for `bob`:
-- Visit `http://localhost:8001/docs` and test `/analytics/bob`:
-  - Expected: `{"message_count": 4}`
+```json
+{
+  "user_id": "junaid",
+  "text": "Where was I planning to go tommorrow?"
+}
+```
+
+OUTPUT:
+```json
+{
+  "user_id": "junaid",
+  "reply": "Based on our previous conversation, you, Junaid, are planning a trip to San Francisco tomorrow.\n",
+  "metadata": {
+    "timestamp": "2025-04-08T23:38:02.667521+00:00",
+    "session_id": "9ee00bf5-1138-45be-81bc-ea5656a0fdd2"
+  }
+}
+```
+
 
 ### Run the Tests
-- Chat Service:
-  ```bash
-  cd chat_service
-  uv run pytest tests/test_main.py -v
-  ```
-  Output:
-  ```
-  collected 3 items
-
-  tests/test_main.py::test_root PASSED
-  tests/test_main.py::test_get_user PASSED
-  tests/test_main.py::test_chat PASSED
-
-  ================= 3 passed in 0.15s =================
-  ```
-- Analytics Service:
-  ```bash
-  cd analytics_service
-  uv run pytest tests/test_main.py -v
-  ```
-  Output:
-  ```
-  collected 4 items
-
-  tests/test_main.py::test_root PASSED
-  tests/test_main.py::test_get_analytics PASSED
-  tests/test_main.py::test_initialize_message_count PASSED
-  tests/test_main.py::test_handle_message_sent PASSED
-
-  ================= 4 passed in 0.12s =================
-  ```
+- `cd chat_service && uv run pytest test_main.py -v`
+- `cd agent_memory_service && uv run pytest test_main.py -v`
 
 ---
 
-## Step 9: Why Dapr Pub/Sub Messaging for DACA?
-Using Dapr’s Pub/Sub Messaging building block enhances DACA’s architecture by:
-- **Decoupling**: The Chat Service and Analytics Service are now loosely coupled; the Chat Service doesn’t need to wait for the Analytics Service to update the message count.
-- **Scalability**: Asynchronous communication allows the Analytics Service to process events at its own pace, improving system throughput.
-- **Resilience**: Dapr handles message delivery and retries (configurable), ensuring events are processed reliably.
-- **Event-Driven Architecture**: Aligns with DACA’s goal of building an agentic AI system that reacts to events (e.g., user actions, agent responses).
+## Step 9: Why Dapr Pub/Sub for DACA?
+- **Decoupling**: Asynchronous updates reduce latency.
+- **Scalability**: Handles conversation volume efficiently.
+- **Dynamic Metadata**: Enhances personalization.
 
 ---
 
 ## Step 10: Next Steps
-You’ve successfully integrated Dapr’s Pub/Sub Messaging into our microservices, enabling asynchronous communication between the Chat Service and Analytics Service! In the next tutorial (**08_dapr_workflows**), we’ll explore Dapr’s Workflows building block to orchestrate multi-step processes (e.g., message processing → analytics update → agent response) with retries and compensation logic.
+Next, we’ll explore Dapr Workflows to orchestrate multi-step processes.
 
-### Optional Exercises
-1. Add a new pub/sub topic for “UserRegistered” events and have the Analytics Service initialize a user’s message count to 0 when they register.
-2. Configure Dapr to use a different message broker (e.g., RabbitMQ) by creating a custom `pubsub.yaml` in the components directory.
-3. Use the Dapr dashboard (`dapr dashboard`) to trace the pub/sub event flow between the Chat Service and Analytics Service.
+### Exercises
+1. Add a “UserRegistered” event to initialize metadata.
 
 ---
 
 ## Conclusion
-In this tutorial, we integrated Dapr’s Pub/Sub Messaging building block into our microservices, enabling asynchronous, event-driven communication. The Chat Service now publishes “MessageSent” events, which the Analytics Service subscribes to and uses to update message counts in the state store. This decouples the services, improves scalability, and aligns with DACA’s event-driven architecture goals. We’re now ready to explore Dapr Workflows in the next tutorial!
-
----
-
-### Final Code for `chat_service/main.py`
-```python
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from agents import Agent, Runner, function_tool
-from datetime import datetime
-import httpx
-
-from models import Message, Response, Metadata
-
-app = FastAPI(
-    title="DACA Chat Service",
-    description="A FastAPI-based Chat Service for the DACA tutorial series",
-    version="0.1.0",
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@function_tool
-def get_current_time() -> str:
-    """Returns the current time in UTC."""
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-
-chat_agent = Agent(
-    name="ChatAgent",
-    instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool. Personalize responses using user analytics (e.g., message count).",
-    model="gpt-4o",
-    tools=[get_current_time],
-)
-
-async def get_db():
-    return {"connection": "Mock DB Connection"}
-
-async def publish_message_sent_event(user_id: str, dapr_port: int = 3500):
-    """Publish a MessageSent event to the messages topic."""
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/publish/pubsub/messages"
-    event_data = {"user_id": user_id, "event_type": "MessageSent"}
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.post(dapr_url, json=event_data)
-            response.raise_for_status()
-            print(f"Published MessageSent event for user {user_id}")
-        except httpx.HTTPStatusError as e:
-            print(f"Failed to publish MessageSent event: {e}")
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
-
-@app.get("/users/{user_id}")
-async def get_user(user_id: str, role: str | None = None):
-    user_info = {"user_id": user_id, "role": role if role else "guest"}
-    return user_info
-
-@app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
-    if not message.text.strip():
-        raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    print(f"DB Connection: {db['connection']}")
-
-    dapr_port = 3500
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/invoke/analytics-service/method/analytics/{message.user_id}"
-    async with httpx.AsyncClient() as client:
-        try:
-            analytics_response = await client.get(dapr_url)
-            analytics_response.raise_for_status()
-            analytics_data = analytics_response.json()
-            message_count = analytics_data.get("message_count", 0)
-        except httpx.HTTPStatusError as e:
-            message_count = 0
-            print(f"Failed to fetch analytics via Dapr: {e}")
-
-    personalized_instructions = (
-        f"You are a helpful chatbot. Respond to user messages in a friendly and informative way. "
-        f"If the user asks for the time, use the get_current_time tool. "
-        f"The user has sent {message_count} messages so far, so personalize your response accordingly."
-    )
-    chat_agent.instructions = personalized_instructions
-
-    result = await Runner.run(chat_agent, input=message.text)
-    reply_text = result.final_output
-
-    await publish_message_sent_event(message.user_id, dapr_port)
-
-    return Response(
-        user_id=message.user_id,
-        reply=reply_text,
-        metadata=Metadata()
-    )
-```
-
----
-
-### Final Code for `analytics_service/main.py`
-```python
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-import httpx
-
-from models import Analytics
-
-app = FastAPI(
-    title="DACA Analytics Service",
-    description="A FastAPI-based Analytics Service for the DACA tutorial series",
-    version="0.1.0",
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-async def get_message_count(user_id: str, dapr_port: int = 3501) -> int:
-    """Retrieve the message count for a user from the Dapr state store."""
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/{user_id}"
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(dapr_url)
-            response.raise_for_status()
-            state_data = response.json()
-            return state_data.get("message_count", 0) if state_data else 0
-        except httpx.HTTPStatusError as e:
-            print(f"Failed to retrieve state for {user_id}: {e}")
-            return 0
-
-async def set_message_count(user_id: str, message_count: int, dapr_port: int = 3501):
-    """Set the message count for a user in the Dapr state store."""
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
-    state_data = [
-        {
-            "key": user_id,
-            "value": {"message_count": message_count}
-        }
-    ]
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.post(dapr_url, json=state_data)
-            response.raise_for_status()
-            print(f"Set message count for {user_id}: {message_count}")
-        except httpx.HTTPStatusError as e:
-            print(f"Failed to set state for {user_id}: {e}")
-
-async def increment_message_count(user_id: str, dapr_port: int = 3501):
-    """Increment the message count for a user in the Dapr state store."""
-    current_count = await get_message_count(user_id, dapr_port)
-    new_count = current_count + 1
-    await set_message_count(user_id, new_count, dapr_port)
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."}
-
-@app.get("/analytics/{user_id}", response_model=Analytics)
-async def get_analytics(user_id: str):
-    message_count = await get_message_count(user_id)
-    if message_count == 0 and user_id not in ["alice", "bob"]:
-        raise HTTPException(status_code=404, detail="User not found")
-    return Analytics(message_count=message_count)
-
-@app.post("/analytics/{user_id}/initialize")
-async def initialize_message_count(user_id: str, message_count: int):
-    await set_message_count(user_id, message_count)
-    return {"status": "success", "user_id": user_id, "message_count": message_count}
-
-@app.post("/messages")
-async def handle_message_sent(event: dict):
-    """Handle MessageSent events from the messages topic."""
-    print(f"Received event: {event}")
-    event_type = event.get("event_type")
-    user_id = event.get("user_id")
-
-    if event_type != "MessageSent" or not user_id:
-        return {"status": "ignored"}
-
-    await increment_message_count(user_id)
-    return {"status": "success"}
-```
-
----
-
-This tutorial provides a focused introduction to Dapr Pub/Sub Messaging, keeping the scope manageable while advancing our microservices architecture. 
+In this tutorial, we integrated Dapr’s Pub/Sub Messaging building block into our microservices, enabling asynchronous, event-driven communication. This aligns with DACA’s scalable, event-driven goals. Next up: Dapr Workflows!
