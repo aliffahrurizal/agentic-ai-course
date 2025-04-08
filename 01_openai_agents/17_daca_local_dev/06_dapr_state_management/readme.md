@@ -1,40 +1,39 @@
-# Managing State with Dapr in Microservices
+# [Managing State with Dapr in Microservices](https://docs.dapr.io/reference/api/state_api/)
 
-
-Welcome to the sixth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll build on the microservices from **05_inter_microservices_communication_using_dapr**, where we integrated Dapr’s Service Invocation to enable synchronous communication between the Chat Service and Analytics Service. Now, we’ll focus on Dapr’s **State Management** building block to replace the mock data (`MOCK_ANALYTICS`) in the Analytics Service with a Dapr-managed state store (using Redis, the default store initialized by `dapr init`). This will make our analytics data persistent, scalable, and suitable for a distributed system. Let’s get started!
+Welcome to the sixth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll enhance the microservices from **05_inter_microservices_communication_using_dapr**, where we used Dapr’s Service Invocation for communication between the Chat Service and Agent Memory Service. Now, we’ll integrate Dapr’s **State Management** building block to replace the mock data (`MOCK_MEMORIES`) in the Agent Memory Service with a persistent state store (Redis, initialized by `dapr init`). We’ll store static user metadata and dynamic conversation history, making our system scalable, realistic, and production-ready. Let’s get started!
 
 ---
 
 ## What You’ll Learn
 - How to use Dapr’s State Management building block to store and retrieve data persistently.
-- Replacing mock data in the Analytics Service with a Dapr-managed state store.
-- Updating the Chat Service to work with the updated Analytics Service.
+- Replacing mock data in the Agent Memory Service with a Dapr-managed state store for user metadata and conversation history.
+- Updating the Chat Service to store and leverage conversation context using a `session_id`.
 - Running microservices with Dapr sidecars and testing state management.
 - Updating unit tests to account for Dapr State Management integration.
 
 ## Prerequisites
-- Completion of **05_inter_microservices_communication_using_dapr** (codebase with Chat Service and Analytics Service using Dapr Service Invocation).
-- Dapr CLI and runtime installed (from **04_dapr_theory_and_cli**).
-- Docker installed (Dapr uses Docker for its sidecars and components).
-- Python 3.12+ installed.
-- An OpenAI API key (set as `OPENAI_API_KEY`) or Google Gemini Flash 2.0.
+- Completion of **05_inter_microservices_communication_using_dapr** (Chat Service and Agent Memory Service with Dapr Service Invocation).
+- Dapr CLI and runtime installed (v1.15 recommended, per **04_dapr_theory_and_cli**).
+- Docker installed (for Dapr sidecars and Redis state store).
+- Python 3.12+ installed (noting your use of Python 3.13 from the error log).
+- A Gemini API key (set as `GEMINI_API_KEY` in `chat_service/.env`).
 
 ---
 
 ## Step 1: Recap of the Current Setup
-In **05_inter_microservices_communication_using_dapr**, we modified our microservices to use Dapr’s Service Invocation:
-- The **Chat Service** calls the **Analytics Service** via Dapr sidecars (`http://localhost:3500/v1.0/invoke/analytics-service/method/analytics/{user_id}`) to fetch the user’s message count.
-- The **Analytics Service** uses a hardcoded dictionary (`MOCK_ANALYTICS`) to store and return analytics data (e.g., message counts).
+In **05_inter_microservices_communication_using_dapr**, we implemented:
+- The **Chat Service**, invoking the **Agent Memory Service** via Dapr sidecars (`http://localhost:3500/v1.0/invoke/agent-memory-service/method/memories/{user_id}`) to fetch static `past_actions`.
+- The **Agent Memory Service**, using a hardcoded `MOCK_MEMORIES` dictionary.
 
 ### Current Limitations
-- **Mock Data**: The Analytics Service uses `MOCK_ANALYTICS`, which is not persistent (data is lost on restart) and not suitable for a distributed system where multiple instances need to share state.
-- **Scalability**: Hardcoded data doesn’t support horizontal scaling, as each instance of the Analytics Service would have its own copy of the data.
+- **Mock Data**: `MOCK_MEMORIES` is ephemeral and not shared across instances.
+- **No Conversation Context**: Lacks storage for dynamic chat history, limiting personalization.
 
 ### Goal for This Tutorial
-We’ll replace `MOCK_ANALYTICS` with a Dapr-managed state store (Redis, the default store). The Analytics Service will:
-- Store message counts in the state store.
-- Retrieve message counts from the state store when requested by the Chat Service.
-This will make the analytics data persistent and accessible across multiple instances of the Analytics Service, aligning with DACA’s scalability goals.
+We’ll replace `MOCK_MEMORIES` with a Dapr-managed state store, storing:
+- **User Metadata** per `user_id`: Static data like `name`, `preferred_style`, and `goal`.
+- **Conversation History** per `session_id`: Dynamic records of user messages and assistant replies.
+The Chat Service will use an existing `session_id` from the `metadata` field if provided, or generate a new one, and store each conversation part by calling the Agent Memory Service.
 
 ### Current Project Structure
 ```
@@ -42,13 +41,11 @@ fastapi-daca-tutorial/
 ├── chat_service/
 │   ├── main.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── analytics_service/
+│   └── test_main.py
+├── agent_memory_service/
 │   ├── main.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
+│   └── test_main.py
 ├── pyproject.toml
 └── uv.lock
 ```
@@ -56,24 +53,22 @@ fastapi-daca-tutorial/
 ---
 
 ## Step 2: Why Use Dapr State Management?
-Dapr’s **State Management** building block provides a key-value store for managing application state in a distributed system. It offers several advantages over mock data or local storage:
-- **Persistence**: State is stored in an external store (e.g., Redis, CockroachDB), surviving service restarts.
-- **Scalability**: Multiple instances of a service can share the same state store, enabling horizontal scaling.
-- **Consistency**: Dapr supports consistency models (e.g., eventual, strong) and concurrency control (e.g., ETags for optimistic concurrency).
-- **Abstraction**: Dapr provides a consistent API for state operations (e.g., get, set, delete), regardless of the underlying store.
-- **Pluggability**: You can switch state stores (e.g., from Redis to Postgres) by changing the Dapr component configuration.
+Dapr’s **State Management** provides:
+- **Persistence**: Data persists in external stores (e.g., Redis).
+- **Scalability**: Shared state supports multiple instances.
+- **Consistency**: Offers concurrency control (e.g., ETags).
+- **Abstraction**: Unified API across backends.
+- **Pluggability**: Easy backend switching.
 
-In DACA, State Management is crucial for:
-- Storing user analytics (e.g., message counts) persistently.
-- Supporting stateless services that can scale horizontally in a containerized environment (e.g., Kubernetes).
-- Ensuring data consistency across distributed instances of the Analytics Service.
+For DACA, it enables:
+- Persistent user metadata and conversation history.
+- Scalable, stateless microservices for Kubernetes.
+- Practical state management learning.
 
 ---
 
 ## Step 3: Configure Dapr State Management Component
-Dapr uses a state store component to manage state. The `dapr init` command already set up a default Redis-based state store in `~/.dapr/components/statestore.yaml`. Let’s verify its configuration.
-
-### Check the Default State Store Component
+Verify the default Redis state store:
 ```bash
 cat ~/.dapr/components/statestore.yaml
 ```
@@ -92,104 +87,137 @@ spec:
   - name: redisPassword
     value: ""
 ```
-- `name: statestore`: The name of the state store component (we’ll use this in our code).
-- `type: state.redis`: Uses Redis as the state store.
-- `redisHost`: Points to the Redis instance running on `localhost:6379` (set up by `dapr init`).
-
-This component is ready to use, so we don’t need to modify it for now. In a production environment, you might configure a cloud-hosted Redis instance (e.g., Upstash) and secure it with a password.
+This is sufficient for local testing.
 
 ---
 
-## Step 4: Update the Analytics Service to Use Dapr State Management
-We’ll modify the Analytics Service to store and retrieve message counts using Dapr’s State Management API, replacing the `MOCK_ANALYTICS` dictionary.
+## Step 4: Update the Agent Memory Service to Use Dapr State Management
+We’ll manage two types of state: user metadata and conversation history.
 
-### Modify `analytics_service/main.py`
-Add functions to interact with the Dapr state store and update the `/analytics/{user_id}` endpoint to use them.
-
+### Update `agent_memory_service/models.py`
 ```python
+from pydantic import BaseModel, Field
+from datetime import datetime, UTC
+
+class UserMetadata(BaseModel):
+    name: str
+    preferred_style: str
+    goal: str
+
+class ConversationEntry(BaseModel):
+    role: str
+    content: str
+    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+
+class ConversationHistory(BaseModel):
+    history: list[ConversationEntry] = []
+```
+
+### Modify `agent_memory_service/main.py`
+```python
+import logging
+import os
+import httpx
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import httpx
+from models import UserMetadata, ConversationHistory, ConversationEntry
 
-from models import Analytics
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    title="DACA Analytics Service",
-    description="A FastAPI-based Analytics Service for the DACA tutorial series",
+    title="DACA Agent Memory Service",
+    description="A FastAPI-based service for user metadata and conversation history",
     version="0.1.0",
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000"],
+    allow_origins=["http://localhost:3000", "http://localhost:8010"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-async def get_message_count(user_id: str, dapr_port: int = 3501) -> int:
-    """Retrieve the message count for a user from the Dapr state store."""
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/{user_id}"
+async def get_user_metadata(user_id: str, dapr_port: int = 3501) -> dict:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/user:{user_id}"
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(dapr_url)
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPStatusError:
+            return {}
+
+async def set_user_metadata(user_id: str, metadata: dict, dapr_port: int = 3501) -> None:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
+    state_data = [{"key": f"user:{user_id}", "value": metadata}]
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(dapr_url, json=state_data)
+            response.raise_for_status()
+            logger.info(f"Stored metadata for {user_id}: {metadata}")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Failed to store metadata: {e}")
+            raise HTTPException(status_code=500, detail="Failed to store metadata")
+
+async def get_conversation_history(session_id: str, dapr_port: int = 3501) -> list[dict]:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/session:{session_id}"
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get(dapr_url)
             response.raise_for_status()
             state_data = response.json()
-            return state_data.get("message_count", 0) if state_data else 0
-        except httpx.HTTPStatusError as e:
-            print(f"Failed to retrieve state for {user_id}: {e}")
-            return 0
+            return state_data.get("history", [])
+        except httpx.HTTPStatusError:
+            return []
 
-async def set_message_count(user_id: str, message_count: int, dapr_port: int = 3501):
-    """Set the message count for a user in the Dapr state store."""
+async def set_conversation_history(session_id: str, history: list[dict], dapr_port: int = 3501) -> None:
     dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
-    state_data = [
-        {
-            "key": user_id,
-            "value": {"message_count": message_count}
-        }
-    ]
+    state_data = [{"key": f"session:{session_id}", "value": {"history": history}}]
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(dapr_url, json=state_data)
             response.raise_for_status()
-            print(f"Set message count for {user_id}: {message_count}")
+            logger.info(f"Stored conversation history for session {session_id}")
         except httpx.HTTPStatusError as e:
-            print(f"Failed to set state for {user_id}: {e}")
+            logger.error(f"Failed to store conversation history: {e}")
+            raise HTTPException(status_code=500, detail="Failed to store conversation")
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."}
+    return {"message": "Welcome to the DACA Agent Memory Service! Access /docs for the API documentation."}
 
-@app.get("/analytics/{user_id}", response_model=Analytics)
-async def get_analytics(user_id: str):
-    message_count = await get_message_count(user_id)
-    if message_count == 0 and user_id not in ["alice", "bob"]:  # Simulate 404 for unknown users
-        raise HTTPException(status_code=404, detail="User not found")
-    return Analytics(message_count=message_count)
+@app.get("/memories/{user_id}", response_model=UserMetadata)
+async def get_memories(user_id: str):
+    metadata = await get_user_metadata(user_id)
+    if not metadata:
+        return UserMetadata(name=user_id, preferred_style="casual", goal="chat")
+    return UserMetadata(**metadata)
 
-# Temporary endpoint to initialize state for testing
-@app.post("/analytics/{user_id}/initialize")
-async def initialize_message_count(user_id: str, message_count: int):
-    await set_message_count(user_id, message_count)
-    return {"status": "success", "user_id": user_id, "message_count": message_count}
+@app.post("/memories/{user_id}/initialize", response_model=dict)
+async def initialize_memories(user_id: str, metadata: UserMetadata):
+    await set_user_metadata(user_id, metadata.dict())
+    return {"status": "success", "user_id": user_id, "metadata": metadata.dict()}
+
+@app.get("/conversations/{session_id}", response_model=ConversationHistory)
+async def get_conversation(session_id: str):
+    history = await get_conversation_history(session_id)
+    return ConversationHistory(history=[ConversationEntry(**entry) for entry in history])
+
+@app.post("/conversations/{session_id}", response_model=dict)
+async def update_conversation(session_id: str, history: ConversationHistory):
+    await set_conversation_history(session_id, [entry.dict() for entry in history.history])
+    return {"status": "success", "session_id": session_id}
 ```
 
 #### Explanation of Changes
-1. **State Management Functions**:
-   - `get_message_count`: Retrieves the message count for a user from the Dapr state store (`http://localhost:3501/v1.0/state/statestore/{user_id}`). Returns 0 if the user doesn’t exist.
-   - `set_message_count`: Sets the message count for a user in the state store (`http://localhost:3501/v1.0/state/statestore`).
+1. **State Functions**: Manage user metadata and conversation history separately.
+2. **Endpoints**:
+   - `/memories/{user_id}`: Fetches metadata.
+   - `/conversations/{session_id}`: Fetches or updates history.
 
-2. **Updated Endpoint**:
-   - `/analytics/{user_id}`: Now retrieves the message count from the state store instead of `MOCK_ANALYTICS`.
-   - Removed the `MOCK_ANALYTICS` dictionary, as we’re now using the Dapr state store.
-
-3. **Temporary Initialization Endpoint**:
-   - Added `/analytics/{user_id}/initialize` to set initial message counts for testing purposes. In a real application, this would be part of a user registration flow or handled by another service.
-
-### Update `analytics_service/tests/test_main.py`
-Update the tests to mock the Dapr State Management API calls.
-
+### Update `agent_memory_service/test_main.py`
 ```python
 import pytest
 from fastapi.testclient import TestClient
@@ -202,61 +230,95 @@ def test_root():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {
-        "message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."
+        "message": "Welcome to the DACA Agent Memory Service! Access /docs for the API documentation."
     }
 
 @pytest.mark.asyncio
-async def test_get_analytics():
-    with patch("main.get_message_count", new_callable=AsyncMock) as mock_get:
-        # Test for existing user
-        mock_get.return_value = 5
-        response = client.get("/analytics/alice")
+async def test_get_memories():
+    with patch("main.get_user_metadata", new_callable=AsyncMock) as mock_get:
+        mock_get.return_value = {"name": "Alice", "preferred_style": "formal", "goal": "schedule tasks"}
+        response = client.get("/memories/alice")
         assert response.status_code == 200
-        assert response.json() == {"message_count": 5}
-
-        # Test for another existing user
-        mock_get.return_value = 3
-        response = client.get("/analytics/bob")
-        assert response.status_code == 200
-        assert response.json() == {"message_count": 3}
-
-        # Test for non-existing user
-        mock_get.return_value = 0
-        response = client.get("/analytics/charlie")
-        assert response.status_code == 404
-        assert response.json() == {"detail": "User not found"}
+        assert response.json() == {"name": "Alice", "preferred_style": "formal", "goal": "schedule tasks"}
 
 @pytest.mark.asyncio
-async def test_initialize_message_count():
-    with patch("main.set_message_count", new_callable=AsyncMock) as mock_set:
-        response = client.post("/analytics/alice/initialize", json={"message_count": 5})
+async def test_initialize_memories():
+    with patch("main.set_user_metadata", new_callable=AsyncMock) as mock_set:
+        metadata = {"name": "Bob", "preferred_style": "casual", "goal": "learn coding"}
+        response = client.post("/memories/bob/initialize", json=metadata)
         assert response.status_code == 200
-        assert response.json() == {"status": "success", "user_id": "alice", "message_count": 5}
-        mock_set.assert_called_once_with("alice", 5)
+        assert response.json() == {"status": "success", "user_id": "bob", "metadata": metadata}
+
+@pytest.mark.asyncio
+async def test_conversation():
+    with patch("main.get_conversation_history", new_callable=AsyncMock) as mock_get, \
+         patch("main.set_conversation_history", new_callable=AsyncMock) as mock_set:
+        mock_get.return_value = [{"role": "user", "content": "Hi", "timestamp": "2025-04-07T15:00:00Z"}]
+        response = client.get("/conversations/session123")
+        assert response.status_code == 200
+        assert len(response.json()["history"]) == 1
+
+        history = {"history": [{"role": "assistant", "content": "Hello!", "timestamp": "2025-04-07T15:01:00Z"}]}
+        response = client.post("/conversations/session123", json=history)
+        assert response.status_code == 200
+        assert response.json()["status"] == "success"
 ```
-
-#### Explanation of Test Changes
-1. **Mock State Management**:
-   - Mocked `get_message_count` to simulate retrieving message counts from the state store.
-   - Mocked `set_message_count` to verify it’s called when initializing message counts.
-
-2. **New Test for Initialization**:
-   - Added a test for the `/analytics/{user_id}/initialize` endpoint to ensure it sets the message count correctly.
 
 ---
 
-## Step 5: Verify the Chat Service
-The Chat Service doesn’t need changes, as it already uses Dapr Service Invocation to call the Analytics Service. However, let’s verify its code for completeness.
+## Step 5: Update the Chat Service
 
-### `chat_service/main.py` (Unchanged)
+### Update `chat_service/models.py`
 ```python
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from agents import Agent, Runner, function_tool
-from datetime import datetime
-import httpx
+from pydantic import BaseModel, Field
+from datetime import datetime, UTC
+from uuid import uuid4
 
-from models import Message, Response, Metadata
+class Metadata(BaseModel):
+    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+    session_id: str = Field(default_factory=lambda: str(uuid4()))
+
+class Message(BaseModel):
+    user_id: str
+    text: str
+    metadata: Metadata | None = None
+    tags: list[str] = []
+
+class Response(BaseModel):
+    user_id: str
+    reply: str
+    metadata: Metadata
+
+class ConversationEntry(BaseModel):
+    role: str
+    content: str
+    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+```
+
+### Modify `chat_service/main.py`
+```python
+import os
+import httpx
+from typing import cast
+from dotenv import load_dotenv
+from datetime import datetime, UTC
+from uuid import uuid4
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from agents import Agent, Runner, function_tool, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
+from models import Message, Response, Metadata, ConversationEntry
+
+load_dotenv()
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+if not gemini_api_key:
+    raise ValueError("GEMINI_API_KEY not set in .env file.")
+
+external_client = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+model = OpenAIChatCompletionsModel(model="gemini-1.5-flash", openai_client=external_client)
+config = RunConfig(model=model, model_provider=cast(ModelProvider, external_client), tracing_disabled=True)
 
 app = FastAPI(
     title="DACA Chat Service",
@@ -274,293 +336,267 @@ app.add_middleware(
 
 @function_tool
 def get_current_time() -> str:
-    """Returns the current time in UTC."""
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-
-chat_agent = Agent(
-    name="ChatAgent",
-    instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool. Personalize responses using user analytics (e.g., message count).",
-    model="gpt-4o",
-    tools=[get_current_time],
-)
-
-async def get_db():
-    return {"connection": "Mock DB Connection"}
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
 
-@app.get("/users/{user_id}")
-async def get_user(user_id: str, role: str | None = None):
-    user_info = {"user_id": user_id, "role": role if role else "guest"}
-    return user_info
-
 @app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
+async def chat(message: Message):
     if not message.text.strip():
         raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    print(f"DB Connection: {db['connection']}")
 
-    dapr_port = 3500
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/invoke/analytics-service/method/analytics/{message.user_id}"
+    # Use existing session_id from metadata if provided, otherwise generate a new one
+    session_id = message.metadata.session_id if message.metadata and message.metadata.session_id else str(uuid4())
+    dapr_port = os.getenv("DAPR_HTTP_PORT", "3500")
+
+    # Fetch user metadata
+    metadata_url = f"http://localhost:{dapr_port}/v1.0/invoke/agent-memory-service/method/memories/{message.user_id}"
     async with httpx.AsyncClient() as client:
         try:
-            analytics_response = await client.get(dapr_url)
-            analytics_response.raise_for_status()
-            analytics_data = analytics_response.json()
-            message_count = analytics_data.get("message_count", 0)
+            memory_response = await client.get(metadata_url)
+            memory_response.raise_for_status()
+            memory_data = memory_response.json()
         except httpx.HTTPStatusError as e:
-            message_count = 0
-            print(f"Failed to fetch analytics via Dapr: {e}")
+            memory_data = {"name": message.user_id, "preferred_style": "casual", "goal": "chat"}
+            print(f"Failed to fetch metadata: {e}")
 
+    # Fetch conversation history
+    history_url = f"http://localhost:{dapr_port}/v1.0/invoke/agent-memory-service/method/conversations/{session_id}"
+    async with httpx.AsyncClient() as client:
+        try:
+            history_response = await client.get(history_url)
+            history_response.raise_for_status()
+            history = history_response.json()["history"]
+        except httpx.HTTPStatusError:
+            history = []
+            print(f"No prior history for session {session_id}")
+
+    name = memory_data.get("name", message.user_id)
+    style = memory_data.get("preferred_style", "casual")
+    goal = memory_data.get("goal", "chat")
+    context = "No prior conversation." if not history else f"Recent chat: {history[-1]['content']}"
     personalized_instructions = (
-        f"You are a helpful chatbot. Respond to user messages in a friendly and informative way. "
+        f"You are a helpful chatbot. Respond in a {style} way. "
         f"If the user asks for the time, use the get_current_time tool. "
-        f"The user has sent {message_count} messages so far, so personalize your response accordingly."
+        f"The user’s name is {name}, their goal is to {goal}. {context}"
     )
-    chat_agent.instructions = personalized_instructions
 
-    result = await Runner.run(chat_agent, input=message.text)
+    chat_agent = Agent(
+        name="ChatAgent",
+        instructions=personalized_instructions,
+        tools=[get_current_time],
+        model=model
+    )
+    result = await Runner.run(chat_agent, input=message.text, run_config=config)
     reply_text = result.final_output
+
+    # Update conversation history
+    history.append(ConversationEntry(role="user", content=message.text).dict())
+    history.append(ConversationEntry(role="assistant", content=reply_text).dict())
+    async with httpx.AsyncClient() as client:
+        update_url = f"http://localhost:{dapr_port}/v1.0/invoke/agent-memory-service/method/conversations/{session_id}"
+        try:
+            await client.post(update_url, json={"history": history})
+        except httpx.HTTPStatusError as e:
+            print(f"Failed to store conversation: {e}")
 
     return Response(
         user_id=message.user_id,
         reply=reply_text,
-        metadata=Metadata()
+        metadata=Metadata(session_id=session_id)
     )
 ```
 
-The Chat Service tests (`chat_service/tests/test_main.py`) also remain unchanged, as they already mock the Service Invocation call to the Analytics Service.
+#### Explanation of Changes
+1. **Session ID Fix**: Correctly accesses `message.metadata.session_id`, handling `None` cases.
+2. **Conversation Storage**: Appends user and assistant messages to history and updates the state store.
+3. **Response**: Passes `session_id` to `Metadata` explicitly.
 
 ---
 
 ## Step 6: Run the Microservices with Dapr
-### Start the Analytics Service with Dapr
-In a terminal, navigate to the Analytics Service directory and run it with Dapr:
+### Start the Agent Memory Service
 ```bash
-cd analytics_service
-dapr run --app-id analytics-service --app-port 8001 --dapr-http-port 3501 -- uv run uvicorn main:app --host 0.0.0.0 --port 8001
-```
-Output:
-```
-ℹ  Starting Dapr with id analytics-service. HTTP Port: 3501  gRPC Port: 50002
-ℹ  Dapr sidecar is up and running.
-ℹ  You're up and running! Both Dapr and your app logs will appear here.
-== APP == INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+cd agent_memory_service
+dapr run --app-id agent-memory-service --app-port 8001 --dapr-http-port 3501 -- uv run uvicorn main:app --host 0.0.0.0 --port 8001 --reload
 ```
 
-### Start the Chat Service with Dapr
-In a separate terminal, navigate to the Chat Service directory and run it with Dapr:
+### Start the Chat Service
+Ensure `chat_service/.env` has `GEMINI_API_KEY=<your-key>`:
 ```bash
 cd chat_service
-dapr run --app-id chat-service --app-port 8000 --dapr-http-port 3500 -- uv run uvicorn main:app --host 0.0.0.0 --port 8000
-```
-Output:
-```
-ℹ  Starting Dapr with id chat-service. HTTP Port: 3500  gRPC Port: 50001
-ℹ  Dapr sidecar is up and running.
-ℹ  You're up and running! Both Dapr and your app logs will appear here.
-== APP == INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+dapr run --app-id chat-service --app-port 8010 --dapr-http-port 3500 -- uv run uvicorn main:app --host 0.0.0.0 --port 8010 --reload
 ```
 
 ### Verify Running Services
 ```bash
 dapr list
 ```
-Output:
-```
-  APP ID            HTTP PORT  GRPC PORT  APP PORT  COMMAND                          AGE  CREATED              STATUS
-  chat-service      3500       50001      8000      uv run uvicorn main:app --ho...  10s  2025-04-06 04:01:00  Running
-  analytics-service 3501       50002      8001      uv run uvicorn main:app --ho...  15s  2025-04-06 04:00:55  Running
-```
 
 ---
 
 ## Step 7: Test the Microservices with Dapr State Management
-### Initialize State for Testing
-Since the state store is initially empty, let’s initialize message counts for `alice` and `bob` using the `/analytics/{user_id}/initialize` endpoint.
-
-Set initial message counts:
-- For `alice`:
+### Initialize State
+- For `junaid`:
   ```bash
-  curl -X POST http://localhost:8001/analytics/alice/initialize -H "Content-Type: application/json" -d '{"message_count": 5}'
+  curl -X POST http://localhost:8001/memories/junaid/initialize -H "Content-Type: application/json" -d '{"name": "Junaid", "preferred_style": "formal", "goal": "schedule tasks"}'
   ```
-  Output:
-  ```json
-  {"status": "success", "user_id": "alice", "message_count": 5}
-  ```
-- For `bob`:
-  ```bash
-  curl -X POST http://localhost:8001/analytics/bob/initialize -H "Content-Type: application/json" -d '{"message_count": 3}'
-  ```
-  Output:
-  ```json
-  {"status": "success", "user_id": "bob", "message_count": 3}
-  ```
-
-### Test the Analytics Service
-Test the `/analytics/{user_id}` endpoint to verify it retrieves data from the state store:
-- Visit `http://localhost:8001/docs` and test:
-  - For `alice`: `{"message_count": 5}`
-  - For `bob`: `{"message_count": 3}`
-  - For `charlie`: `404 Not Found`
 
 ### Test the Chat Service
-Send a request to the Chat Service to verify the full flow:
+First request (new session):
 ```json
 {
-  "user_id": "alice",
-  "text": "Hello, how are you?",
-  "metadata": {
-    "timestamp": "2025-04-06T12:00:00Z",
-    "session_id": "123e4567-e89b-12d3-a456-426614174000"
-  },
+  "user_id": "junaid",
+  "text": "Hello",
   "tags": ["greeting"]
 }
 ```
-Expected response (actual reply may vary):
+Response:
 ```json
 {
-  "user_id": "alice",
-  "reply": "Hi Alice! You've sent 5 messages already—great to hear from you again! How can I help today?",
+  "user_id": "junaid",
+  "reply": "Hello Junaid, how may I help you today?\n",
   "metadata": {
-    "timestamp": "2025-04-06T04:01:00Z",
-    "session_id": "some-uuid"
+    "timestamp": "2025-04-08T22:06:28.209479+00:00",
+    "session_id": "623d75cd-528c-4768-9652-cf33e233d049"
+  }
+}
+```
+Second request (using returned `session_id`):
+```json
+{
+  "user_id": "junaid",
+  "text": "What time is it?",
+  "metadata": {
+    "session_id": "623d75cd-528c-4768-9652-cf33e233d049"
+  },
+  "tags": ["question"]
+}
+```
+Response:
+```json
+{
+  "user_id": "junaid",
+  "reply": "The current time is 2025-04-08 22:06:53 UTC.  How may I further assist you with your task scheduling?\n",
+  "metadata": {
+    "timestamp": "2025-04-08T22:06:54.669251+00:00",
+    "session_id": "623d75cd-528c-4768-9652-cf33e233d049"
   }
 }
 ```
 
+Thied request (using returned `session_id`):
+```json
+{
+  "user_id": "junaid",
+  "text": "What have we talked about and what do you know about me?",
+  "metadata": {
+    "session_id": "623d75cd-528c-4768-9652-cf33e233d049"
+  },
+  "tags": ["question"]
+}
+```
+Response:
+```json
+{
+  "user_id": "junaid",
+  "reply": "We have just begun our conversation.  I know your name is Junaid and that your goal is to schedule tasks.  I have no other information about you.\n",
+  "metadata": {
+    "timestamp": "2025-04-08T22:07:21.600372+00:00",
+    "session_id": "623d75cd-528c-4768-9652-cf33e233d049"
+  }
+}
+```
+#### Verify Conversation History
+Input:
+```json
+{
+  "user_id": "junaid",
+  "text": "What were my last 2 messages?",
+  "metadata": {
+    "session_id": "623d75cd-528c-4768-9652-cf33e233d049"
+  },
+  "tags": ["question"]
+}
+```
+Output:
+```json
+{
+  "user_id": "junaid",
+  "reply": "Your last two messages were:\n\n1. \"What time is it?\"\n2. \"What have we talked about and what do you know about me?\"\n",
+  "metadata": {
+    "timestamp": "2025-04-08T22:08:02.874905+00:00",
+    "session_id": "623d75cd-528c-4768-9652-cf33e233d049"
+  }
+}
+```
+-> Try what happens if you don't share session_id or change it!
+
 #### What Happens During the Request?
-1. The Chat Service receives the request and uses Service Invocation to call the Analytics Service.
-2. The Analytics Service retrieves `alice`’s message count (5) from the Dapr state store.
-3. The Chat Service uses the message count to personalize the agent’s response.
+1. Chat Service uses provided `session_id` or generates a new one.
+2. Fetches metadata and history via Dapr.
+3. Personalizes response and stores conversation parts.
 
 ### Run the Tests
-- Chat Service:
-  ```bash
-  cd chat_service
-  uv run pytest tests/test_main.py -v
-  ```
-  Output:
-  ```
-  collected 3 items
+- Agent Memory Service: `cd agent_memory_service && uv run pytest test_main.py -v`
+- Run Chat Service tests
+```python
+import pytest
+from fastapi.testclient import TestClient
+from main import app
+from unittest.mock import AsyncMock, patch
 
-  tests/test_main.py::test_root PASSED
-  tests/test_main.py::test_get_user PASSED
-  tests/test_main.py::test_chat PASSED
+client = TestClient(app)
 
-  ================= 3 passed in 0.15s =================
-  ```
-- Analytics Service:
-  ```bash
-  cd analytics_service
-  uv run pytest tests/test_main.py -v
-  ```
-  Output:
-  ```
-  collected 3 items
+def test_root():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {
+        "message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."
+    }
 
-  tests/test_main.py::test_root PASSED
-  tests/test_main.py::test_get_analytics PASSED
-  tests/test_main.py::test_initialize_message_count PASSED
+@pytest.mark.asyncio
+async def test_chat():
+    with patch("main.Runner.run", new_callable=AsyncMock) as mock_run, \
+         patch("httpx.AsyncClient.get", new_callable=AsyncMock) as mock_get, \
+         patch("httpx.AsyncClient.post", new_callable=AsyncMock) as mock_post:
+        # Mock metadata and history responses
+        mock_get.side_effect = [
+            AsyncMock(status_code=200, json=lambda: {"name": "Alice", "preferred_style": "formal", "goal": "schedule tasks"}),
+            AsyncMock(status_code=200, json=lambda: {"history": []})
+        ]
+        mock_run.return_value.final_output = "Greetings, Alice!"
+        mock_post.return_value = AsyncMock(status_code=200)
 
-  ================= 3 passed in 0.12s =================
-  ```
+        request_data = {
+            "user_id": "alice",
+            "text": "Hello",
+            "tags": ["greeting"]
+        }
+        response = client.post("/chat/", json=request_data)
+        assert response.status_code == 200
+        assert response.json()["reply"] == "Greetings, Alice!"
+        assert "session_id" in response.json()["metadata"]
+```
+
+Run: `cd chat_service && uv run pytest test_main.py -v`
 
 ---
 
 ## Step 8: Why Dapr State Management for DACA?
-Using Dapr’s State Management building block enhances DACA’s architecture by:
-- **Persistence**: Message counts are now stored in a persistent state store (Redis), surviving service restarts.
-- **Scalability**: Multiple instances of the Analytics Service can share the same state store, supporting horizontal scaling in a containerized environment.
-- **Consistency**: Dapr provides options for consistency and concurrency control (e.g., ETags), which we’ll explore in future tutorials.
-- **Abstraction**: The Dapr State Management API abstracts the underlying store, making it easy to switch to a different backend (e.g., CockroachDB) if needed.
+- **Persistence**: Metadata and conversations persist.
+- **Scalability**: Supports distributed instances.
+- **Realism**: Tracks chat history for context.
 
 ---
 
-
 ### Exercises for Students
-1. Configure Dapr to use a different state store (e.g., in-memory for testing) by creating a custom `statestore.yaml` in a components directory.
-2. Add a new endpoint to the Analytics Service to increment the message count, simulating a real-world update scenario.
-3. Use the Dapr dashboard (`dapr dashboard`) to inspect the state store and verify the stored data.
-
+1. Enhance the Chat Service to summarize history for longer sessions.
+2. Use Zikin, `dapr dashboard` and inspect stored state.
+3. Find and implement how to fire a [callback or webhook using FastAPI](https://fastapi.tiangolo.com/advanced/openapi-webhooks/#an-app-with-webhooks) so we don't have to wait while our chat history is saved.
 ---
 
 ## Conclusion
-In this tutorial, we integrated Dapr’s State Management building block into our microservices, replacing the mock data in the Analytics Service with a Dapr-managed state store. The Analytics Service now stores and retrieves message counts persistently, making our system more scalable and production-ready. This aligns with DACA’s goals of building a distributed, resilient agentic AI system. We’re now ready to explore Dapr Pub/Sub Messaging in the next tutorial!
-
----
-
-### Final Code for `analytics_service/main.py`
-```python
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-import httpx
-
-from models import Analytics
-
-app = FastAPI(
-    title="DACA Analytics Service",
-    description="A FastAPI-based Analytics Service for the DACA tutorial series",
-    version="0.1.0",
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-async def get_message_count(user_id: str, dapr_port: int = 3501) -> int:
-    """Retrieve the message count for a user from the Dapr state store."""
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/{user_id}"
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(dapr_url)
-            response.raise_for_status()
-            state_data = response.json()
-            return state_data.get("message_count", 0) if state_data else 0
-        except httpx.HTTPStatusError as e:
-            print(f"Failed to retrieve state for {user_id}: {e}")
-            return 0
-
-async def set_message_count(user_id: str, message_count: int, dapr_port: int = 3501):
-    """Set the message count for a user in the Dapr state store."""
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
-    state_data = [
-        {
-            "key": user_id,
-            "value": {"message_count": message_count}
-        }
-    ]
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.post(dapr_url, json=state_data)
-            response.raise_for_status()
-            print(f"Set message count for {user_id}: {message_count}")
-        except httpx.HTTPStatusError as e:
-            print(f"Failed to set state for {user_id}: {e}")
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."}
-
-@app.get("/analytics/{user_id}", response_model=Analytics)
-async def get_analytics(user_id: str):
-    message_count = await get_message_count(user_id)
-    if message_count == 0 and user_id not in ["alice", "bob"]:
-        raise HTTPException(status_code=404, detail="User not found")
-    return Analytics(message_count=message_count)
-
-@app.post("/analytics/{user_id}/initialize")
-async def initialize_message_count(user_id: str, message_count: int):
-    await set_message_count(user_id, message_count)
-    return {"status": "success", "user_id": user_id, "message_count": message_count}
-```
-
----
-
-This tutorial provides a focused introduction to Dapr State Management, keeping the scope manageable while advancing our microservices architecture. 
+We’ve integrated Dapr’s State Management, replacing mock data with persistent user metadata and conversation history. This enhances scalability and realism, aligning with DACA’s goals. Next, we’ll explore Dapr Pub/Sub Messaging!
