@@ -743,3 +743,33 @@ In conclusion, research suggests that FIPA ACL, with its standardized communicat
 - [What is a Multiagent System IBM Think Article](https://www.ibm.com/think/topics/multiagent-system)
 - [Introducing the Model Context Protocol by Anthropic News](https://www.anthropic.com/news/model-context-protocol)
 
+
+## Appendix VI: Current Alternative Protocols
+
+Establishing effective agent-to-agent communication across different organizations, enterprises, and countries involves addressing interoperability, security, and standardization challenges. Here are key considerations and approaches:
+
+**1. Standardized Communication Protocols:**
+Implementing standardized protocols ensures seamless interactions between agents from diverse entities. The Agent Communication Language (ACL) provides a framework for structured agent interactions, enabling agents to express intentions, share knowledge, and negotiate. 
+
+https://smythos.com/ai-agents/agent-architectures/agent-communication-in-distributed-ai/
+
+**2. Internet of Agents (IoA):**
+The IoA concept envisions a network where heterogeneous agents collaborate across organizational boundaries. Frameworks like AGNTCY.org promote an open, interoperable environment, connecting AI systems across vendors and technical frameworks.
+
+https://arxiv.org/abs/2407.07061
+
+https://outshift.cisco.com/blog/building-the-internet-of-agents-introducing-the-agntcy
+
+**3. Security and Trust:**
+Ensuring secure communication is critical. Implementing robust authentication mechanisms, encryption, and adherence to security standards helps protect data integrity and confidentiality. The Agent-to-Agent Communication Protocol (AACP) addresses the need for a standardized, secure communication infrastructure between autonomous AI agents.
+
+https://kossisoroyce.com/2025/03/28/ai-agent-to-agent-communications-protocol/
+
+**4. Distributed Development and Cross-Domain Interoperability:**
+Adopting distributed development practices and ensuring cross-domain interoperability facilitate collaboration across different regions and systems. Establishing common standards and interfaces enables effective information exchange and service integration.
+
+https://en.wikipedia.org/wiki/Cross-domain_interoperability
+
+By focusing on these areas, organizations can develop robust frameworks for agent-to-agent communication that transcend organizational and national boundaries, enabling effective collaboration in a global context.
+
+
