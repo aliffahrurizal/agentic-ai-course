@@ -183,6 +183,28 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 - **Cost**: Fully free, but watch free tier limits (e.g., Upstash’s 7 req/min cap).
 
 ### 3. Medium Enterprise Scale: Azure Container Apps (ACA)
+
+#### Classification on the Spectrum of Managed Services
+
+![](./spectrum-cloud-service.png)
+
+
+
+1. **Fully Managed Services**:
+   - **Google Cloud Run**: Provides the highest level of abstraction and management, completely handling infrastructure for stateless containers.
+   - **Azure Container Apps**: Offers serverless scaling and deep integration with Azure, simplifying container management.
+   - **GKE Autopilot**: Automates most of the Kubernetes management tasks, focusing on application deployment and scalability.
+
+2. **Semi-Managed Services**:
+   - **AWS Karpenter**: While it automates scaling and integrates with AWS services, it still requires some management and configuration of the Kubernetes environment.
+
+3. **Self-Managed Services**:
+   - **Native Kubernetes**: Provides full control and flexibility, but requires significant management effort, including setup, scaling, updates, and maintenance.
+
+Choosing the right Kubernetes-powered platform depends on your needs for management and control. Fully managed services like Google Cloud Run, Azure Container Apps (ACA), and GKE Autopilot offer ease of use and scalability, ideal for teams focusing on application development without worrying about infrastructure. Semi-managed services like AWS Karpenter offer a balance, with some automation while allowing for more customization. Native Kubernetes provides maximum control and customization at the cost of increased management overhead. We have chossen Azure Container Apps (AKA) because it offers a perfect balance, with native Dapr support.
+
+#### Azure Container Apps (ACA)
+
 - **Goal**: Scale to thousands of users with cost efficiency.
 - **Setup**:
   - **Containers**: Deploy to ACA with Dapr support (via KEDA).
