@@ -47,6 +47,85 @@ Think of it this way: You might be able to design a brilliant engine (the AI age
 
 ---
 
+## Core Design Patterns for Agentic AI Systems: A Visual Guide
+
+![](./agentic_design.jpg)
+
+The diagram illustrates four key agentic AI architecture design patterns, which are frameworks for designing AI systems that operate autonomously or semi-autonomously to achieve specific goals. These patterns are labeled as Reflection Pattern, Tool Use Pattern, Planning Pattern, and MultiAgent Pattern. Each pattern is depicted with a flowchart showing the interaction between a user, the AI agent, and various processes or components. Let’s break down each pattern in detail.
+
+---
+
+### 1. Reflection Pattern (Top Left)
+**Overview**: The Reflection Pattern allows an AI agent to evaluate and improve its own output through a process of self-reflection. This is useful for tasks where the AI needs to refine its responses iteratively.
+
+**Components and Flow**:
+- **User**: The process starts with a user providing a prompt (e.g., a question or task) to the AI system.
+- **Generate**: The AI, labeled as "Generate," produces an initial output text based on the prompt.
+- **Reflect**: The generated output is then passed to a "Reflect" module. This module evaluates the output, likely checking for accuracy, coherence, or relevance.
+- **Iterate**: If the output isn’t satisfactory, the Reflect module sends feedback to the Generate module, prompting it to iterate and produce a revised output. This loop continues until the output meets the desired quality.
+- **Output Text**: Once the reflection process is complete, the final output text is sent back to the user as a response.
+
+**Key Insight**: The Reflection Pattern emphasizes self-improvement within the AI. It’s like the AI double-checking its work, similar to how a human might revise a draft after reviewing it. This pattern is particularly useful for tasks requiring high accuracy, such as writing or problem-solving, where the AI can refine its answers over multiple iterations.
+
+---
+
+### 2. Tool Use Pattern (Top Right)
+**Overview**: The Tool Use Pattern enables an AI agent to interact with external tools or information sources to enhance its capabilities and provide better responses.
+
+**Components and Flow**:
+- **User**: The user provides a prompt to the AI system.
+- **Tool A and Tool B**: The AI has access to multiple external tools (labeled Tool A and Tool B). These could be APIs, databases, or other software tools (e.g., a calculator, a web scraper, or a search engine).
+- **Information Sources**: The tools interact with external information sources (e.g., the internet, a knowledge base) to gather relevant data.
+- **Prompt-Response Loop**: The AI sends prompts to the tools, which return responses. For example, if the user asks for the weather, the AI might query a weather API (Tool A) to fetch the data.
+- **Response**: The AI processes the information from the tools and formulates a final response to the user.
+
+**Key Insight**: This pattern highlights the AI’s ability to extend its knowledge and functionality by leveraging external resources. It’s particularly useful for tasks requiring real-time data or specialized functions that the AI model itself cannot perform, such as accessing live stock prices or performing complex calculations.
+
+---
+
+### 3. Planning Pattern (Bottom Left)
+**Overview**: The Planning Pattern allows an AI agent to break down a complex task into smaller, manageable subtasks, plan their execution, and adjust the plan as needed.
+
+**Components and Flow**:
+- **User**: The user provides a prompt to the AI system.
+- **Planning**: The AI enters a "Planning" phase, where it decomposes the task into smaller subtasks. For example, if the user asks the AI to "organize a trip," the AI might break it down into booking flights, reserving a hotel, and planning activities.
+- **Generate Task**: The AI generates a list of subtasks based on the plan.
+- **Execute Single Task**: Each subtask is executed individually. The AI may need to interact with external systems or tools to complete these tasks (e.g., querying a flight booking API).
+- **Test**: After executing a subtask, the AI tests the result to ensure it aligns with the overall goal.
+- **Replan**: If the test reveals issues (e.g., a flight is unavailable), the AI returns to the Planning phase to adjust the plan and generate new subtasks. This iteration continues until all subtasks are successfully completed.
+- **Response**: Once the plan is fully executed, the AI delivers the final response to the user.
+
+**Key Insight**: The Planning Pattern is ideal for complex, multi-step tasks that require strategic thinking and adaptability. It mimics how a human might approach a project by creating a to-do list, executing each item, and adjusting the plan if something goes wrong. This pattern is often used in applications like project management, logistics, or automated workflows.
+
+---
+
+### 4. MultiAgent Pattern (Bottom Right)
+**Overview**: The MultiAgent Pattern involves multiple AI agents working collaboratively, each with a specialized role, to achieve a common goal. This mimics a team of human experts working together.
+
+**Components and Flow**:
+- **User**: The user provides a prompt to the AI system.
+- **Agent 1 (Software Engineer)**: The first agent, specialized as a Software Engineer, receives the prompt and begins working on its part of the task. For example, if the user asks to build a website, this agent might focus on coding the backend.
+- **Agent 2 (Project Manager)**: The second agent, a Project Manager, coordinates the overall effort, ensuring that all agents are aligned and the project stays on track.
+- **Agent 3 (Content Developer)**: The third agent, a Content Developer, handles content-related tasks, such as writing text or designing visuals for the website.
+- **Agent 4 (Market Research Analyst)**: The fourth agent, a Market Research Analyst, gathers data to ensure the project meets market needs, such as researching user preferences for the website.
+- **Collaboration**: The agents communicate with each other (shown by dashed arrows), sharing information and updates. For example, the Market Research Analyst might inform the Content Developer about target audience preferences, while the Project Manager ensures deadlines are met.
+- **Response**: Once the agents complete their tasks and the project is finished, the final response (e.g., a fully built website) is delivered to the user.
+
+**Key Insight**: The MultiAgent Pattern leverages specialization and collaboration, allowing each agent to focus on what it does best while working as a team. This is particularly effective for large-scale projects that require diverse skills, such as software development, marketing campaigns, or research initiatives. It also mirrors real-world teamwork, where different roles contribute to a shared goal.
+
+---
+
+### Overall Summary
+The diagram presents four agentic AI design patterns, each tailored to different types of tasks:
+- **Reflection Pattern**: Focuses on self-improvement through iterative refinement of output.
+- **Tool Use Pattern**: Enhances AI capabilities by integrating external tools and information sources.
+- **Planning Pattern**: Breaks down complex tasks into manageable subtasks, with iterative planning and execution.
+- **MultiAgent Pattern**: Involves multiple specialized AI agents collaborating to achieve a common goal.
+
+These patterns can be combined or used individually depending on the task at hand. For example, a MultiAgent system might incorporate the Tool Use Pattern to access external data or the Planning Pattern to manage its workflow. Together, they provide a robust framework for designing autonomous AI systems capable of handling a wide range of challenges.
+
+---
+
 ## DACA Architecture Overview
 
 The DACA architecture is a layered, event-driven, stateless system that integrates human-in-the-loop (HITL) capabilities. It’s built on a **three-tier microservices architecture**, enhanced by Dapr, and supports both real-time and scheduled agentic workflows.
