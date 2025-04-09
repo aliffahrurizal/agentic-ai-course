@@ -1,115 +1,105 @@
-# Monitoring and Debugging with Dapr Observability
+# Step 11: [Monitoring and Debugging with Dapr Observability](https://docs.dapr.io/operations/observability)
 
-Welcome to the eleventh tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll enhance the microservices from **10_dapr_actors** by integrating Dapr’s observability features. Currently, our Chat Service and Analytics Service use Dapr’s building blocks (Service Invocation, State Management, Pub/Sub Messaging, Workflows, Secrets Management, and Actors) to process messages, but we lack visibility into their interactions, performance, and potential issues. We’ll enable Dapr’s distributed tracing, metrics, and logging to monitor and debug our system, ensuring we can maintain and optimize it effectively in production. Let’s get started!
+Welcome to Step 11 of the **Dapr Agentic Cloud Ascent (DACA)** series! In this tutorial, we enhance the Chat Service from **10_dapr_actors** by integrating Dapr’s observability features. Our current Chat Service uses Dapr’s State Management, Pub/Sub Messaging, and Actors to process messages and maintain conversation history, but we lack visibility into its performance and interactions. Here, we’ll enable distributed tracing, metrics, and logging to monitor and debug the system, preparing it for production-level reliability and insight.
 
 ---
 
 ## What You’ll Learn
-- How to enable Dapr’s observability features: distributed tracing, metrics, and logging.
-- Configuring Dapr to export traces and metrics to observability tools (e.g., Zipkin for tracing, Prometheus for metrics).
-- Setting up logging to capture detailed information about service interactions.
-- Using observability tools to monitor and debug the Chat Service and Analytics Service.
-- Updating unit tests to account for observability (if applicable).
+
+- Enable Dapr’s observability features: distributed tracing, metrics, and logging.
+- Configure Dapr to export traces to Zipkin and metrics to Prometheus.
+- Enhance application logging for detailed debugging.
+- Use observability tools to monitor the Chat Service and troubleshoot issues.
 
 ## Prerequisites
-- Completion of **10_dapr_actors** (codebase with Chat Service and Analytics Service using Dapr Service Invocation, State Management, Pub/Sub Messaging, Workflows, Secrets Management, and Actors).
-- Dapr CLI and runtime installed (from **04_dapr_theory_and_cli**).
-- Docker installed (Dapr uses Docker for observability tools like Zipkin and Prometheus).
-- Python 3.8+ installed.
-- Familiarity with observability concepts (e.g., tracing, metrics, logging).
+
+- Completion of **10_dapr_actors** (Chat Service with `UserSessionActor`).
+- **Dapr CLI** and runtime installed ([instructions](https://docs.dapr.io/getting-started/install-dapr-cli/)).
+- **Docker** installed for Redis, Zipkin, and Prometheus ([install](https://docs.docker.com/get-docker/)).
+- **Python 3.9+** installed.
+- Basic understanding of observability concepts (tracing, metrics, logging).
+
+## Reading Material
+
+- [Concepts](https://docs.dapr.io/concepts/observability-concept/)
+- [Tracing](https://docs.dapr.io/operations/observability/tracing/)
+- [Metrics](https://docs.dapr.io/operations/observability/metrics/)
+- [Logging](https://docs.dapr.io/operations/observability/logging/)
 
 ---
 
 ## Step 1: Recap of the Current Setup
-In **10_dapr_actors**, we integrated Dapr’s Actors into the Chat Service:
-- The **Chat Service**:
-  - Uses a Dapr Workflow to orchestrate message processing: fetching the user’s message count (via Service Invocation), retrieving conversation history (via Actors), generating a reply (using the OpenAI Agents SDK), storing the conversation (via Actors), and publishing a “MessageSent” event (via Pub/Sub).
-  - Retrieves the OpenAI API key from a Dapr secrets store.
-  - Uses a `UserSessionActor` to manage per-user conversation history.
-- The **Analytics Service**:
-  - Subscribes to the `messages` topic and updates the user’s message count in the Dapr state store when a “MessageSent” event is received.
+
+In **10_dapr_actors**, we built a Chat Service that:
+
+- Uses a `UserSessionActor` to manage per-user conversation history, stored in Redis via Dapr’s State Management.
+- Processes chat requests via a `/chat/` endpoint, fetching history and adding messages using Dapr’s actor API (`http://localhost:3500/v1.0/actors/...`).
+- Publishes a `ConversationUpdated` event via Pub/Sub Messaging (Redis-backed).
+- Integrates an AI agent (e.g., Gemini) for reply generation, with a fallback to mock metadata if `agent-memory-service` is unavailable.
 
 ### Current Limitations
-- **Lack of Visibility**: We can’t easily trace requests across services (e.g., from the Chat Service to the Analytics Service) or identify where failures occur.
-- **Performance Monitoring**: There’s no mechanism to measure latency, throughput, or error rates for our services and Dapr components.
-- **Debugging Challenges**: Without detailed logs or traces, debugging issues (e.g., workflow failures, actor state inconsistencies) is difficult.
-- **Production Readiness**: Observability is critical for monitoring and maintaining a production system, but our current setup lacks these capabilities.
 
-### Goal for This Tutorial
-We’ll enable Dapr’s observability features to monitor and debug our microservices:
-- Configure distributed tracing with Zipkin to trace requests across services.
-- Set up metrics collection with Prometheus to monitor performance (e.g., request latency, error rates).
-- Enhance logging to capture detailed information about service interactions.
-- Use observability tools to gain insights into the system’s behavior and troubleshoot issues.
+- **No Visibility**: We can’t trace requests through the Chat Service, actor interactions, or pub/sub events.
+- **Performance Unknown**: Latency, throughput, and error rates aren’t measurable.
+- **Debugging Blind**: Issues like actor state errors or pub/sub failures are hard to pinpoint without detailed logs or traces.
 
-### Current Project Structure
-```
-fastapi-daca-tutorial/
-├── chat_service/
+### Goal
+
+Enable Dapr’s observability features to:
+
+- Trace requests with Zipkin across the Chat Service, actors, and pub/sub.
+- Collect metrics with Prometheus to monitor performance.
+- Enhance logging for detailed debugging insights.
+
+### Project Structure
+
+````
+11_dapr_observability/
+├── chat-service/
+│   ├── main.py              # FastAPI app with chat endpoint and observability
+│   ├── user_session_actor.py # UserSessionActor definition
+│   ├── models.py            # Message and Metadata models
+│   ├── utils.py             # Utility functions (e.g., get_gemini_api_key)
+│   └── requirements.txt     # Python dependencies
+│   ├── pyproject.toml
+│   └── uv.lock
+├── agent_memory_service/
 │   ├── main.py
-│   ├── user_session_actor.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── analytics_service/
-│   ├── main.py
-│   ├── models.py
-│   └── tests/
-│       └── test_main.py
+│   ├── test_main.py
+│   ├── pyproject.toml
+│   └── uv.lock
 ├── components/
+│   ├── pubsub.yaml
+│   ├── statestore.yaml
 │   ├── subscriptions.yaml
-│   ├── secretstore.yaml
-│   └── secrets.json
-├── pyproject.toml
-└── uv.lock
-```
+│   └── secretstore.yaml
+│   └── tracing.yaml         # NEW Tracing configuration
+├── prometheus.yml           # NEW Prometheus configuration
+└── README.md                # This file
+
 
 ---
 
-## Step 2: Why Use Dapr Observability?
-Dapr provides built-in observability features to monitor and debug distributed systems, including:
-- **Distributed Tracing**: Tracks requests as they flow through services and Dapr components, helping identify bottlenecks and failures.
-- **Metrics**: Collects performance metrics (e.g., request latency, error rates) for services and Dapr components, enabling monitoring and alerting.
-- **Logging**: Captures detailed logs of Dapr sidecar and application interactions, aiding in debugging.
+## Step 2: Why Dapr Observability?
+Dapr’s observability features provide:
+- **Distributed Tracing**: Tracks requests across services and Dapr components (e.g., actors, pub/sub).
+- **Metrics**: Measures performance (e.g., request latency, actor counts).
+- **Logging**: Captures detailed sidecar and app interactions.
 
-In DACA, observability is crucial for:
-- Gaining visibility into the interactions between the Chat Service, Analytics Service, and Dapr components (e.g., workflows, actors).
-- Monitoring performance to ensure the system meets scalability and reliability goals.
-- Debugging issues in a distributed environment, such as workflow failures or actor state inconsistencies.
-- Preparing the system for production by enabling monitoring and alerting.
+For DACA, this means:
+- Insight into actor method calls (`GetConversationHistory`, `AddMessage`) and pub/sub events.
+- Performance monitoring for scalability.
+- Easier debugging of distributed issues.
 
 ---
 
 ## Step 3: Enable Distributed Tracing with Zipkin
-Dapr supports distributed tracing out of the box and can export traces to various backends, such as Zipkin, Jaeger, or OpenTelemetry Collector. We’ll use **Zipkin** for this tutorial because it’s lightweight and easy to set up.
+Dapr supports tracing and exports to Zipkin by default when configured. We’ll set up Zipkin and configure Dapr to use it.
 
-### Step 3.1: Run Zipkin with Docker
-Start a Zipkin instance using Docker:
-```bash
-docker run -d -p 9411:9411 openzipkin/zipkin
-```
-- This runs Zipkin on port `9411`, which we’ll use to visualize traces.
+### 3.1: Configure Dapr Tracing
+Create `components/tracing.yaml`:
 
-Verify Zipkin is running:
-```bash
-docker ps
-```
-Output should include:
-```
-CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                    NAMES
-abc123def456   openzipkin/zipkin   "start-zipkin"          10 seconds ago  Up 10 seconds  9410/tcp, 9411/tcp       some-container-name
-```
-
-Access the Zipkin UI at `http://localhost:9411` to confirm it’s running.
-
-### Step 3.2: Configure Dapr for Tracing
-Dapr uses a configuration file to enable tracing and specify the backend. Create a `tracing.yaml` file in the `components` directory.
-
-```bash
-touch components/tracing.yaml
-```
-
-Edit `components/tracing.yaml`:
 ```yaml
 apiVersion: dapr.io/v1alpha1
 kind: Configuration
@@ -117,996 +107,373 @@ metadata:
   name: tracing
 spec:
   tracing:
-    samplingRate: "1"  # Sample 100% of requests (1 = 100%, 0 = 0%)
+    samplingRate: "1"  # 100% sampling
     zipkin:
       endpointAddress: "http://localhost:9411/api/v2/spans"
-```
-- `samplingRate: "1"`: Ensures all requests are traced (for production, you might lower this to reduce overhead).
-- `endpointAddress`: Points to the Zipkin instance running on `localhost:9411`.
+````
 
-### Step 3.3: Apply the Tracing Configuration When Running Dapr
-When starting the services with Dapr, we’ll specify the `--config` flag to apply the `tracing.yaml` configuration. Dapr will automatically instrument requests with tracing headers and export traces to Zipkin.
+- samplingRate: "1": Traces all requests (adjust lower in production).
+- endpointAddress: Points to Zipkin at localhost:9411.
+
+Note: Dapr doesn’t run Zipkin; we’ll start it alongside the Chat Service in Step 6.```
 
 ---
 
-## Step 4: Enable Metrics Collection with Prometheus
-Dapr exposes metrics in Prometheus format, which can be scraped and visualized using Prometheus and Grafana. We’ll set up Prometheus to collect metrics from Dapr sidecars.
+## Step 4: Enable Metrics with Prometheus
 
-### Step 4.1: Run Prometheus with Docker
-Create a `prometheus.yml` configuration file for Prometheus in the project root.
+We’ll collect Dapr metrics using Prometheus.
 
-```bash
-touch prometheus.yml
-```
+### 4.1: Configure Prometheus
 
-Edit `prometheus.yml`:
+Create `prometheus.yml`:
+
 ```yaml
 global:
   scrape_interval: 15s
-
 scrape_configs:
-  - job_name: 'dapr'
+  - job_name: "dapr"
     static_configs:
-      - targets: ['localhost:9090']  # Dapr metrics endpoint (we’ll configure the port)
+      - targets: ["localhost:9091"] # Dapr metrics port (Chat Service)
 ```
 
-Start Prometheus using Docker:
+Run Prometheus:
+
 ```bash
 docker run -d -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
 ```
 
-Verify Prometheus is running:
-```bash
-docker ps
-```
-Output should include:
-```
-CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                    NAMES
-xyz789abc123   prom/prometheus   "/bin/prometheus --c..." 10 seconds ago  Up 10 seconds  0.0.0.0:9090->9090/tcp  some-container-name
-```
-
-Access the Prometheus UI at `http://localhost:9090` to confirm it’s running. You can query metrics once Dapr is configured to expose them.
-
-### Step 4.2: Configure Dapr for Metrics
-Dapr exposes metrics by default on port `9090` (or a port specified via `--metrics-port`). We don’t need a separate configuration file for metrics, but we’ll ensure the Dapr sidecars expose metrics when we start the services.
+- Verify: `http://localhost:9090`.
 
 ---
 
 ## Step 5: Enhance Logging
-Dapr provides detailed logs for its sidecars, which include interactions with components (e.g., state store, pub/sub, actors). We’ll also add application-level logging in the Chat Service and Analytics Service to capture key events.
 
-### Step 5.1: Configure Dapr Logging
-Dapr logs are controlled by the `--log-level` flag when running `dapr run`. We’ll set it to `debug` for detailed logs during development:
-- `--log-level debug`: Captures detailed information about Dapr sidecar operations.
+We’ll add structured logging to the Chat Service and use Dapr’s debug logs.
 
-### Step 5.2: Add Application-Level Logging
-We’ll use Python’s `logging` module to add structured logging to the Chat Service and Analytics Service.
+### 5.1: Update `main.py` with Logging
 
-#### Update `chat_service/main.py`
-Add logging to capture key events (e.g., workflow steps, actor interactions).
+Modify `chat-service/main.py` to include logging (this matches our Step 10 code with added observability):
 
 ```python
 import logging
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from agents import Agent, Runner, function_tool
-from datetime import datetime
 import httpx
-from dapr.clients import DaprClient
-from dapr.ext.workflow import WorkflowRuntime, DaprWorkflowClient, DaprWorkflowContext, when
-from dapr.workflow import WorkflowActivityContext
+from typing import List, Dict, Any
+from uuid import uuid4
+from datetime import datetime, UTC
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from dapr.ext.fastapi import DaprActor
 from dapr.actor.runtime.runtime import ActorRuntime
+from dapr.actor.runtime.config import ActorRuntimeConfig, ActorTypeConfig, ActorReentrancyConfig
+from agents import Agent, Runner, function_tool, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
+from models import Message, Metadata
 from user_session_actor import UserSessionActor, UserSessionActorInterface
-
-from models import Message, Response, Metadata
+from utils import get_gemini_api_key, settings
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("ChatService")
+
+external_client = None
+model = None
 
 app = FastAPI(
     title="DACA Chat Service",
     description="A FastAPI-based Chat Service for the DACA tutorial series",
-    version="0.1.0",
+    version="0.1.0"
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+config = ActorRuntimeConfig()
+config.update_actor_type_configs([ActorTypeConfig(actor_type=UserSessionActor.__name__, reentrancy=ActorReentrancyConfig(enabled=True))])
+ActorRuntime.set_actor_config(config)
 
-workflow_runtime = WorkflowRuntime()
-ActorRuntime.register_actor(UserSessionActor)
-workflow_runtime.start()
-
-async def get_openai_api_key() -> str:
-    with DaprClient() as dapr_client:
-        try:
-            logger.info("Fetching OpenAI API key from secrets store")
-            secret = await dapr_client.get_secret(
-                store_name="secretstore",
-                key="openai-api-key"
-            )
-            return secret.secret["openai-api-key"]
-        except Exception as e:
-            logger.error(f"Failed to retrieve OpenAI API key: {e}")
-            raise HTTPException(status_code=500, detail=f"Failed to retrieve OpenAI API key: {e}")
-
-async def initialize_chat_agent():
-    api_key = await get_openai_api_key()
-    logger.info("Initializing chat agent with OpenAI API key")
-    return Agent(
-        name="ChatAgent",
-        instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool. Personalize responses using user analytics (e.g., message count) and conversation history.",
-        model="gpt-4o",
-        tools=[get_current_time],
-        api_key=api_key
-    )
-
-@function_tool
-def get_current_time() -> str:
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-
-chat_agent = None
+actor = DaprActor(app)
 
 @app.on_event("startup")
 async def startup():
-    global chat_agent
-    chat_agent = await initialize_chat_agent()
-
-async def get_db():
-    return {"connection": "Mock DB Connection"}
-
-async def fetch_analytics_activity(ctx: WorkflowActivityContext, user_id: str) -> int:
-    with DaprClient() as dapr_client:
-        try:
-            logger.info(f"Fetching analytics for user {user_id}")
-            response = await dapr_client.invoke_method_async(
-                app_id="analytics-service",
-                method_name=f"analytics/{user_id}",
-                http_verb="GET"
-            )
-            analytics_data = response.json()
-            message_count = analytics_data.get("message_count", 0)
-            logger.info(f"Fetched message count for user {user_id}: {message_count}")
-            return message_count
-        except Exception as e:
-            logger.error(f"Failed to fetch analytics for user {user_id}: {e}")
-            return 0
-
-async def fetch_conversation_history_activity(ctx: WorkflowActivityContext, user_id: str) -> list:
-    with DaprClient() as dapr_client:
-        try:
-            logger.info(f"Fetching conversation history for user {user_id}")
-            actor = dapr_client.create_actor(UserSessionActorInterface, user_id)
-            history = await actor.get_conversation_history()
-            logger.info(f"Fetched conversation history for user {user_id}: {history}")
-            return history
-        except Exception as e:
-            logger.error(f"Failed to fetch conversation history for user {user_id}: {e}")
-            return []
-
-async def generate_reply_activity(ctx: WorkflowActivityContext, input_data: dict) -> str:
-    user_id = input_data["user_id"]
-    message_text = input_data["message_text"]
-    message_count = input_data["message_count"]
-    conversation_history = input_data["conversation_history"]
-
-    logger.info(f"Generating reply for user {user_id} with message: {message_text}")
-    history_summary = "No previous conversation."
-    if conversation_history:
-        history_summary = "Previous conversation:\n"
-        for entry in conversation_history:
-            history_summary += f"User: {entry['message']}\nBot: {entry['reply']}\n"
-
-    personalized_instructions = (
-        f"You are a helpful chatbot. Respond to user messages in a friendly and informative way. "
-        f"If the user asks for the time, use the get_current_time tool. "
-        f"The user has sent {message_count} messages so far, so personalize your response accordingly. "
-        f"Here is the conversation history to provide context:\n{history_summary}"
-    )
-    chat_agent.instructions = personalized_instructions
-
-    result = await Runner.run(chat_agent, input=message_text)
-    reply = result.final_output
-    logger.info(f"Generated reply for user {user_id}: {reply}")
-    return reply
-
-async def store_conversation_activity(ctx: WorkflowActivityContext, input_data: dict):
-    user_id = input_data["user_id"]
-    message = input_data["message"]
-    reply = input_data["reply"]
-
-    with DaprClient() as dapr_client:
-        try:
-            logger.info(f"Storing conversation for user {user_id}")
-            actor = dapr_client.create_actor(UserSessionActorInterface, user_id)
-            await actor.add_message({"message": message, "reply": reply})
-            logger.info(f"Stored conversation for user {user_id}")
-        except Exception as e:
-            logger.error(f"Failed to store conversation for user {user_id}: {e}")
-            raise
-
-async def publish_event_activity(ctx: WorkflowActivityContext, user_id: str):
-    with DaprClient() as dapr_client:
-        try:
-            logger.info(f"Publishing MessageSent event for user {user_id}")
-            await dapr_client.publish_event(
-                pubsub_name="pubsub",
-                topic_name="messages",
-                data={"user_id": user_id, "event_type": "MessageSent"}
-            )
-            logger.info(f"Published MessageSent event for user {user_id}")
-        except Exception as e:
-            logger.error(f"Failed to publish MessageSent event for user {user_id}: {e}")
-            raise
-
-@workflow_runtime.workflow
-async def message_processing_workflow(ctx: DaprWorkflowContext, input_data: dict) -> dict:
-    user_id = input_data["user_id"]
-    message_text = input_data["message_text"]
-
-    logger.info(f"Starting workflow for user {user_id} with message: {message_text}")
-    message_count = await ctx.call_activity(
-        fetch_analytics_activity,
-        input=user_id,
-        retry_policy={"max_retries": 3, "interval": "PT5S"}
-    )
-
-    conversation_history = await ctx.call_activity(
-        fetch_conversation_history_activity,
-        input=user_id,
-        retry_policy={"max_retries": 3, "interval": "PT5S"}
-    )
-
-    reply = await ctx.call_activity(
-        generate_reply_activity,
-        input={
-            "user_id": user_id,
-            "message_text": message_text,
-            "message_count": message_count,
-            "conversation_history": conversation_history
-        },
-        retry_policy={"max_retries": 2, "interval": "PT3S"}
-    )
-
-    await ctx.call_activity(
-        store_conversation_activity,
-        input={"user_id": user_id, "message": message_text, "reply": reply},
-        retry_policy={"max_retries": 3, "interval": "PT5S"}
-    )
-
-    await ctx.call_activity(
-        publish_event_activity,
-        input=user_id,
-        retry_policy={"max_retries": 5, "interval": "PT2S"}
-    )
-
-    logger.info(f"Completed workflow for user {user_id}")
-    return {"user_id": user_id, "reply": reply}
-
-@app.get("/")
-async def root():
-    logger.info("Received request to root endpoint")
-    return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
-
-@app.get("/users/{user_id}")
-async def get_user(user_id: str, role: str | None = None):
-    logger.info(f"Fetching user info for user_id: {user_id}, role: {role}")
-    user_info = {"user_id": user_id, "role": role if role else "guest"}
-    return user_info
-
-@app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
-    if not message.text.strip():
-        logger.warning("Received empty message text")
-        raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    logger.info(f"Received chat request for user {message.user_id}: {message.text}")
-    print(f"DB Connection: {db['connection']}")
-
-    with DaprWorkflowClient() as workflow_client:
-        instance_id = f"chat-{message.user_id}-{int(datetime.utcnow().timestamp())}"
-        input_data = {"user_id": message.user_id, "message_text": message.text}
-        
-        logger.info(f"Scheduling workflow with instance_id: {instance_id}")
-        await workflow_client.schedule_new_workflow(
-            workflow=message_processing_workflow,
-            instance_id=instance_id,
-            input=input_data
-        )
-
-        logger.info(f"Waiting for workflow {instance_id} to complete")
-        result = await workflow_client.wait_for_workflow_completion(
-            instance_id=instance_id,
-            timeout_in_seconds=60
-        )
-
-        if result is None or result.runtime_status != "COMPLETED":
-            logger.error(f"Workflow {instance_id} failed to complete: {result.runtime_status if result else 'None'}")
-            raise HTTPException(status_code=500, detail="Workflow failed to complete")
-
-        workflow_output = result.output
-        reply_text = workflow_output["reply"]
-        logger.info(f"Workflow {instance_id} completed with reply: {reply_text}")
-
-    return Response(
-        user_id=message.user_id,
-        reply=reply_text,
-        metadata=Metadata()
-    )
-
-@app.on_event("shutdown")
-def shutdown():
-    logger.info("Shutting down Chat Service")
-    workflow_runtime.stop()
-```
-
-#### Update `analytics_service/main.py`
-Add logging to the Analytics Service.
-
-```python
-import logging
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-import httpx
-
-from models import Analytics
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger("AnalyticsService")
-
-app = FastAPI(
-    title="DACA Analytics Service",
-    description="A FastAPI-based Analytics Service for the DACA tutorial series",
-    version="0.1.0",
-)
+    global external_client, model
+    logger.info("Starting up Chat Service")
+    await actor.register_actor(UserSessionActor)
+    logger.info(f"Registered actor: {UserSessionActor.__name__}")
+    try:
+        api_key = await get_gemini_api_key()
+        external_client = AsyncOpenAI(api_key=api_key, base_url=settings.MODEL_BASE_URL)
+        model = OpenAIChatCompletionsModel(model=settings.MODEL_NAME, openai_client=external_client)
+        logger.info("Initialized AI client")
+    except Exception as e:
+        logger.error(f"Error initializing AI client: {e}")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-async def get_message_count(user_id: str, dapr_port: int = 3501) -> int:
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/{user_id}"
-    async with httpx.AsyncClient() as client:
-        try:
-            logger.info(f"Fetching message count for user {user_id} from state store")
-            response = await client.get(dapr_url)
-            response.raise_for_status()
-            state_data = response.json()
-            message_count = state_data.get("message_count", 0) if state_data else 0
-            logger.info(f"Fetched message count for user {user_id}: {message_count}")
-            return message_count
-        except httpx.HTTPStatusError as e:
-            logger.error(f"Failed to retrieve state for user {user_id}: {e}")
-            return 0
+def get_run_config():
+    if model and external_client:
+        return RunConfig(model=model, model_provider=external_client, tracing_disabled=True)
+    return None
 
-async def set_message_count(user_id: str, message_count: int, dapr_port: int = 3501):
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
-    state_data = [
-        {
-            "key": user_id,
-            "value": {"message_count": message_count}
-        }
-    ]
-    async with httpx.AsyncClient() as client:
-        try:
-            logger.info(f"Setting message count for user {user_id} to {message_count}")
-            response = await client.post(dapr_url, json=state_data)
-            response.raise_for_status()
-            logger.info(f"Set message count for user {user_id}: {message_count}")
-        except httpx.HTTPStatusError as e:
-            logger.error(f"Failed to set state for user {user_id}: {e}")
+@function_tool
+def get_current_time() -> str:
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
 
-async def increment_message_count(user_id: str, dapr_port: int = 3501):
-    logger.info(f"Incrementing message count for user {user_id}")
-    current_count = await get_message_count(user_id, dapr_port)
-    new_count = current_count + 1
-    await set_message_count(user_id, new_count, dapr_port)
-    logger.info(f"Incremented message count for user {user_id} to {new_count}")
+async def publish_conversation_event(user_id: str, session_id: str, user_text: str, reply_text: str, dapr_port: int = 3500) -> None:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/publish/pubsub/conversations"
+    event_data = {"user_id": user_id, "session_id": session_id, "event_type": "ConversationUpdated", "user_message": user_text, "assistant_reply": reply_text}
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        try:
+            logger.info(f"Publishing event for user {user_id}, session {session_id}")
+            response = await client.post(dapr_url, json=event_data)
+            response.raise_for_status()
+            logger.info(f"Published ConversationUpdated event for user {user_id}, session {session_id}")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Failed to publish event: {e}")
+
+async def get_memory_data(user_id: str, dapr_port: int = 3500) -> Dict[str, str]:
+    metadata_url = f"http://localhost:{dapr_port}/v1.0/invoke/agent-memory-service/method/memories/{user_id}"
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        try:
+            logger.info(f"Fetching metadata for user {user_id}")
+            response = await client.get(metadata_url)
+            response.raise_for_status()
+            data = response.json()
+            logger.info(f"Fetched metadata for user {user_id}: {data}")
+            return data
+        except Exception as e:
+            logger.warning(f"Failed to fetch metadata for user {user_id}: {e}")
+            return {"name": user_id, "preferred_style": "casual", "user_summary": f"{user_id} is a new user."}
+
+async def generate_reply(user_id: str, message_text: str, history: List[Dict[str, str]]) -> str:
+    try:
+        logger.info(f"Generating reply for user {user_id}: {message_text}")
+        memory_data = await get_memory_data(user_id)
+        name = memory_data.get("name", user_id)
+        style = memory_data.get("preferred_style", "casual")
+        summary = memory_data.get("user_summary", f"{name} is a new user.")
+        history_summary = "No prior conversation." if not history else "\n".join(
+            f"User: {entry.get('user_text', '')}\nAssistant: {entry.get('reply_text', '')}" for entry in history[-3:]
+        )
+        instructions = f"You are a helpful chatbot. Respond in a {style} way. If the user asks for the time, use the get_current_time tool. The user's name is {name}. User summary: {summary}. Conversation history:\n{history_summary}"
+        config = get_run_config()
+        if not config:
+            logger.warning("AI not initialized")
+            return "I'm sorry, but I'm not fully initialized yet. Please try again in a moment."
+        chat_agent = Agent(name="ChatAgent", instructions=instructions, tools=[get_current_time], model=model)
+        result = await Runner.run(chat_agent, input=message_text, run_config=config)
+        reply = result.final_output
+        logger.info(f"Generated reply: {reply}")
+        return reply
+    except Exception as e:
+        logger.error(f"Error generating reply: {e}")
+        return "I'm sorry, I encountered an error while processing your message."
+
+async def get_conversation_history(user_id: str, dapr_port: int = 3500) -> List[Dict[str, Any]]:
+    url = f"http://localhost:{dapr_port}/v1.0/actors/UserSessionActor/{user_id}/method/GetConversationHistory"
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        try:
+            logger.info(f"Fetching history for user {user_id}")
+            response = await client.post(url, json={})
+            response.raise_for_status()
+            history = response.json()
+            logger.info(f"Received history for user {user_id}: {history}")
+            return history if history is not None else []
+        except httpx.HTTPStatusError as e:
+            logger.warning(f"Error getting history: {e.response.status_code} - {e.response.text}")
+            if e.response.status_code == 404 or "ERR_ACTOR_INSTANCE_MISSING" in e.response.text:
+                return []
+            raise
+        except Exception as e:
+            logger.error(f"Error fetching history: {e}")
+            raise
+
+async def add_message(user_id: str, message_data: Dict[str, Any], dapr_port: int = 3500) -> None:
+    url = f"http://localhost:{dapr_port}/v1.0/actors/UserSessionActor/{user_id}/method/AddMessage"
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        try:
+            logger.info(f"Adding message for user {user_id}: {message_data}")
+            headers = {"Content-Type": "application/json"}
+            response = await client.post(url, json=message_data, headers=headers)
+            response.raise_for_status()
+            logger.info(f"Message added for user {user_id}")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Error adding message: {e.response.status_code} - {e.response.text}")
+            raise HTTPException(status_code=500, detail=f"Failed to add message: {e}")
+        except Exception as e:
+            logger.error(f"Error adding message: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to add message: {e}")
 
 @app.get("/")
-async def root():
+async def root() -> Dict[str, str]:
     logger.info("Received request to root endpoint")
-    return {"message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."}
+    return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
 
-@app.get("/analytics/{user_id}", response_model=Analytics)
-async def get_analytics(user_id: str):
-    logger.info(f"Fetching analytics for user {user_id}")
-    message_count = await get_message_count(user_id)
-    if message_count == 0 and user_id not in ["alice", "bob"]:
-        logger.warning(f"User {user_id} not found")
-        raise HTTPException(status_code=404, detail="User not found")
-    return Analytics(message_count=message_count)
-
-@app.post("/analytics/{user_id}/initialize")
-async def initialize_message_count(user_id: str, message_count: int):
-    logger.info(f"Initializing message count for user {user_id} to {message_count}")
-    await set_message_count(user_id, message_count)
-    return {"status": "success", "user_id": user_id, "message_count": message_count}
-
-@app.post("/messages")
-async def handle_message_sent(event: dict):
-    logger.info(f"Received event: {event}")
-    event_type = event.get("event_type")
-    user_id = event.get("user_id")
-
-    if event_type != "MessageSent" or not user_id:
-        logger.warning(f"Ignoring invalid event: {event}")
-        return {"status": "ignored"}
-
-    await increment_message_count(user_id)
-    logger.info(f"Processed MessageSent event for user {user_id}")
-    return {"status": "success"}
+@app.post("/chat/", response_model=Dict[str, Any])
+async def chat(message: Message) -> Dict[str, Any]:
+    if not message.text.strip():
+        logger.warning("Empty message text received")
+        raise HTTPException(status_code=400, detail="Message text cannot be empty")
+    logger.info(f"Processing chat request for user {message.user_id}: {message.text}")
+    session_id = message.metadata.session_id if message.metadata and message.metadata.session_id else str(uuid4())
+    try:
+        history = await get_conversation_history(message.user_id)
+        reply_text = await generate_reply(message.user_id, message.text, history)
+        await add_message(message.user_id, {"user_text": message.text, "reply_text": reply_text})
+        await publish_conversation_event(message.user_id, session_id, message.text, reply_text, int(settings.DAPR_HTTP_PORT))
+        logger.info(f"Chat request completed for user {message.user_id}")
+        return {"user_id": message.user_id, "reply": reply_text, "metadata": Metadata(session_id=session_id)}
+    except Exception as e:
+        logger.error(f"Error in chat endpoint: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
 ```
 
-#### Explanation of Logging Changes
-- Added the `logging` module to both services with a structured format (`%(asctime)s - %(name)s - %(levelname)s - %(message)s`).
-- Used `logger.info`, `logger.warning`, and `logger.error` to log key events, such as:
-  - Request handling (e.g., `/chat/`, `/analytics/{user_id}`).
-  - Workflow steps (e.g., fetching analytics, generating replies).
-  - Actor interactions (e.g., fetching/storing conversation history).
-  - Errors (e.g., failed API calls, workflow failures).
+### 5.2: Dapr Logging
+
+Run Dapr with `--log-level debug` for detailed sidecar logs.
 
 ---
 
-## Step 6: Run the Microservices with Observability Enabled
-### Start the Analytics Service with Dapr
-In a terminal, navigate to the Analytics Service directory and run it with Dapr, enabling tracing and metrics:
+## Step 6: Run with Observability
+
+1. **Start Dapr**:
+
+   ```bash
+   dapr init
+   ```
+
+2. Start Agent Memory Service
+
 ```bash
-cd analytics_service
-dapr run --app-id analytics-service --app-port 8001 --dapr-http-port 3501 --metrics-port 9091 --log-level debug --config ../components/tracing.yaml --components-path ../components -- uv run uvicorn main:app --host 0.0.0.0 --port 8001
-```
-- `--metrics-port 9091`: Exposes Dapr metrics on port `9091`.
-- `--log-level debug`: Enables detailed Dapr logs.
-- `--config ../components/tracing.yaml`: Applies the tracing configuration.
-
-Output:
-```
-ℹ  Starting Dapr with id analytics-service. HTTP Port: 3501  gRPC Port: 50002
-ℹ  Dapr sidecar is up and running.
-ℹ  Metrics server started on 9091
-ℹ  You're up and running! Both Dapr and your app logs will appear here.
-== APP == INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+dapr run --app-id agent-memory-service --app-port 8001 --dapr-http-port 3501 --resources-path ../components -- uv run uvicorn main:app --host 0.0.0.0 --port 8001 --reload
 ```
 
-### Start the Chat Service with Dapr
-In a separate terminal, navigate to the Chat Service directory and run it with Dapr, enabling tracing and metrics:
+2. **Run Chat Service with Observability**:
+
+   ```bash
+   cd chat-service
+   dapr run --app-id chat-service --app-port 8010 --dapr-http-port 3500 --metrics-port 9091 --log-level debug --config ../components/tracing.yaml --resources-path ../components -- uv run uvicorn main:app --host 0.0.0.0 --port 8010 --reload
+   ```
+
+   - `--metrics-port 9091`: Exposes Dapr metrics.
+   - `--config ../components/tracing.yaml`: Enables Zipkin tracing.
+
+3. **Test the Chat Endpoint**:
+   ```bash
+   curl -X POST http://localhost:8010/chat/ -H "Content-Type: application/json" -d '{"user_id": "junaid", "text": "Hi there"}'
+   ```
+   - Expected response:
+     ```json
+     {
+       "user_id": "junaid",
+       "reply": "Hey junaid! Hi there!",
+       "metadata": { "session_id": "..." }
+     }
+     ```
+
+---
+
+## Step 7: Observe the System
+
+### Logs
+
+Check Chat Service logs:
+
+```
+2025-04-09 12:00:00,123 - ChatService - INFO - Starting up Chat Service
+2025-04-09 12:00:00,124 - ChatService - INFO - Registered actor: UserSessionActor
+2025-04-09 12:00:00,125 - ChatService - INFO - Processing chat request for user junaid: Hi there
+2025-04-09 12:00:00,126 - ChatService - INFO - Fetching history for user junaid
+2025-04-09 12:00:00,130 - ChatService - INFO - Received history for user junaid: []
+2025-04-09 12:00:00,131 - ChatService - INFO - Generating reply for user junaid: Hi there
+2025-04-09 12:00:00,135 - ChatService - INFO - Generated reply: Hey junaid! Hi there!
+2025-04-09 12:00:00,136 - ChatService - INFO - Adding message for user junaid: {"user_text": "Hi there", "reply_text": "Hey junaid! Hi there!"}
+2025-04-09 12:00:00,140 - ChatService - INFO - Message added for user junaid
+2025-04-09 12:00:00,141 - ChatService - INFO - Publishing event for user junaid, session ...
+2025-04-09 12:00:00,145 - ChatService - INFO - Published ConversationUpdated event for user junaid, session ...
+2025-04-09 12:00:00,146 - ChatService - INFO - Chat request completed for user junaid
+```
+
+### Traces in Zipkin
+
+- Visit `http://localhost:9411`.
+- Search for `chat-service` traces.
+- Expect spans for:
+  - `/chat/` endpoint.
+  - Actor calls (`GetConversationHistory`, `AddMessage`).
+  - Pub/sub (`conversations` topic).
+
+### Metrics
+
+Dapr exposes metrics on the port specified by --metrics-port (in our case, 9091 for the Chat Service).
+Check if the metrics endpoint is accessible:
+
 ```bash
-cd chat_service
-dapr run --app-id chat-service --app-port 8000 --dapr-http-port 3500 --dapr-grpc-port 50001 --metrics-port 9090 --log-level debug --config ../components/tracing.yaml --components-path ../components -- uv run uvicorn main:app --host 0.0.0.0 --port 8000
-```
-- `--metrics-port 9090`: Exposes Dapr metrics on port `9090`.
-- `--log-level debug`: Enables detailed Dapr logs.
-- `--config ../components/tracing.yaml`: Applies the tracing configuration.
-
-Output:
-```
-ℹ  Starting Dapr with id chat-service. HTTP Port: 3500  gRPC Port: 50001
-ℹ  Dapr sidecar is up and running.
-ℹ  Actor runtime started. Actor idle timeout: 1h0m0s. Actor scan interval: 30s
-ℹ  Metrics server started on 9090
-ℹ  You're up and running! Both Dapr and your app logs will appear here.
-== APP == INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+curl http://localhost:9091/metrics
 ```
 
-### Update Prometheus Configuration
-Since we’re running Dapr metrics on ports `9090` (Chat Service) and `9091` (Analytics Service), update `prometheus.yml` to scrape both ports:
+Send multiple requests to the Chat Service:
+
+```bash
+curl -X POST http://localhost:8010/chat/ -H "Content-Type: application/json" -d '{"user_id": "junaid", "text": "Hi there"}'
+curl -X POST http://localhost:8010/chat/ -H "Content-Type: application/json" -d '{"user_id": "junaid", "text": "What time is it?"}'
+```
+
+Wait a few seconds, then check the metrics endpoint again:
+
+```bash
+curl http://localhost:9091/metrics | grep dapr
+```
+
+### Metrics in Prometheus
+
+- Visit `http://localhost:9090`.
+- Query:
+  - `dapr_http_server_request_count{app_id="chat-service"}`: Request count.
+  - `dapr_actor_active_actors{app_id="chat-service", actor_type="UserSessionActor"}`: Active actors.
+
+#### Debugging
+
+If you see nothing change your port
+
+1. First check: http://localhost:9090/targets?search=
+2. Get your ip `bash ifconfig | grep inet ` it shall be something like 192.164.0.000 (from inet 192.164.0.000 netmask 0xffffff00)
+3. In promethous.yaml update your
+
 ```yaml
-global:
-  scrape_interval: 15s
-
-scrape_configs:
-  - job_name: 'dapr'
-    static_configs:
-      - targets: ['localhost:9090', 'localhost:9091']
+- targets: ["192.164.0.000"] # Dapr metrics port (Chat Service)
 ```
 
-Restart Prometheus to apply the updated configuration:
-```bash
-docker stop <prometheus-container-id>
-docker run -d -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
-```
-
+4. Stop and start the container
+5. Test time
+- http://localhost:9090/targets?search=
+- Visit `http://localhost:9090`.
+- Query:
+  - `dapr_http_server_request_count{app_id="chat-service"}`: Request count.
+  - `dapr_actor_active_actors{app_id="chat-service", actor_type="UserSessionActor"}`: Active actors.
 ---
 
-## Step 7: Test the Microservices and Observe Behavior
-### Initialize State for Testing
-Initialize message counts for `alice` and `bob`:
-- For `alice`:
-  ```bash
-  curl -X POST http://localhost:8001/analytics/alice/initialize -H "Content-Type: application/json" -d '{"message_count": 5}'
-  ```
-- For `bob`:
-  ```bash
-  curl -X POST http://localhost:8001/analytics/bob/initialize -H "Content-Type: application/json" -d '{"message_count": 3}'
-  ```
+## Step 8: Why Observability for DACA?
 
-### Test the Chat Service
-Send a request to the Chat Service to trigger the workflow:
-```json
-{
-  "user_id": "bob",
-  "text": "Hi, how are you?",
-  "metadata": {
-    "timestamp": "2025-04-06T12:00:00Z",
-    "session_id": "123e4567-e89b-12d3-a456-426614174001"
-  },
-  "tags": ["greeting"]
-}
-```
-Expected response (actual reply may vary):
-```json
-{
-  "user_id": "bob",
-  "reply": "Hi Bob! You've sent 3 messages so far. No previous conversation. How can I help you today?",
-  "metadata": {
-    "timestamp": "2025-04-06T04:01:00Z",
-    "session_id": "some-uuid"
-  }
-}
-```
-
-#### Observe Logs
-Check the Chat Service logs for detailed information:
-```
-2025-04-06 04:01:00,123 - ChatService - INFO - Received chat request for user bob: Hi, how are you?
-2025-04-06 04:01:00,124 - ChatService - INFO - Scheduling workflow with instance_id: chat-bob-1744064460
-2025-04-06 04:01:00,125 - ChatService - INFO - Starting workflow for user bob with message: Hi, how are you?
-2025-04-06 04:01:00,126 - ChatService - INFO - Fetching analytics for user bob
-2025-04-06 04:01:00,130 - ChatService - INFO - Fetched message count for user bob: 3
-2025-04-06 04:01:00,131 - ChatService - INFO - Fetching conversation history for user bob
-2025-04-06 04:01:00,135 - ChatService - INFO - Fetched conversation history for user bob: []
-2025-04-06 04:01:00,136 - ChatService - INFO - Generating reply for user bob with message: Hi, how are you?
-2025-04-06 04:01:00,150 - ChatService - INFO - Generated reply for user bob: Hi Bob! You've sent 3 messages so far. No previous conversation. How can I help you today?
-2025-04-06 04:01:00,151 - ChatService - INFO - Storing conversation for user bob
-2025-04-06 04:01:00,155 - ChatService - INFO - Stored conversation for user bob
-2025-04-06 04:01:00,156 - ChatService - INFO - Publishing MessageSent event for user bob
-2025-04-06 04:01:00,160 - ChatService - INFO - Published MessageSent event for user bob
-2025-04-06 04:01:00,161 - ChatService - INFO - Completed workflow for user bob
-```
-
-Check the Analytics Service logs:
-```
-2025-04-06 04:01:00,162 - AnalyticsService - INFO - Received event: {'user_id': 'bob', 'event_type': 'MessageSent'}
-2025-04-06 04:01:00,163 - AnalyticsService - INFO - Incrementing message count for user bob
-2025-04-06 04:01:00,164 - AnalyticsService - INFO - Fetching message count for user bob from state store
-2025-04-06 04:01:00,165 - AnalyticsService - INFO - Fetched message count for user bob: 3
-2025-04-06 04:01:00,166 - AnalyticsService - INFO - Setting message count for user bob to 4
-2025-04-06 04:01:00,167 - AnalyticsService - INFO - Set message count for user bob: 4
-2025-04-06 04:01:00,168 - AnalyticsService - INFO - Incremented message count for user bob to 4
-2025-04-06 04:01:00,169 - AnalyticsService - INFO - Processed MessageSent event for user bob
-```
-
-#### Observe Traces in Zipkin
-1. Open the Zipkin UI at `http://localhost:9411`.
-2. Click “Find Traces” to see recent traces.
-3. Look for a trace involving the `chat-service` and `analytics-service`:
-   - You should see spans for:
-     - The `/chat/` endpoint in the Chat Service.
-     - Service Invocation to the Analytics Service (`analytics/bob`).
-     - Actor interactions (`UserSessionActor` methods).
-     - Pub/Sub messaging (`messages` topic).
-     - Workflow steps.
-   - The trace will show the latency of each operation and the flow of the request across services.
-
-#### Observe Metrics in Prometheus
-1. Open the Prometheus UI at `http://localhost:9090`.
-2. Query some Dapr metrics:
-   - `dapr_http_server_request_count`: Number of HTTP requests handled by Dapr sidecars.
-     - Example: `dapr_http_server_request_count{app_id="chat-service"}`
-   - `dapr_actor_active_actors`: Number of active actors.
-     - Example: `dapr_actor_active_actors{app_id="chat-service", actor_type="UserSessionActor"}`
-   - `dapr_workflow_execution_time`: Workflow execution time.
-     - Example: `dapr_workflow_execution_time{app_id="chat-service"}`
-3. You should see metrics for both the Chat Service and Analytics Service, reflecting the request we sent.
-
----
-
-## Step 8: Why Dapr Observability for DACA?
-Using Dapr’s observability features enhances DACA’s architecture by:
-- **Visibility**: Distributed tracing provides a clear view of request flows across services and Dapr components, making it easier to identify bottlenecks or failures.
-- **Performance Monitoring**: Metrics allow us to monitor latency, throughput, and error rates, ensuring the system meets performance goals.
-- **Debugging**: Detailed logs and traces simplify troubleshooting, especially in a distributed system with workflows and actors.
-- **Production Readiness**: Observability is critical for maintaining and optimizing a production system, enabling monitoring, alerting, and debugging.
+- **Visibility**: Traces show request flows through actors and pub/sub.
+- **Performance**: Metrics monitor latency and throughput.
+- **Debugging**: Logs and traces pinpoint issues (e.g., actor state errors).
 
 ---
 
 ## Step 9: Next Steps
-You’ve successfully integrated Dapr’s observability features into the Chat Service and Analytics Service, enabling distributed tracing, metrics collection, and detailed logging! In the next tutorial (**12_dapr_containerization**), we’ll containerize our microservices using Docker and deploy them with Dapr in a Kubernetes cluster, preparing the system for production deployment.
+
+Next, in **12_dapr_containerization**, we’ll containerize the Chat Service and deploy it to Kubernetes with Dapr.
 
 ### Optional Exercises
-1. Set up Grafana to visualize Prometheus metrics with dashboards (e.g., for request latency, actor counts).
-2. Simulate a failure (e.g., make the Analytics Service unavailable) and use Zipkin traces to identify the issue.
-3. Add custom metrics to the Chat Service (e.g., number of messages processed per user) using Dapr’s metrics API.
+
+- Add Grafana for Prometheus dashboards.
+- Simulate a failure (e.g., stop Redis) and debug with Zipkin.
+- Log custom metrics (e.g., messages per user).
 
 ---
 
 ## Conclusion
-In this tutorial, we enabled Dapr’s observability features—distributed tracing with Zipkin, metrics collection with Prometheus, and detailed logging—to monitor and debug our microservices. This provides visibility into the system’s behavior, helps identify performance issues, and simplifies troubleshooting, aligning with DACA’s goals for a production-ready, distributed agentic AI system. We’re now ready to containerize and deploy our microservices in the next tutorial!
 
----
-
-### Final Code for `chat_service/main.py`
-```python
-import logging
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from agents import Agent, Runner, function_tool
-from datetime import datetime
-import httpx
-from dapr.clients import DaprClient
-from dapr.ext.workflow import WorkflowRuntime, DaprWorkflowClient, DaprWorkflowContext, when
-from dapr.workflow import WorkflowActivityContext
-from dapr.actor.runtime.runtime import ActorRuntime
-from user_session_actor import UserSessionActor, UserSessionActorInterface
-
-from models import Message, Response, Metadata
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger("ChatService")
-
-app = FastAPI(
-    title="DACA Chat Service",
-    description="A FastAPI-based Chat Service for the DACA tutorial series",
-    version="0.1.0",
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-workflow_runtime = WorkflowRuntime()
-ActorRuntime.register_actor(UserSessionActor)
-workflow_runtime.start()
-
-async def get_openai_api_key() -> str:
-    with DaprClient() as dapr_client:
-        try:
-            logger.info("Fetching OpenAI API key from secrets store")
-            secret = await dapr_client.get_secret(
-                store_name="secretstore",
-                key="openai-api-key"
-            )
-            return secret.secret["openai-api-key"]
-        except Exception as e:
-            logger.error(f"Failed to retrieve OpenAI API key: {e}")
-            raise HTTPException(status_code=500, detail=f"Failed to retrieve OpenAI API key: {e}")
-
-async def initialize_chat_agent():
-    api_key = await get_openai_api_key()
-    logger.info("Initializing chat agent with OpenAI API key")
-    return Agent(
-        name="ChatAgent",
-        instructions="You are a helpful chatbot. Respond to user messages in a friendly and informative way. If the user asks for the time, use the get_current_time tool. Personalize responses using user analytics (e.g., message count) and conversation history.",
-        model="gpt-4o",
-        tools=[get_current_time],
-        api_key=api_key
-    )
-
-@function_tool
-def get_current_time() -> str:
-    return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-
-chat_agent = None
-
-@app.on_event("startup")
-async def startup():
-    global chat_agent
-    chat_agent = await initialize_chat_agent()
-
-async def get_db():
-    return {"connection": "Mock DB Connection"}
-
-async def fetch_analytics_activity(ctx: WorkflowActivityContext, user_id: str) -> int:
-    with DaprClient() as dapr_client:
-        try:
-            logger.info(f"Fetching analytics for user {user_id}")
-            response = await dapr_client.invoke_method_async(
-                app_id="analytics-service",
-                method_name=f"analytics/{user_id}",
-                http_verb="GET"
-            )
-            analytics_data = response.json()
-            message_count = analytics_data.get("message_count", 0)
-            logger.info(f"Fetched message count for user {user_id}: {message_count}")
-            return message_count
-        except Exception as e:
-            logger.error(f"Failed to fetch analytics for user {user_id}: {e}")
-            return 0
-
-async def fetch_conversation_history_activity(ctx: WorkflowActivityContext, user_id: str) -> list:
-    with DaprClient() as dapr_client:
-        try:
-            logger.info(f"Fetching conversation history for user {user_id}")
-            actor = dapr_client.create_actor(UserSessionActorInterface, user_id)
-            history = await actor.get_conversation_history()
-            logger.info(f"Fetched conversation history for user {user_id}: {history}")
-            return history
-        except Exception as e:
-            logger.error(f"Failed to fetch conversation history for user {user_id}: {e}")
-            return []
-
-async def generate_reply_activity(ctx: WorkflowActivityContext, input_data: dict) -> str:
-    user_id = input_data["user_id"]
-    message_text = input_data["message_text"]
-    message_count = input_data["message_count"]
-    conversation_history = input_data["conversation_history"]
-
-    logger.info(f"Generating reply for user {user_id} with message: {message_text}")
-    history_summary = "No previous conversation."
-    if conversation_history:
-        history_summary = "Previous conversation:\n"
-        for entry in conversation_history:
-            history_summary += f"User: {entry['message']}\nBot: {entry['reply']}\n"
-
-    personalized_instructions = (
-        f"You are a helpful chatbot. Respond to user messages in a friendly and informative way. "
-        f"If the user asks for the time, use the get_current_time tool. "
-        f"The user has sent {message_count} messages so far, so personalize your response accordingly. "
-        f"Here is the conversation history to provide context:\n{history_summary}"
-    )
-    chat_agent.instructions = personalized_instructions
-
-    result = await Runner.run(chat_agent, input=message_text)
-    reply = result.final_output
-    logger.info(f"Generated reply for user {user_id}: {reply}")
-    return reply
-
-async def store_conversation_activity(ctx: WorkflowActivityContext, input_data: dict):
-    user_id = input_data["user_id"]
-    message = input_data["message"]
-    reply = input_data["reply"]
-
-    with DaprClient() as dapr_client:
-        try:
-            logger.info(f"Storing conversation for user {user_id}")
-            actor = dapr_client.create_actor(UserSessionActorInterface, user_id)
-            await actor.add_message({"message": message, "reply": reply})
-            logger.info(f"Stored conversation for user {user_id}")
-        except Exception as e:
-            logger.error(f"Failed to store conversation for user {user_id}: {e}")
-            raise
-
-async def publish_event_activity(ctx: WorkflowActivityContext, user_id: str):
-    with DaprClient() as dapr_client:
-        try:
-            logger.info(f"Publishing MessageSent event for user {user_id}")
-            await dapr_client.publish_event(
-                pubsub_name="pubsub",
-                topic_name="messages",
-                data={"user_id": user_id, "event_type": "MessageSent"}
-            )
-            logger.info(f"Published MessageSent event for user {user_id}")
-        except Exception as e:
-            logger.error(f"Failed to publish MessageSent event for user {user_id}: {e}")
-            raise
-
-@workflow_runtime.workflow
-async def message_processing_workflow(ctx: DaprWorkflowContext, input_data: dict) -> dict:
-    user_id = input_data["user_id"]
-    message_text = input_data["message_text"]
-
-    logger.info(f"Starting workflow for user {user_id} with message: {message_text}")
-    message_count = await ctx.call_activity(
-        fetch_analytics_activity,
-        input=user_id,
-        retry_policy={"max_retries": 3, "interval": "PT5S"}
-    )
-
-    conversation_history = await ctx.call_activity(
-        fetch_conversation_history_activity,
-        input=user_id,
-        retry_policy={"max_retries": 3, "interval": "PT5S"}
-    )
-
-    reply = await ctx.call_activity(
-        generate_reply_activity,
-        input={
-            "user_id": user_id,
-            "message_text": message_text,
-            "message_count": message_count,
-            "conversation_history": conversation_history
-        },
-        retry_policy={"max_retries": 2, "interval": "PT3S"}
-    )
-
-    await ctx.call_activity(
-        store_conversation_activity,
-        input={"user_id": user_id, "message": message_text, "reply": reply},
-        retry_policy={"max_retries": 3, "interval": "PT5S"}
-    )
-
-    await ctx.call_activity(
-        publish_event_activity,
-        input=user_id,
-        retry_policy={"max_retries": 5, "interval": "PT2S"}
-    )
-
-    logger.info(f"Completed workflow for user {user_id}")
-    return {"user_id": user_id, "reply": reply}
-
-@app.get("/")
-async def root():
-    logger.info("Received request to root endpoint")
-    return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
-
-@app.get("/users/{user_id}")
-async def get_user(user_id: str, role: str | None = None):
-    logger.info(f"Fetching user info for user_id: {user_id}, role: {role}")
-    user_info = {"user_id": user_id, "role": role if role else "guest"}
-    return user_info
-
-@app.post("/chat/", response_model=Response)
-async def chat(message: Message, db: dict = Depends(get_db)):
-    if not message.text.strip():
-        logger.warning("Received empty message text")
-        raise HTTPException(status_code=400, detail="Message text cannot be empty")
-    logger.info(f"Received chat request for user {message.user_id}: {message.text}")
-    print(f"DB Connection: {db['connection']}")
-
-    with DaprWorkflowClient() as workflow_client:
-        instance_id = f"chat-{message.user_id}-{int(datetime.utcnow().timestamp())}"
-        input_data = {"user_id": message.user_id, "message_text": message.text}
-        
-        logger.info(f"Scheduling workflow with instance_id: {instance_id}")
-        await workflow_client.schedule_new_workflow(
-            workflow=message_processing_workflow,
-            instance_id=instance_id,
-            input=input_data
-        )
-
-        logger.info(f"Waiting for workflow {instance_id} to complete")
-        result = await workflow_client.wait_for_workflow_completion(
-            instance_id=instance_id,
-            timeout_in_seconds=60
-        )
-
-        if result is None or result.runtime_status != "COMPLETED":
-            logger.error(f"Workflow {instance_id} failed to complete: {result.runtime_status if result else 'None'}")
-            raise HTTPException(status_code=500, detail="Workflow failed to complete")
-
-        workflow_output = result.output
-        reply_text = workflow_output["reply"]
-        logger.info(f"Workflow {instance_id} completed with reply: {reply_text}")
-
-    return Response(
-        user_id=message.user_id,
-        reply=reply_text,
-        metadata=Metadata()
-    )
-
-@app.on_event("shutdown")
-def shutdown():
-    logger.info("Shutting down Chat Service")
-    workflow_runtime.stop()
-```
-
----
-
-### Final Code for `analytics_service/main.py`
-```python
-import logging
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-import httpx
-
-from models import Analytics
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger("AnalyticsService")
-
-app = FastAPI(
-    title="DACA Analytics Service",
-    description="A FastAPI-based Analytics Service for the DACA tutorial series",
-    version="0.1.0",
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-async def get_message_count(user_id: str, dapr_port: int = 3501) -> int:
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/{user_id}"
-    async with httpx.AsyncClient() as client:
-        try:
-            logger.info(f"Fetching message count for user {user_id} from state store")
-            response = await client.get(dapr_url)
-            response.raise_for_status()
-            state_data = response.json()
-            message_count = state_data.get("message_count", 0) if state_data else 0
-            logger.info(f"Fetched message count for user {user_id}: {message_count}")
-            return message_count
-        except httpx.HTTPStatusError as e:
-            logger.error(f"Failed to retrieve state for user {user_id}: {e}")
-            return 0
-
-async def set_message_count(user_id: str, message_count: int, dapr_port: int = 3501):
-    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
-    state_data = [
-        {
-            "key": user_id,
-            "value": {"message_count": message_count}
-        }
-    ]
-    async with httpx.AsyncClient() as client:
-        try:
-            logger.info(f"Setting message count for user {user_id} to {message_count}")
-            response = await client.post(dapr_url, json=state_data)
-            response.raise_for_status()
-            logger.info(f"Set message count for user {user_id}: {message_count}")
-        except httpx.HTTPStatusError as e:
-            logger.error(f"Failed to set state for user {user_id}: {e}")
-
-async def increment_message_count(user_id: str, dapr_port: int = 3501):
-    logger.info(f"Incrementing message count for user {user_id}")
-    current_count = await get_message_count(user_id, dapr_port)
-    new_count = current_count + 1
-    await set_message_count(user_id, new_count, dapr_port)
-    logger.info(f"Incremented message count for user {user_id} to {new_count}")
-
-@app.get("/")
-async def root():
-    logger.info("Received request to root endpoint")
-    return {"message": "Welcome to the DACA Analytics Service! Access /docs for the API documentation."}
-
-@app.get("/analytics/{user_id}", response_model=Analytics)
-async def get_analytics(user_id: str):
-    logger.info(f"Fetching analytics for user {user_id}")
-    message_count = await get_message_count(user_id)
-    if message_count == 0 and user_id not in ["alice", "bob"]:
-        logger.warning(f"User {user_id} not found")
-        raise HTTPException(status_code=404, detail="User not found")
-    return Analytics(message_count=message_count)
-
-@app.post("/analytics/{user_id}/initialize")
-async def initialize_message_count(user_id: str, message_count: int):
-    logger.info(f"Initializing message count for user {user_id} to {message_count}")
-    await set_message_count(user_id, message_count)
-    return {"status": "success", "user_id": user_id, "message_count": message_count}
-
-@app.post("/messages")
-async def handle_message_sent(event: dict):
-    logger.info(f"Received event: {event}")
-    event_type = event.get("event_type")
-    user_id = event.get("user_id")
-
-    if event_type != "MessageSent" or not user_id:
-        logger.warning(f"Ignoring invalid event: {event}")
-        return {"status": "ignored"}
-
-    await increment_message_count(user_id)
-    logger.info(f"Processed MessageSent event for user {user_id}")
-    return {"status": "success"}
-```
-
----
-
-This tutorial provides a focused introduction to Dapr observability, enabling monitoring and debugging of our microservices. 
+You’ve added Dapr observability to the Chat Service, enabling tracing, metrics, and logging for monitoring and debugging. This step enhances DACA’s production readiness, providing critical insights into our distributed system.
