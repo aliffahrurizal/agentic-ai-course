@@ -52,8 +52,9 @@ Think of it this way: You might be able to design a brilliant engine (the AI age
 The DACA architecture is a layered, event-driven, stateless system that integrates human-in-the-loop (HITL) capabilities. It’s built on a **three-tier microservices architecture**, enhanced by Dapr, and supports both real-time and scheduled agentic workflows.
 
 ### Architecture Diagram Breakdown
-
-![daca](./architecture.png)
+<p align="center">
+<img src="./architecture.png" width="600">
+</p>
 
 The provided architecture diagram illustrates the DACA framework:
 - **Presentation Layer**: Next.js, Streamlit, or Chainlit for user interaction.
