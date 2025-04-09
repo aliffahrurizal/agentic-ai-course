@@ -100,7 +100,7 @@ The diagram illustrates four key agentic AI architecture design patterns, which 
 ---
 
 ### 4. MultiAgent Pattern (Bottom Right)
-**Overview**: The MultiAgent Pattern involves multiple AI agents working collaboratively, each with a specialized role, to achieve a common goal. This mimics a team of human experts working together.
+**Overview**: The MultiAgent Pattern involves multiple AI agents working collaboratively, each with a specialized role, to achieve a common goal. This mimics a team of human experts working together. It would be the most likely for workflows involving multiple steps, activities and outcomes in complex enterprise environments to enable superior outcomes.
 
 **Components and Flow**:
 - **User**: The user provides a prompt to the AI system.
