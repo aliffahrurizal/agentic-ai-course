@@ -423,13 +423,7 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern excels in building scala
 
 ---
 
-## Appendix I: LLM Research (It might help you understand the basics)
-
-https://grok.com/share/bGVnYWN5_c41dc0f7-8fcb-4d31-bbc0-1414d0a4e294
-
----
-
-## Appendix II: Cost Estimates for a Basic Kubernetes Cluster:
+## Appendix I: Cost Estimates for a Basic Kubernetes Cluster:
 
 https://grok.com/share/bGVnYWN5_1bb223b7-26d5-4e9e-bdbc-4aab3b78d1c3
 
@@ -441,7 +435,7 @@ https://www.civo.com/pricing
 
 ---
 
-## Appendix III: DACA a Design Patter or Framework?
+## Appendix II: DACA a Design Patter or Framework?
 
 The **Dapr Agentic Cloud Ascent (DACA)** is best classified as a **design pattern**, though it has elements that might make it feel framework-like in certain contexts. Let’s break this down to clarify its nature and why it fits the design pattern label, while also addressing the nuances that might lead to confusion.
 
@@ -544,7 +538,7 @@ Classifying DACA as a design pattern highlights its flexibility and reusability:
 
 ---
 
-## Appendix IV: Agent-to-Agent Communication Across Organizations Using Natural Language and the Role of MCP
+## Appendix III: Agent-to-Agent Communication Across Organizations Using Natural Language and the Role of MCP
 
 Below is a detailed report addressing the challenge of agent-to-agent communication across organizations, enterprises, and countries over the internet using natural language, rather than traditional APIs, with a focus on the role of the Model Context Protocol (MCP) and the potential for AI agents to function as MCP servers. This report builds on the concepts from the "Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern" while extending the discussion to a decentralized, internet-scale context.
 
@@ -695,7 +689,7 @@ By integrating these strategies, organizations can effectively manage agent-to-a
 
 ---
 
-## Appendix V: FIPA ACL Reseach Report
+## Appendix IV: FIPA ACL Reseach Report
 
  [FIPA](http://www.fipa.org/) ACL, with its standardized communication and security features, is a robust solution for agent-to-agent communication across different organizations and countries
 
@@ -779,7 +773,7 @@ In conclusion, research suggests that FIPA ACL, with its standardized communicat
 - [Introducing the Model Context Protocol by Anthropic News](https://www.anthropic.com/news/model-context-protocol)
 
 
-## Appendix VI: Current Alternative Protocols
+## Appendix V: Current Alternative Protocols
 
 Establishing effective agent-to-agent communication across different organizations, enterprises, and countries involves addressing interoperability, security, and standardization challenges. Here are key considerations and approaches:
 
