@@ -103,6 +103,7 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Purpose**: Powers agent reasoning and task execution with robust, agent-friendly features (e.g., function calling).
 
 2. **Lightweight Agents and MCP Servers**:
+![](./mcp.jpeg)
    - **Choice**: OpenAI Agents SDK for modular, task-specific agents with guardrails, tool integration, and handoffs. MCP Servers for standardized Tool calling.
    - **Purpose**: Minimizes resource use while enabling scalable, collaborative workflows.
 
@@ -115,8 +116,9 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Purpose**: Ensures portability, scalability, and efficient resource use across environments.
 
 5. **Asynchronous Message Passing**:
+![](./agent_to_agent.webp)
    - **Choice**: RabbitMQ (prototyping, free tier via CloudAMQP), Kafka (production on Kubernetes).
-   - **Purpose**: Decouples components for resilience and event-driven workflows.
+   - **Purpose**: Decouples components and agents for resilience and event-driven workflows.
 
 6. **Scheduled Container Invocation**:
    - **Choice**:
@@ -138,6 +140,7 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Why It Matters**: Ensures interoperability across tools and agents.
 
 10. **Distributed Application Runtime (Dapr)**:
+![](./dapr.png)
     - **Purpose**: Simplifies distributed systems with standardized building blocks (state, pub/sub, workflows).
     - **Implementation**: Runs as a sidecar container, managing state (Redis, CockroachDB), messaging (RabbitMQ, Kafka), and workflows.
     - **Optional**: Dapr Agents and Dapr Workflows for advanced orchestration.
