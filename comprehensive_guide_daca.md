@@ -148,11 +148,8 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Choice**: Upstash Redis (free tier, serverless).
    - **Purpose**: High-performance caching, session storage, and message brokering.
 
-9. **Model Context Protocol (MCP)**:
-   - **Purpose**: Standardizes agentic tool calling in stateless containers.
-   - **Why It Matters**: Ensures interoperability across tools and agents.
 
-10. **Distributed Application Runtime (Dapr)**:
+9. **Distributed Application Runtime (Dapr)**:
 
     - **Purpose**: Simplifies distributed systems with standardized building blocks (state, pub/sub, workflows).
     - **Implementation**: Runs as a sidecar container, managing state (Redis, CockroachDB), messaging (RabbitMQ, Kafka), and workflows.
