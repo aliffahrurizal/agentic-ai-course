@@ -47,7 +47,7 @@ Think of it this way: You might be able to design a brilliant engine (the AI age
 
 ---
 
-## Core Design Patterns for Agentic AI Systems: A Visual Guide
+## Core Architecture Design Patterns for Agentic AI Systems: A Visual Guide
 
 ![](./agentic_design.jpg)
 
