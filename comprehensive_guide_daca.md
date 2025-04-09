@@ -734,6 +734,15 @@ While the two sets of patterns have different focuses, there is some overlap. Le
   - **Anthropic Equivalent**: This is most similar to Anthropic’s **autonomous agents** when multiple agents collaborate, as seen in Anthropic’s coding agent example (Appendix 1). It also shares some similarities with the **Orchestrator-Workers** workflow, where multiple LLMs (workers) collaborate under a central orchestrator.
   - **Difference**: The MultiAgent Pattern in the diagram emphasizes equal collaboration among specialized agents (e.g., Software Engineer, Project Manager), with no central controller. Anthropic’s Orchestrator-Workers has a central LLM directing the workers, which is a more hierarchical structure.
 
+#### Core Patterns Without Full Equivalents
+The core patterns that do not have full equivalents in Anthropic’s patterns are:
+
+- **Tool Use Pattern**: Tool use is a capability in Anthropic’s framework, not a distinct pattern.
+- **Planning Pattern**: Lacks a full equivalent due to the absence of a structured planning-testing-replanning loop in Anthropic’s patterns.
+- **MultiAgent Pattern**: Lacks a full equivalent due to the decentralized, role-based collaboration not being explicitly defined in Anthropic’s patterns.
+
+The **Reflection Pattern is the only one with a full equivalent (Evaluator-Optimizer)**, as its core concept of iterative refinement through evaluation is directly mirrored in Anthropic’s framework.
+
 #### 5. Practical Application and Examples
 - **Core**: The diagram provides high-level, conceptual examples (e.g., a Software Engineer agent collaborating with a Market Research agent in the MultiAgent Pattern). It’s more abstract and doesn’t delve into specific use cases or implementation details.
 - **Anthropic**: Anthropic offers detailed, practical examples for each pattern, such as:
