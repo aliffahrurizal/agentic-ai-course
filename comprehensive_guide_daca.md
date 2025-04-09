@@ -152,7 +152,7 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Why It Matters**: Ensures interoperability across tools and agents.
 
 10. **Distributed Application Runtime (Dapr)**:
-<img src="./dapr.png" width="400">
+<img src="./dapr.png" width="600">
     - **Purpose**: Simplifies distributed systems with standardized building blocks (state, pub/sub, workflows).
     - **Implementation**: Runs as a sidecar container, managing state (Redis, CockroachDB), messaging (RabbitMQ, Kafka), and workflows.
     - **Optional**: Dapr Agents and Dapr Workflows for advanced orchestration.
