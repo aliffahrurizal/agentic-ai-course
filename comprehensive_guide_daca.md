@@ -656,13 +656,13 @@ These patterns can be combined or used individually depending on the task at han
 
 ## The Difference Between Core Patterns and Anthrophic Patterns
 
-To compare the core architecture patterns from the diagram you provided ("Top 4 Agentic AI Architecture Design Patterns") with the patterns defined by Anthropic in the document "[Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)," we need to analyze both sets of patterns in terms of their purpose, structure, and application. The diagram focuses on four agentic AI patterns: Reflection, Tool Use, Planning, and MultiAgent. Anthropic, on the other hand, describes a broader range of patterns, starting with foundational building blocks, moving to workflows, and then discussing autonomous agents. Let’s break this down systematically.
+To compare the core architecture patterns ("Top 4 Agentic AI Architecture Design Patterns") with the patterns defined by Anthropic in the document "[Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)," we need to analyze both sets of patterns in terms of their purpose, structure, and application. The diagram focuses on four agentic AI patterns: Reflection, Tool Use, Planning, and MultiAgent. Anthropic, on the other hand, describes a broader range of patterns, starting with foundational building blocks, moving to workflows, and then discussing autonomous agents. Let’s break this down systematically.
 
 ---
 
 ### Overview of the Two Sets of Patterns
 
-#### Diagram: Top 4 Agentic AI Architecture Design Patterns
+#### Core Architecture: Top 4 Agentic AI Architecture Design Patterns
 The diagram presents four patterns specifically for agentic AI systems, which are AI systems capable of autonomous decision-making and task execution:
 1. **Reflection Pattern**: The AI evaluates and refines its own output iteratively.
 2. **Tool Use Pattern**: The AI leverages external tools or information sources to enhance its capabilities.
@@ -697,7 +697,7 @@ Anthropic’s patterns cover both structured workflows (with predefined steps) a
 - Anthropic’s Prompt Chaining, on the other hand, involves a predefined sequence of steps (e.g., generating marketing copy, then translating it), which is a workflow, not an autonomous agent.
 
 #### 2. Level of Autonomy
-- **Diagram**: All four patterns assume a high level of autonomy. For instance:
+- **Core**: All four patterns assume a high level of autonomy. For instance:
   - In the Reflection Pattern, the AI autonomously evaluates and refines its output.
   - In the MultiAgent Pattern, multiple agents collaborate dynamically without predefined steps.
 - **Anthropic**: Autonomy varies across the patterns:
@@ -706,36 +706,36 @@ Anthropic’s patterns cover both structured workflows (with predefined steps) a
   - Anthropic’s "Agents" category aligns with the diagram’s focus, as it describes fully autonomous systems that plan, use tools, and operate independently over multiple steps.
 
 **Example**:
-- The diagram’s MultiAgent Pattern is similar to Anthropic’s description of autonomous agents, where multiple LLMs (or agents) collaborate dynamically. However, Anthropic’s Orchestrator-Workers workflow also involves multiple LLMs but in a more structured way, with a central LLM (the orchestrator) delegating tasks according to a predefined framework.
+- The Core’s MultiAgent Pattern is similar to Anthropic’s description of autonomous agents, where multiple LLMs (or agents) collaborate dynamically. However, Anthropic’s Orchestrator-Workers workflow also involves multiple LLMs but in a more structured way, with a central LLM (the orchestrator) delegating tasks according to a predefined framework.
 
 #### 3. Granularity and Specificity
-- **Diagram**: The four patterns are high-level and abstract, focusing on broad strategies for agentic behavior. For example, the Tool Use Pattern doesn’t specify how tools are integrated or what types of tools are used—it’s a general concept.
+- **Core**: The four patterns are high-level and abstract, focusing on broad strategies for agentic behavior. For example, the Tool Use Pattern doesn’t specify how tools are integrated or what types of tools are used—it’s a general concept.
 - **Anthropic**: Anthropic provides more granular patterns, breaking down workflows into specific types (e.g., Prompt Chaining, Routing, Parallelization) and offering practical examples for each. Additionally, Anthropic starts with a foundational building block (Augmented LLM) and builds up to more complex systems, providing a clearer progression.
 
 **Example**:
-- The diagram’s Tool Use Pattern is a single, broad concept that could encompass many of Anthropic’s workflows. For instance, Anthropic’s Orchestrator-Workers workflow might involve tool use (e.g., workers accessing external APIs), but it’s a more specific implementation of how tools are used within a structured framework.
+- The Core’s Tool Use Pattern is a single, broad concept that could encompass many of Anthropic’s workflows. For instance, Anthropic’s Orchestrator-Workers workflow might involve tool use (e.g., workers accessing external APIs), but it’s a more specific implementation of how tools are used within a structured framework.
 
 #### 4. Pattern Overlap and Mapping
 While the two sets of patterns have different focuses, there is some overlap. Let’s map the diagram’s patterns to Anthropic’s framework:
 
-- **Reflection Pattern (Diagram)**:
+- **Reflection Pattern (Core)**:
   - **Anthropic Equivalent**: This aligns closely with Anthropic’s **Evaluator-Optimizer** workflow, where one LLM generates a response and another evaluates it, providing feedback in a loop. Both patterns focus on iterative refinement through self-evaluation.
   - **Difference**: The Reflection Pattern assumes the AI is autonomous and dynamically decides to reflect, whereas Evaluator-Optimizer is a structured workflow where the evaluation loop is predefined.
 
-- **Tool Use Pattern (Diagram)**:
+- **Tool Use Pattern (Core)**:
   - **Anthropic Equivalent**: This is a core capability of Anthropic’s **Augmented LLM** (the foundational building block), which includes tools as an augmentation. Tool use also appears across Anthropic’s workflows and agents, such as in Orchestrator-Workers (where workers might use tools) or autonomous agents (which use tools in a loop).
-  - **Difference**: The diagram treats Tool Use as a standalone pattern, while Anthropic integrates tool use as a fundamental feature across all patterns, not a distinct pattern on its own.
+  - **Difference**: The Core treats Tool Use as a standalone pattern, while Anthropic integrates tool use as a fundamental feature across all patterns, not a distinct pattern on its own.
 
-- **Planning Pattern (Diagram)**:
+- **Planning Pattern (Core)**:
   - **Anthropic Equivalent**: This aligns with Anthropic’s **autonomous agents**, which are described as planning and operating independently over multiple steps. It also shares similarities with the **Orchestrator-Workers** workflow, where the orchestrator dynamically breaks down tasks and delegates them.
   - **Difference**: The Planning Pattern in the diagram is fully autonomous, with the AI replanning as needed. Anthropic’s Orchestrator-Workers is more structured, as the orchestrator follows a predefined framework for delegation, even if the subtasks are determined dynamically.
 
-- **MultiAgent Pattern (Diagram)**:
+- **MultiAgent Pattern (Core)**:
   - **Anthropic Equivalent**: This is most similar to Anthropic’s **autonomous agents** when multiple agents collaborate, as seen in Anthropic’s coding agent example (Appendix 1). It also shares some similarities with the **Orchestrator-Workers** workflow, where multiple LLMs (workers) collaborate under a central orchestrator.
   - **Difference**: The MultiAgent Pattern in the diagram emphasizes equal collaboration among specialized agents (e.g., Software Engineer, Project Manager), with no central controller. Anthropic’s Orchestrator-Workers has a central LLM directing the workers, which is a more hierarchical structure.
 
 #### 5. Practical Application and Examples
-- **Diagram**: The diagram provides high-level, conceptual examples (e.g., a Software Engineer agent collaborating with a Market Research agent in the MultiAgent Pattern). It’s more abstract and doesn’t delve into specific use cases or implementation details.
+- **Core**: The diagram provides high-level, conceptual examples (e.g., a Software Engineer agent collaborating with a Market Research agent in the MultiAgent Pattern). It’s more abstract and doesn’t delve into specific use cases or implementation details.
 - **Anthropic**: Anthropic offers detailed, practical examples for each pattern, such as:
   - Prompt Chaining for generating and translating marketing copy.
   - Routing for directing customer service queries to different models.
@@ -748,7 +748,7 @@ While the two sets of patterns have different focuses, there is some overlap. Le
 - Anthropic’s coding agent example (Appendix 1) describes a similar multi-agent setup but provides more detail, such as how agents iterate on solutions using test results as feedback and integrate human review for oversight.
 
 #### 6. Design Philosophy
-- **Diagram**: The diagram assumes that agentic AI systems are the goal and focuses on patterns that enable autonomy and flexibility. It doesn’t discuss simpler, non-agentic solutions.
+- **Core**: The diagram assumes that agentic AI systems are the goal and focuses on patterns that enable autonomy and flexibility. It doesn’t discuss simpler, non-agentic solutions.
 - **Anthropic**: Anthropic emphasizes simplicity and incremental complexity, advising developers to start with basic LLM calls and only add agentic systems when necessary. This philosophy is evident in their progression from the Augmented LLM to workflows to autonomous agents, and their recommendation to avoid unnecessary complexity (e.g., using frameworks only when needed).
 
 **Example**:
@@ -758,7 +758,7 @@ While the two sets of patterns have different focuses, there is some overlap. Le
 ---
 
 ### Summary of Differences
-| **Aspect**               | **Diagram (Top 4 Patterns)**                          | **Anthropic (Building Effective Agents)**            |
+| **Aspect**               | **Core (Top 4 Patterns)**                          | **Anthropic (Building Effective Agents)**            |
 |--------------------------|------------------------------------------------------|-----------------------------------------------------|
 | **Scope**                | Focuses on agentic AI systems with autonomous behavior. | Covers both workflows (structured) and agents (autonomous). |
 | **Level of Autonomy**    | All patterns are autonomous, with dynamic decision-making. | Workflows are structured; only "Agents" are fully autonomous. |
@@ -770,9 +770,9 @@ While the two sets of patterns have different focuses, there is some overlap. Le
 ---
 
 ### Conclusion
-The diagram’s "Top 4 Agentic AI Architecture Design Patterns" focus on autonomous, agentic systems, presenting four high-level patterns (Reflection, Tool Use, Planning, MultiAgent) that emphasize dynamic decision-making and flexibility. Anthropic’s framework in "Building Effective Agents" is broader, covering both structured workflows (Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer) and autonomous agents, with a strong emphasis on starting simple and adding complexity only when needed.
+The Core’s "Top 4 Agentic AI Architecture Design Patterns" focus on autonomous, agentic systems, presenting four high-level patterns (Reflection, Tool Use, Planning, MultiAgent) that emphasize dynamic decision-making and flexibility. Anthropic’s framework in "Building Effective Agents" is broader, covering both structured workflows (Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer) and autonomous agents, with a strong emphasis on starting simple and adding complexity only when needed.
 
-The diagram’s patterns align most closely with Anthropic’s "Agents" category and some workflows like Evaluator-Optimizer and Orchestrator-Workers, but Anthropic provides a more comprehensive and practical framework by including non-agentic workflows and detailed implementation advice. If you’re building an autonomous AI system, the diagram’s patterns are directly relevant, but Anthropic’s document offers a more complete roadmap for deciding when and how to use agentic systems versus simpler solutions.
+The Core patterns align most closely with Anthropic’s "Agents" category and some workflows like Evaluator-Optimizer and Orchestrator-Workers, but Anthropic provides a more comprehensive and practical framework by including non-agentic workflows and detailed implementation advice. If you’re building an autonomous AI system, the Core patterns are directly relevant, but Anthropic’s document offers a more complete roadmap for deciding when and how to use agentic systems versus simpler solutions.
 
 
 ---
