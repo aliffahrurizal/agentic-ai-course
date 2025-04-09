@@ -1,6 +1,8 @@
 # Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern
 
-<img src="./daca_report.png" width="500">
+<p align="center">
+<img src="./daca_report.png" width="300">
+</p>
 
 The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework for developing and deploying scalable, resilient, and cost-effective agentic AI systems. It leverages the simplicity of the OpenAI Agents SDK with Model Context Protocol (MCP) Servers for tool execution, the distributed capabilities of Dapr, and a progressive deployment strategy across free-tier cloud services and Kubernetes to achieve planetary-scale intelligence. DACA combines **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, and **scheduled computing (CronJobs)** to meet the autonomy, real-time needs, scalability, and complexity of AI agents. This document consolidates all aspects of DACA, including its architecture, components, deployment stages, and benefits.
 
@@ -27,7 +29,9 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework
 
 **Imagine a world where everything is an AI agent**, from your coffee machine to your car, from businesses to entire cities. Picture a world transformed into Agentia—a dynamic, living network of intelligent AI agents seamlessly integrated into our daily lives.  From our homes and offices to entire cities, systems no longer communicate through outdated APIs but through sophisticated, intelligent dialogues driven by state-of-the-art AI frameworks. Agentia scales effortlessly across the globe, thanks to its foundation in cloud-native technologies. Agentia is more than digital—it's also physical, brought to life by robots that serve as embodied agents interacting with and enhancing our physical world.
 
-<img src="./agentia.png" width="400">
+<p align="center">
+<img src="./agentia.png" width="300">
+</p>
 
 ### DACA Design Pattern is an implementation of the Agentia World Vision:
 
@@ -103,9 +107,13 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Purpose**: Powers agent reasoning and task execution with robust, agent-friendly features (e.g., function calling).
 
 2. **Lightweight Agents and MCP Servers**:
-<img src="./mcp.jpeg" width="400">
+
    - **Choice**: OpenAI Agents SDK for modular, task-specific agents with guardrails, tool integration, and handoffs. MCP Servers for standardized Tool calling.
    - **Purpose**: Minimizes resource use while enabling scalable, collaborative workflows.
+
+<p align="center">
+<img src="./mcp.jpeg" width="300">
+</p>
 
 3. **REST APIs**:
    - **Choice**: FastAPI for high-performance, asynchronous communication.
@@ -116,9 +124,13 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Purpose**: Ensures portability, scalability, and efficient resource use across environments.
 
 5. **Asynchronous Message Passing**:
-<img src="./agent_to_agent.webp" height="200">
+
    - **Choice**: RabbitMQ (prototyping, free tier via CloudAMQP), Kafka (production on Kubernetes).
    - **Purpose**: Decouples components and agents for resilience and event-driven workflows.
+
+<p align="center">
+<img src="./agent_to_agent.webp" height="200">
+</p>
 
 6. **Scheduled Container Invocation**:
    - **Choice**:
