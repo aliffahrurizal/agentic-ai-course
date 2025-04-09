@@ -167,6 +167,11 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
 DACA’s “ascent” refers to its progressive deployment pipeline, scaling from local development to planetary-scale production while optimizing cost and complexity.
 
 ### 1. Local Development: Open-Source Stack
+
+<p align="center">
+<img src="./local_dev.webp" width="400">
+</p>
+
 - **Goal**: Rapid iteration with production-like features.
 - **Setup**:
   - **Docker Compose**: Runs the agent app, Dapr sidecar, and local services.
@@ -201,6 +206,11 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 - **Cost**: Free, using open-source tools.
 
 ### 2. Prototyping: Free Deployment
+
+<p align="center">
+<img src="./huggingface.png" width="400">
+</p>
+
 - **Goal**: Test and validate with minimal cost.
 - **Setup**:
   - **Containers**: Deploy to Hugging Face Docker Spaces (free hosting, CI/CD). Both FastAPI and MCP Server containers.
@@ -236,6 +246,10 @@ Choosing the right Kubernetes-powered platform depends on your needs for managem
 
 #### Azure Container Apps (ACA)
 
+<p align="center">
+<img src="./aca.png" width="400">
+</p>
+
 - **Goal**: Scale to thousands of users with cost efficiency.
 - **Setup**:
   - **Containers**: Deploy containers (FastAPI and MCP Servers) to ACA with Dapr support (via KEDA).
@@ -266,6 +280,14 @@ Choosing the right Kubernetes-powered platform depends on your needs for managem
 - **Cost**: Free tier covers light traffic; paid tier ~$0.02/vCPU-s beyond that.
 
 ### 4. Planet-Scale: Kubernetes with Self-Hosted LLMs
+
+<p align="center">
+<img src="./kubernetes.png" width="400">
+</p>
+<p align="center">
+<img src="./karch.webp" width="400">
+</p>
+
 - **Goal**: Achieve planetary scale with no API limits.
 - **Setup**:
   - **Containers**: Kubernetes cluster (e.g., on Oracle Cloud’s free VMs: 2 AMD VMs or 4 Arm VMs). Both FastAPIs and MCP containers.
