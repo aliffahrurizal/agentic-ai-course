@@ -4,6 +4,8 @@
 <img src="./daca_report.png" width="300">
 </p>
 
+If you are a beginner start with [The Rise of the AI Agents Presentation](https://docs.google.com/presentation/d/1VNFGsCYMDT1VTe8W1wxFbmAwYsJ1I0Y-6CnTvuCEn98/edit?usp=sharing).
+
 The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework for developing and deploying scalable, resilient, and cost-effective agentic AI systems. It leverages the simplicity of the OpenAI Agents SDK with Model Context Protocol (MCP) Servers for tool execution, the distributed capabilities of Dapr, and a progressive deployment strategy across free-tier cloud services and Kubernetes to achieve planetary-scale intelligence. DACA combines **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, and **scheduled computing (CronJobs)** to meet the autonomy, real-time needs, scalability, and complexity of AI agents. This document consolidates all aspects of DACA, including its architecture, components, deployment stages, and benefits.
 
 ---
