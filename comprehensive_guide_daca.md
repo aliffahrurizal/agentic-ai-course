@@ -2,14 +2,14 @@
 
 ![DACA Report Cover](./daca_report.png)
 
-The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework for developing and deploying scalable, resilient, and cost-effective agentic AI systems. It leverages the simplicity of the OpenAI Agents SDK, the distributed capabilities of Dapr, and a progressive deployment strategy across free-tier cloud services and Kubernetes to achieve planetary-scale intelligence. DACA combines **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, and **scheduled computing (CronJobs)** to meet the autonomy, real-time needs, scalability, and complexity of AI agents. This document consolidates all aspects of DACA, including its architecture, components, deployment stages, and benefits.
+The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework for developing and deploying scalable, resilient, and cost-effective agentic AI systems. It leverages the simplicity of the OpenAI Agents SDK with Model Context Protocol (MCP) Servers for tool execution, the distributed capabilities of Dapr, and a progressive deployment strategy across free-tier cloud services and Kubernetes to achieve planetary-scale intelligence. DACA combines **event-driven architecture (EDA)**, **three-tier microservices architecture**, **stateless computing**, and **scheduled computing (CronJobs)** to meet the autonomy, real-time needs, scalability, and complexity of AI agents. This document consolidates all aspects of DACA, including its architecture, components, deployment stages, and benefits.
 
 ---
 
 ## What is DACA?
 
-**Dapr Agentic Cloud Ascent (DACA)** is a design pattern for building and scaling agentic AI systems using a minimalist, cloud-first approach. It integrates the OpenAI Agents SDK for agent logic, Dapr for distributed resilience, and a staged deployment pipeline that ascends from local development to planetary-scale production. DACA emphasizes:
-- **Agentic AI**: Autonomous AI agents that perceive, decide, and act to achieve goals.
+**Dapr Agentic Cloud Ascent (DACA)** is a design pattern for building and scaling agentic AI systems using a minimalist, cloud-first approach. It integrates the OpenAI Agents SDK for agent logic, MCP for tool calling, Dapr for distributed resilience, and a staged deployment pipeline that ascends from local development to planetary-scale production. DACA emphasizes:
+- **Agentic AI and MCP Servers**: Autonomous AI agents that perceive, decide, and act to achieve goals using MCP Servers for tool execution.
 - **Stateless Design**: Containers that scale efficiently without retaining state.
 - **Dapr Sidecar**: Provides state management, messaging, and workflows.
 - **Cloud-Free Tiers**: Leverages free services for cost efficiency.
@@ -55,6 +55,7 @@ The provided architecture diagram illustrates the DACA framework:
 - **Presentation Layer**: Next.js, Streamlit, or Chainlit for user interaction.
 - **Business Logic Layer**:
   - **Containerized AI Agent**: OpenAI Agents SDK running in a stateless Docker container, orchestrated via FastAPI for RESTful communication.
+  - **Containerized MCP Servers**: MCP Servers running in a stateless Docker containers being called by AI Agents via tool calling.
   - **Dapr Sidecar Container**: Handles state, messaging, and workflows.
   - **Containerized MCP Server**: Implements the Model Context Protocol (MCP) for standardized tool calling.
 - **Infrastructure Layer**:
@@ -70,7 +71,7 @@ The provided architecture diagram illustrates the DACA framework:
 
 2. **Three-Tier Microservices Architecture**:
    - **Presentation Tier**: User interfaces (Next.js, Streamlit, Chainlit) for interacting with agents or HITL dashboards.
-   - **Application Tier**: Stateless FastAPI services running OpenAI Agents SDK, with Dapr sidecars for distributed capabilities.
+   - **Application Tier**: Stateless FastAPI services running OpenAI Agents SDK, with Dapr sidecars for distributed capabilities. It also includes stateless MCP Servers.
    - **Data Tier**: Managed databases (CockroachDB, Upstash Redis) and specialized stores (Pinecone, Neo4j) for state and knowledge.
 
 3. **Stateless Computing**:
@@ -101,8 +102,8 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Choice**: OpenAI Chat Completion (industry standard), Responses API. Prototyping can use Google Gemini (free tier).
    - **Purpose**: Powers agent reasoning and task execution with robust, agent-friendly features (e.g., function calling).
 
-2. **Lightweight Agents**:
-   - **Choice**: OpenAI Agents SDK for modular, task-specific agents with guardrails, tool integration, and handoffs.
+2. **Lightweight Agents and MCP Servers**:
+   - **Choice**: OpenAI Agents SDK for modular, task-specific agents with guardrails, tool integration, and handoffs. MCP Servers for standardized Tool calling.
    - **Purpose**: Minimizes resource use while enabling scalable, collaborative workflows.
 
 3. **REST APIs**:
@@ -172,7 +173,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
         image: redis:latest
     ```
   - **LLM APIs**: OpenAI Chat Completion, Google Gemini (free tier).
-  - **Agents**: OpenAI Agents SDK.
+  - **Agents and MCP Servers**: OpenAI Agents SDK with MCP Servers.
   - **REST APIs**: FastAPI.
   - **Messaging**: Local RabbitMQ container.
   - **Scheduling**: python-crontab, APScheduler, or Schedule.
@@ -185,7 +186,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 ### 2. Prototyping: Free Deployment
 - **Goal**: Test and validate with minimal cost.
 - **Setup**:
-  - **Containers**: Deploy to Hugging Face Docker Spaces (free hosting, CI/CD).
+  - **Containers**: Deploy to Hugging Face Docker Spaces (free hosting, CI/CD). Both FastAPI and MCP Server containers.
   - **LLM APIs**: Google Gemini (free tier), Responses API.
   - **Messaging**: CloudAMQP RabbitMQ (free tier: 1M messages/month, 20 connections).
   - **Scheduling**: cron-job.org (free online scheduler).
@@ -220,7 +221,7 @@ Choosing the right Kubernetes-powered platform depends on your needs for managem
 
 - **Goal**: Scale to thousands of users with cost efficiency.
 - **Setup**:
-  - **Containers**: Deploy to ACA with Dapr support (via KEDA).
+  - **Containers**: Deploy containers (FastAPI and MCP Servers) to ACA with Dapr support (via KEDA).
     ```yaml
     apiVersion: containerapps.azure.com/v1
     kind: ContainerApp
@@ -250,7 +251,7 @@ Choosing the right Kubernetes-powered platform depends on your needs for managem
 ### 4. Planet-Scale: Kubernetes with Self-Hosted LLMs
 - **Goal**: Achieve planetary scale with no API limits.
 - **Setup**:
-  - **Containers**: Kubernetes cluster (e.g., on Oracle Cloud’s free VMs: 2 AMD VMs or 4 Arm VMs).
+  - **Containers**: Kubernetes cluster (e.g., on Oracle Cloud’s free VMs: 2 AMD VMs or 4 Arm VMs). Both FastAPIs and MCP containers.
   - **LLM APIs**: Self-hosted LLMs (e.g., LLaMA, Mistral) with OpenAI-compatible APIs (via vLLM or llama.cpp).
   - **Messaging**: Kafka on Kubernetes (high-throughput, multi-broker).
   - **Scheduling**: Kubernetes CronJobs.
