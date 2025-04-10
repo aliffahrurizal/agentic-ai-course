@@ -57,7 +57,7 @@ The DACA architecture is a layered, event-driven, stateless system that integrat
 
 ### Architecture Diagram Breakdown
 <p align="center">
-<img src="./architecture.png" width="600">
+<img src="./architecture1.png" width="600">
 </p>
 
 The provided architecture diagram illustrates the DACA framework:
