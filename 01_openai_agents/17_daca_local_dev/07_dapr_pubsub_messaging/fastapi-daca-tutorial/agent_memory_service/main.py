@@ -102,7 +102,7 @@ async def root():
 async def get_memories(user_id: str):
     metadata = await get_user_metadata(user_id)
     if not metadata:
-        return UserMetadata(name=user_id, preferred_style="casual", goal="chat")
+        return UserMetadata(name=user_id, preferred_style="casual", user_summary=f"{user_id} is a new user.")
     return UserMetadata(**metadata)
 
 @app.post("/memories/{user_id}/initialize", response_model=dict)
