@@ -66,7 +66,7 @@ The provided architecture diagram illustrates the DACA framework:
   - **Containerized AI Agent**: OpenAI Agents SDK in stateless Docker containers, using FastAPI for RESTful interfaces and A2A for agent-to-agent communication.
   - **Containerized MCP Servers**: MCP Servers running in a stateless Docker containers being called by AI Agents via tool calling.
   - **Dapr Sidecar Container**: Handles state, messaging, and workflows.
-  - **Containerized MCP Server**: Implements the Model Context Protocol (MCP) for standardized tool calling.
+  - **A2A Integration**: Agents expose capabilities via A2A Agent Cards and communicate via A2A endpoints.
 - **Infrastructure Layer**:
   - **Deployment Platforms**: Kubernetes or Azure Container Apps (ACA) for scaling.
   - **Messaging**: Kafka, RabbitMQ, Redis for asynchronous events, with A2A for direct agent dialogues.
