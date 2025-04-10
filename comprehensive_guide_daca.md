@@ -605,7 +605,13 @@ Classifying DACA as a design pattern highlights its flexibility and reusability:
 - It positions DACA as a conceptual tool for the broader AI community, not a rigid framework tied to specific libraries or runtimes.
 
 ---
-## Appendix III: Core Architecture and Anthrophic Design Patterns for Agentic AI Systems: A Visual Guide
+
+## Appendix III: A2A vs MCP?
+
+https://www.linkedin.com/posts/avi-chawla_agent2agent-protocol-by-google-explained-activity-7316034375899402241-5A3o/
+
+---
+## Appendix IV: Core Architecture and Anthrophic Design Patterns for Agentic AI Systems: A Visual Guide
 
 ![](./agentic_design.jpg)
 
