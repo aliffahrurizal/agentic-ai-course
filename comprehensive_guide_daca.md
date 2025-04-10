@@ -176,6 +176,17 @@ A2A, launched by Google with over 50 partners, is integral to DACA. It uses HTTP
 - **Interoperability**: Connects agents across platforms, supporting Agentia’s vision of a global network.
 - **Security**: Enterprise-grade authentication ensures trust in cross-domain dialogues.
 
+<p align="center">
+<img src="./a2a.png" width="400">
+</p>
+
+A2A enables interaction between a "client" agent and a "remote" agent. The client agent creates and sends tasks, while the remote agent executes them to deliver accurate information or perform the appropriate action. This process relies on several essential features:
+
+- **Capability discovery**: Agents can share their skills through a JSON-based “Agent Card,” enabling the client agent to select the most suitable remote agent for a task and connect via A2A.
+- **Task management**: The client and remote agents focus on completing tasks to meet user needs. Tasks, defined by the protocol, follow a lifecycle—some are finished quickly, while others, especially prolonged ones, require ongoing communication to keep both agents aligned on progress. The result of a task is called an “artifact.”
+- **Collaboration**: Agents exchange messages to share context, responses, artifacts, or user guidance.
+- **User experience negotiation**: Messages contain “parts,” fully developed content pieces like generated images, each with a defined content type. This allows the agents to agree on the proper format and adapt to the user’s interface preferences, such as support for iframes, videos, web forms, and other elements.
+
 ---
 
 ## DACA Deployment Stages: The Ascent
