@@ -658,6 +658,12 @@ These patterns can be combined or used individually depending on the task at han
 
 ## The Difference Between Core Patterns and Anthrophic Patterns
 
+![](./anthrophic.jpeg)
+
+Reference: 
+
+https://www.linkedin.com/feed/update/urn:li:activity:7315934306063855616/
+
 To compare the core architecture patterns ("Top 4 Agentic AI Architecture Design Patterns") with the patterns defined by Anthropic in the document "[Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)," we need to analyze both sets of patterns in terms of their purpose, structure, and application. The diagram focuses on four agentic AI patterns: Reflection, Tool Use, Planning, and MultiAgent. Anthropic, on the other hand, describes a broader range of patterns, starting with foundational building blocks, moving to workflows, and then discussing autonomous agents. Let’s break this down systematically.
 
 ---
@@ -784,6 +790,214 @@ The **Reflection Pattern is the only one with a full equivalent (Evaluator-Optim
 The Core’s "Top 4 Agentic AI Architecture Design Patterns" focus on autonomous, agentic systems, presenting four high-level patterns (Reflection, Tool Use, Planning, MultiAgent) that emphasize dynamic decision-making and flexibility. Anthropic’s framework in "Building Effective Agents" is broader, covering both structured workflows (Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer) and autonomous agents, with a strong emphasis on starting simple and adding complexity only when needed.
 
 The Core patterns align most closely with Anthropic’s "Agents" category and some workflows like Evaluator-Optimizer and Orchestrator-Workers, but Anthropic provides a more comprehensive and practical framework by including non-agentic workflows and detailed implementation advice. If you’re building an autonomous AI system, the Core patterns are directly relevant, but Anthropic’s document offers a more complete roadmap for deciding when and how to use agentic systems versus simpler solutions.
+
+### Multi-agent Architectures
+
+![](./agentic_arch.jpeg)
+
+Reference:
+
+https://www.linkedin.com/feed/update/urn:li:activity:7315932513737019394/ 
+
+Let’s dive into the third set of patterns introduced in the LinkedIn post by Victoria Slocum, which are labeled as **Multi-Agent Architectures**. These architectures focus on how multiple AI agents can be organized to collaborate and solve complex tasks. We’ll describe each architecture, compare them to the **core patterns** (Reflection, Tool Use, Planning, MultiAgent) from the "Top 4 Agentic AI Architecture Design Patterns" diagram and the **Anthropic patterns** (Augmented LLM, Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer, and Autonomous Agents) from Anthropic’s "Building Effective Agents" document, and then identify which of these new architectures lack full equivalents in the core and Anthropic patterns.
+
+---
+
+### Description of the Multi-Agent Architectures (Victoria Slocum’s Post)
+
+The LinkedIn post outlines six distinct **Multi-Agent Architectures**, along with additional patterns that can be combined with these architectures. Here’s a detailed breakdown:
+
+#### 1. Hierarchical (Vertical) Architecture
+- **Description**: A supervisor agent orchestrates multiple specialized agents, each handling a specific task. The supervisor acts as a central coordinator, delegating tasks to the appropriate agents.
+- **Example**:
+  - One agent retrieves information from internal data sources.
+  - Another agent specializes in public information from web searches.
+  - A third agent retrieves information from personal accounts (e.g., email, chat).
+- **Key Features**:
+  - Centralized control with a supervisor agent.
+  - Specialized agents work under the supervisor’s direction.
+  - Suitable for tasks requiring coordination across diverse data sources.
+
+#### 2. Human-in-the-Loop Architecture
+- **Description**: Incorporates human verification before proceeding to the next actions, particularly useful when handling sensitive information.
+- **Key Features**:
+  - Agents pause at critical points to seek human input or approval.
+  - Ensures safety and accountability in high-stakes scenarios.
+  - Balances autonomy with human oversight.
+
+#### 3/5. Network (Horizontal) Architecture
+- **Description**: Agents communicate directly with one another in a many-to-many fashion, forming a decentralized network without a strict hierarchical structure.
+- **Key Features**:
+  - Decentralized collaboration where agents interact as peers.
+  - No central supervisor; agents self-organize to achieve the goal.
+  - Flexible and resilient due to the lack of a single point of failure.
+
+#### 4. Sequential Architecture
+- **Description**: Agents process tasks in a sequence, where one agent’s output becomes the input for the next agent.
+- **Example**:
+  - First query agent retrieves information from a vector search.
+  - Second query agent retrieves additional information from a web search based on the first agent’s findings.
+  - Final generation agent creates a response using information from both query agents.
+- **Key Features**:
+  - Linear workflow with a clear order of operations.
+  - Each agent builds on the previous agent’s output.
+  - Suitable for tasks with a natural progression of steps.
+
+#### 5. Data Transformation Architecture
+- **Description**: Includes agents dedicated to transforming data, either at insert-time or by transforming existing collections.
+- **Example**:
+  - A transformation agent enriches data at insert-time or modifies existing data collections.
+- **Key Features**:
+  - Focuses on data preprocessing or enrichment.
+  - Agents specialize in modifying data to make it more usable for downstream tasks.
+  - Often used in data pipelines or knowledge management systems.
+
+#### Additional Patterns (Can Be Combined with Architectures)
+- **Loop Pattern**: Iterative cycles for continuous improvement, where agents repeat a process to refine results.
+- **Parallel Pattern**: Multiple agents work simultaneously on different parts of a task to increase efficiency.
+- **Router Pattern**: A central router determines which agents to invoke based on the task requirements.
+- **Aggregator/Synthesizer Pattern**: Collects and synthesizes outputs from multiple agents to produce a unified result.
+
+---
+
+### Comparison to Core Patterns and Anthropic Patterns
+
+Now, let’s compare these Multi-Agent Architectures to the core patterns (Reflection, Tool Use, Planning, MultiAgent) and Anthropic patterns (Augmented LLM, Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer, Autonomous Agents). We’ll focus on the structural and functional similarities and differences, as well as the level of autonomy and collaboration.
+
+#### 1. Hierarchical (Vertical) Architecture
+- **Comparison to Core Patterns**:
+  - **Reflection**: No direct match. Hierarchical Architecture focuses on multi-agent coordination, not self-evaluation or iterative refinement.
+  - **Tool Use**: Partial overlap. Specialized agents in the Hierarchical Architecture might use tools (e.g., to retrieve data from web searches), but tool use isn’t the primary focus.
+  - **Planning**: Partial overlap. The supervisor agent might perform planning by deciding which agents to delegate tasks to, but there’s no explicit testing or replanning loop as in the Planning Pattern.
+  - **MultiAgent**: Strong overlap. Both involve multiple agents collaborating, but Hierarchical Architecture has a centralized supervisor, whereas the MultiAgent Pattern in the core set is decentralized (e.g., Software Engineer and Project Manager agents collaborate as equals).
+- **Comparison to Anthropic Patterns**:
+  - **Augmented LLM**: Not a direct match, but the specialized agents could be built on augmented LLMs with tool access.
+  - **Prompt Chaining**: No match. Prompt Chaining is a sequential, predefined workflow, not a multi-agent architecture.
+  - **Routing**: Partial overlap. The supervisor agent acts like a router by delegating tasks to specialized agents, similar to Anthropic’s Routing workflow.
+  - **Parallelization**: Partial overlap. The specialized agents might work in parallel, but this isn’t the primary focus.
+  - **Orchestrator-Workers**: Strong overlap. This is the closest match, as Orchestrator-Workers involves a central LLM (orchestrator) delegating tasks to worker LLMs, mirroring the supervisor-specialized agent structure in Hierarchical Architecture.
+  - **Evaluator-Optimizer**: No match. Evaluator-Optimizer focuses on iterative refinement, not multi-agent coordination.
+  - **Autonomous Agents**: Partial overlap. The specialized agents could be autonomous, but the supervisor imposes a hierarchical structure, unlike the more general autonomy in Anthropic’s Autonomous Agents.
+- **Summary**: Hierarchical Architecture aligns closely with the core MultiAgent Pattern (but with a centralized supervisor) and Anthropic’s Orchestrator-Workers (due to the orchestrator-worker dynamic). However, it lacks the decentralized collaboration of the core MultiAgent Pattern and the explicit focus on autonomy in Anthropic’s Autonomous Agents.
+
+#### 2. Human-in-the-Loop Architecture
+- **Comparison to Core Patterns**:
+  - **Reflection**: No match. Human-in-the-Loop focuses on human oversight, not self-evaluation.
+  - **Tool Use**: No direct match, though agents might use tools as part of their tasks.
+  - **Planning**: No match. Human-in-the-Loop doesn’t involve dynamic task decomposition or replanning.
+  - **MultiAgent**: Partial overlap. It could involve multiple agents, but the focus is on human intervention, not agent collaboration.
+- **Comparison to Anthropic Patterns**:
+  - **Augmented LLM**: Not a direct match, but agents could be built on augmented LLMs.
+  - **Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer**: No match. These workflows don’t explicitly incorporate human oversight as a core component.
+  - **Autonomous Agents**: Partial overlap. Anthropic’s Autonomous Agents can pause for human feedback at checkpoints, which aligns with the Human-in-the-Loop concept.
+- **Summary**: Human-in-the-Loop Architecture is a unique pattern that emphasizes human oversight, which isn’t a primary focus of the core patterns. In Anthropic’s framework, Autonomous Agents mention pausing for human feedback, but this isn’t defined as a distinct architecture, making Human-in-the-Loop a distinct concept.
+
+#### 3/5. Network (Horizontal) Architecture
+- **Comparison to Core Patterns**:
+  - **Reflection, Tool Use, Planning**: No direct match. Network Architecture focuses on decentralized multi-agent collaboration, not self-evaluation, tool usage, or planning.
+  - **MultiAgent**: Strong overlap. The Network Architecture’s decentralized, many-to-many communication mirrors the core MultiAgent Pattern, where agents (e.g., Software Engineer, Project Manager) collaborate as equals without a central controller.
+- **Comparison to Anthropic Patterns**:
+  - **Augmented LLM, Prompt Chaining, Routing, Parallelization, Evaluator-Optimizer**: No match. These patterns don’t focus on decentralized multi-agent collaboration.
+  - **Orchestrator-Workers**: No match. Orchestrator-Workers is centralized, with a single orchestrator directing workers, unlike the decentralized Network Architecture.
+  - **Autonomous Agents**: Strong overlap. Anthropic’s Autonomous Agents can collaborate in a decentralized manner, as seen in their coding agent example where multiple agents work together to solve GitHub issues.
+- **Summary**: Network Architecture aligns closely with the core MultiAgent Pattern due to its decentralized collaboration. It also aligns with Anthropic’s Autonomous Agents when they collaborate without a central controller, though Anthropic doesn’t define this as a distinct architecture.
+
+#### 4. Sequential Architecture
+- **Comparison to Core Patterns**:
+  - **Reflection, Tool Use, MultiAgent**: No direct match. Sequential Architecture focuses on a linear workflow, not self-evaluation, tool usage, or decentralized collaboration.
+  - **Planning**: Partial overlap. The sequential execution of tasks resembles the Planning Pattern’s execution phase, but Sequential Architecture lacks the dynamic task decomposition, testing, and replanning aspects.
+- **Comparison to Anthropic Patterns**:
+  - **Augmented LLM**: Not a direct match, but agents could be built on augmented LLMs.
+  - **Prompt Chaining**: Strong overlap. Prompt Chaining involves a sequence of LLM calls where each processes the previous output, mirroring Sequential Architecture’s linear workflow.
+  - **Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer**: No match. These patterns don’t focus on sequential processing.
+  - **Autonomous Agents**: No match. Autonomous Agents are more flexible and don’t necessarily follow a strict sequential structure.
+- **Summary**: Sequential Architecture aligns closely with Anthropic’s Prompt Chaining due to its linear, sequential workflow. It has some overlap with the core Planning Pattern’s execution phase but lacks the full planning-testing-replanning loop.
+
+#### 5. Data Transformation Architecture
+- **Comparison to Core Patterns**:
+  - **Reflection, Tool Use, Planning, MultiAgent**: No direct match. Data Transformation Architecture focuses on data preprocessing, which isn’t a primary focus of any core pattern.
+- **Comparison to Anthropic Patterns**:
+  - **Augmented LLM, Prompt Chaining, Routing, Parallelization, Orchestrator-Workers, Evaluator-Optimizer, Autonomous Agents**: No match. None of Anthropic’s patterns explicitly focus on data transformation as a core function.
+- **Summary**: Data Transformation Architecture is a unique pattern that focuses on data preprocessing and enrichment, which isn’t directly addressed by the core or Anthropic patterns.
+
+#### Additional Patterns (Loop, Parallel, Router, Aggregator/Synthesizer)
+- **Loop Pattern**:
+  - **Core Patterns**: Aligns with Reflection (iterative refinement) and Planning (replanning loop).
+  - **Anthropic Patterns**: Aligns with Evaluator-Optimizer (feedback loop) and Autonomous Agents (iterative operation).
+- **Parallel Pattern**:
+  - **Core Patterns**: No direct match, though MultiAgent agents might work in parallel.
+  - **Anthropic Patterns**: Aligns with Parallelization (running subtasks simultaneously).
+- **Router Pattern**:
+  - **Core Patterns**: No direct match.
+  - **Anthropic Patterns**: Aligns with Routing (classifying and directing tasks).
+- **Aggregator/Synthesizer Pattern**:
+  - **Core Patterns**: No direct match.
+  - **Anthropic Patterns**: Partial overlap with Orchestrator-Workers (synthesizing worker outputs) and Autonomous Agents (synthesizing results from collaboration).
+
+---
+
+### Which Multi-Agent Architectures Lack Full Equivalents?
+
+Now, let’s identify which of the Multi-Agent Architectures (Hierarchical, Human-in-the-Loop, Network, Sequential, Data Transformation) lack full equivalents in the core and Anthropic patterns. A "full equivalent" means a pattern that matches the architecture’s structure, purpose, and level of autonomy.
+
+#### 1. Hierarchical (Vertical) Architecture
+- **Core Patterns**: Partial match with MultiAgent, but the centralized supervisor makes it distinct (MultiAgent is decentralized).
+- **Anthropic Patterns**: Full match with Orchestrator-Workers, which has a central orchestrator delegating tasks to workers, mirroring the supervisor-specialized agent structure.
+- **Conclusion**: Has a full equivalent in Anthropic’s Orchestrator-Workers but not in the core patterns due to the centralized structure.
+
+#### 2. Human-in-the-Loop Architecture
+- **Core Patterns**: No match. None of the core patterns (Reflection, Tool Use, Planning, MultiAgent) explicitly incorporate human oversight as a core component.
+- **Anthropic Patterns**: Partial match with Autonomous Agents, which can pause for human feedback, but this isn’t defined as a distinct architecture.
+- **Conclusion**: Lacks a full equivalent in both core and Anthropic patterns. Human-in-the-Loop is a unique architecture emphasizing human oversight, which isn’t a primary focus of the other frameworks.
+
+#### 3/5. Network (Horizontal) Architecture
+- **Core Patterns**: Full match with MultiAgent, as both involve decentralized, peer-to-peer collaboration among agents.
+- **Anthropic Patterns**: Partial match with Autonomous Agents (when they collaborate decentrally), but Anthropic doesn’t define this as a distinct architecture.
+- **Conclusion**: Has a full equivalent in the core MultiAgent Pattern but lacks a full equivalent in Anthropic’s patterns due to the lack of a specific decentralized architecture.
+
+#### 4. Sequential Architecture
+- **Core Patterns**: Partial match with Planning (execution phase), but lacks the full planning-testing-replanning loop.
+- **Anthropic Patterns**: Full match with Prompt Chaining, which involves a sequential workflow where each LLM call processes the previous output.
+- **Conclusion**: Has a full equivalent in Anthropic’s Prompt Chaining but not in the core patterns due to the lack of a sequential focus.
+
+#### 5. Data Transformation Architecture
+- **Core Patterns**: No match. None of the core patterns focus on data transformation.
+- **Anthropic Patterns**: No match. None of Anthropic’s patterns explicitly address data transformation as a core function.
+- **Conclusion**: Lacks a full equivalent in both core and Anthropic patterns. Data Transformation is a unique architecture focused on data preprocessing, which isn’t directly addressed by the other frameworks.
+
+---
+
+### Summary: Multi-Agent Architectures Without Full Equivalents
+
+- **Hierarchical (Vertical) Architecture**:
+  - Full equivalent in Anthropic’s Orchestrator-Workers.
+  - No full equivalent in core patterns (MultiAgent is decentralized, not hierarchical).
+- **Human-in-the-Loop Architecture**:
+  - No full equivalent in core or Anthropic patterns.
+- **Network (Horizontal) Architecture**:
+  - Full equivalent in core MultiAgent Pattern.
+  - No full equivalent in Anthropic patterns (Autonomous Agents collaborate but lack a specific decentralized architecture).
+- **Sequential Architecture**:
+  - Full equivalent in Anthropic’s Prompt Chaining.
+  - No full equivalent in core patterns (Planning lacks the sequential focus).
+- **Data Transformation Architecture**:
+  - No full equivalent in core or Anthropic patterns.
+
+**Architectures Without Full Equivalents in Both Core and Anthropic Patterns**:
+- **Human-in-the-Loop Architecture**: Unique due to its focus on human oversight, which isn’t a primary component of the core or Anthropic patterns.
+- **Data Transformation Architecture**: Unique due to its focus on data preprocessing, which isn’t directly addressed by the core or Anthropic patterns.
+
+**Architectures Without Full Equivalents in Core Patterns**:
+- **Hierarchical (Vertical) Architecture**: The centralized structure doesn’t fully match the decentralized MultiAgent Pattern.
+- **Sequential Architecture**: The sequential focus doesn’t fully match any core pattern, though it partially aligns with Planning.
+
+**Architectures Without Full Equivalents in Anthropic Patterns**:
+- **Network (Horizontal) Architecture**: The decentralized structure isn’t specifically defined in Anthropic’s patterns, though Autonomous Agents can collaborate decentrally.
+
+---
+
+### Final Thoughts
+The Multi-Agent Architectures from Victoria Slocum’s post provide a more granular and practical set of patterns for multi-agent systems, focusing on how agents are organized and interact. They complement the core patterns (which are more high-level and agentic) and Anthropic’s patterns (which include both workflows and agents). The **Human-in-the-Loop** and **Data Transformation** architectures stand out as unique, addressing specific needs (human oversight and data preprocessing) that aren’t fully captured by the core or Anthropic frameworks. This highlights the evolving nature of agentic AI design, where new patterns emerge to address practical challenges in multi-agent collaboration.
 
 
 ---
