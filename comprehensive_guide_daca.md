@@ -36,7 +36,7 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework
 <img src="./agentia.png" width="300">
 </p>
 
-### DACA with A2A: Implementing Agentia World**
+### DACA with A2A: Implementing Agentia World
 
 DACA, enhanced by A2A, is a comprehensive blueprint for realizing Agentia World. A2A enables agents to collaborate across platforms, organizations, and physical-digital boundaries, while DACA’s progressive deployment strategy—spanning free-tier clouds to Kubernetes—delivers planetary-scale intelligence. This fusion empowers AI agents to operate seamlessly at vast scale, transforming homes, offices, and cities into an interconnected, intelligent ecosystem.
 
