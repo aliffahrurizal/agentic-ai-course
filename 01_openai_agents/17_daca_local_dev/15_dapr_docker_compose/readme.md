@@ -1,48 +1,60 @@
 # Running DACA Microservices with Docker Compose and Dapr
 
-Welcome to the fifteenth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll use Docker Compose to manage the containerized Chat Service and Analytics Service from **13_dapr_containerization**, along with their Dapr sidecars and supporting services (Redis, Zipkin, Prometheus). We’ll create a `docker-compose.yml` file to define all components, start the application with a single command, and verify that it works as expected. This will streamline our development workflow and set the stage for deploying the application to a prototyping and production environment (e.g., Azure Container App, Kubernetes) in future tutorials. Let’s dive in!
+Welcome to the fifteenth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll use **Docker Compose** to manage the containerized **Chat Service** and **Agent Memory Service** from **13_dapr_containerization**, along with their Dapr sidecars and Redis. Building on the Docker Compose basics from **14_docker_compose_introduction**, we’ll create a `compose.yml` file to define all components, start the application with a single command, and verify that pub/sub messaging, state management, and service invocation work as expected. 
+
+As a challenge, we’ll introduce **Zipkin** for distributed tracing and **Prometheus** for metrics, enhancing observability for production readiness. This streamlines our development workflow and prepares us for deploying to environments like Kubernetes or Azure Container Apps in future tutorials.
 
 ---
 
-## What You’ll Learn
-- How to define a multi-container DACA application using a `docker-compose.yml` file.
-- Running the Chat Service, Analytics Service, Dapr sidecars, Redis, Zipkin, and Prometheus with Docker Compose.
+### What You’ll Learn
+- How to define a multi-container DACA application using a `compose.yml` file.
+- Running the Chat Service, Agent Memory Service, Dapr sidecars, and Redis with Docker Compose.
 - Verifying the application works the same as in **13_dapr_containerization**.
+- **Challenge**: Adding Zipkin for tracing and Prometheus for metrics to monitor microservices.
 - Benefits of using Docker Compose with Dapr for managing microservices.
 
-## Prerequisites
-- Completion of **13_dapr_containerization** (containerized Chat Service and Analytics Service with Dapr sidecars).
-- Completion of **14_docker_compose** (understanding of Docker Compose concepts and usage).
-- Docker and Docker Desktop installed (from **12_docker_and_desktop**).
-- Dapr CLI and runtime installed (from **04_dapr_theory_and_cli**), though we’ll use Dapr’s containerized runtime.
-- An OpenAI API key (stored in `components/secrets.json`).
+### Prerequisites
+- Completion of **13_dapr_containerization** (containerized Chat Service and Agent Memory Service with Dapr sidecars).
+- Completion of **14_docker_compose_introduction** (general understanding of Docker Compose concepts).
+- **Docker** and **Docker Desktop** installed ([Docker installation guide](https://docs.docker.com/get-docker/)).
+- **Python 3.12+** for local development (though containers handle runtime).
+- **Gemini API Key** set in `chat_service/.env` and `agent_memory_service/.env` as `GEMINI_API_KEY=<your-key>`.
 
 ---
 
 ## Step 1: Recap of the Current Setup
-In **13_dapr_containerization**, we containerized the Chat Service and Analytics Service:
+In **13_dapr_containerization**, we containerized the Chat Service and Agent Memory Service:
 - **Chat Service**:
-  - Uses a Dapr Workflow to orchestrate message processing: fetching the user’s message count (via Service Invocation), retrieving conversation history (via Actors), generating a reply (using the OpenAI Agents SDK), storing the conversation (via Actors), and publishing a “MessageSent” event (via Pub/Sub).
-  - Retrieves the OpenAI API key from a Dapr secrets store.
-  - Uses a `UserSessionActor` to manage per-user conversation history.
-  - Includes logging, tracing (Zipkin), and metrics (Prometheus) for observability.
-- **Analytics Service**:
-  - Subscribes to the `messages` topic and updates the user’s message count in the Dapr state store when a “MessageSent” event is received.
-  - Includes logging, tracing, and metrics for observability.
-- We built Docker images (`chat-service:latest` and `analytics-service:latest`) and ran them with Dapr sidecars using `docker run` commands.
+  - Handles user messages via `POST /chat/`.
+  - Fetches user metadata and conversation history from the Agent Memory Service using Dapr service invocation over HTTP.
+  - Generates replies using a Gemini-powered LLM (via the Agents SDK).
+  - Publishes `ConversationUpdated` events to the `conversations` topic via Dapr pub/sub.
+  - Runs on port `8080` with a Dapr sidecar on port `3500`.
+- **Agent Memory Service**:
+  - Stores user metadata (`name`, `preferred_style`, `user_summary`) and conversation history in a Dapr state store (Redis).
+  - Subscribes to the `conversations` topic to update history and generate `user_summary` using the Gemini LLM.
+  - Exposes endpoints like `GET /memories/{user_id}` and `GET /conversations/{session_id}`.
+  - Runs on port `8001` with a Dapr sidecar on port `3501`.
+- **Supporting Services**:
+  - Redis for Dapr’s state store and pub/sub.
+- **Docker Setup**:
+  - Images: `chat-service:latest`, `agent-memory-service:latest`, `daprio/dapr:1.15.1`, `redis:latest`.
+  - Custom `dapr-network` for communication.
+  - Dapr components: `pubsub.yaml`, `statestore.yaml`, `subscriptions.yaml`.
 
 ### Current Limitations
-- **Manual Container Management**: In **13_dapr_containerization**, we started each container (Chat Service, Analytics Service, Dapr sidecars, Redis, Zipkin, Prometheus) individually with `docker run` commands, which is error-prone and cumbersome.
-- **Networking Complexity**: We used `--network host` for simplicity, but this isn’t ideal for production as it bypasses Docker’s network isolation.
-- **Dependency Management**: There’s no clear way to ensure services start in the correct order (e.g., Redis before Dapr sidecars, Dapr sidecars before application services).
+- **Manual Container Management**: Starting each container (`redis`, `chat-service-app`, `chat-service-dapr`, `agent-memory-service-app`, `agent-memory-service-dapr`) with separate `docker run` commands is tedious and error-prone.
+- **Dependency Handling**: No automated way to ensure services start in the correct order (e.g., Redis before Dapr sidecars).
+- **Observability**: No tracing or metrics to monitor request flows or performance, limiting production readiness.
+- **Reproducibility**: Sharing or reproducing the setup requires running multiple commands manually.
 
 ### Goal for This Tutorial
 We’ll use Docker Compose to:
-- Define all components (Chat Service, Analytics Service, Dapr sidecars, Redis, Zipkin, Prometheus) in a single `docker-compose.yml` file.
-- Start the entire application with a single `docker-compose up` command.
-- Use a custom Docker network for proper isolation and communication between services.
-- Verify the application works the same as in **13_dapr_containerization** by running the same tests.
-- Prepare for production deployment in future tutorials.
+- Define all services in a single `compose.yml` file.
+- Start the entire application with `docker compose up`.
+- Use the `dapr-network` for isolated communication.
+- Verify core functionality with the same tests from **13_dapr_containerization**.
+- **Challenge**: Add Zipkin for tracing and Prometheus for metrics to enhance observability.
 
 ### Current Project Structure
 ```
@@ -50,53 +62,175 @@ fastapi-daca-tutorial/
 ├── chat_service/
 │   ├── Dockerfile
 │   ├── main.py
-│   ├── user_session_actor.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── analytics_service/
+│   ├── test_main.py
+│   ├── pyproject.toml
+│   ├── uv.lock
+│   ├── .env
+│   └── .dockerignore
+├── agent_memory_service/
 │   ├── Dockerfile
 │   ├── main.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
+│   ├── test_main.py
+│   ├── pyproject.toml
+│   ├── uv.lock
+│   ├── .env
+│   └── .dockerignore
 ├── components/
+│   ├── pubsub.yaml
+│   ├── statestore.yaml
 │   ├── subscriptions.yaml
-│   ├── secretstore.yaml
-│   ├── secrets.json
-│   └── tracing.yaml
-├── prometheus.yml
-├── pyproject.toml
-└── uv.lock
+│   ├── tracing.yaml  # New for Zipkin challenge
+├── prometheus.yml  # New for Prometheus challenge
+├── compose.yml  # New for this tutorial
+└── README.md
 ```
 
 ---
 
 ## Step 2: Why Use Docker Compose with Dapr?
-Using Docker Compose with Dapr simplifies the management of our multi-container application by:
-- **Centralized Configuration**: Define all services (application containers, Dapr sidecars, supporting services) in a single `docker-compose.yml` file.
-- **Simplified Commands**: Start and stop the entire application with `docker-compose up` and `docker-compose down`, instead of multiple `docker run` commands.
-- **Networking**: Docker Compose creates a default network, allowing services to communicate using service names (e.g., `chat-service` can reach `analytics-service` via Dapr).
-- **Dependency Management**: Docker Compose can handle dependencies between services, ensuring they start in the correct order (e.g., Redis before Dapr sidecars).
-- **Development Efficiency**: Streamlines local development and testing by providing a reproducible environment for all components.
+Docker Compose simplifies our DACA setup by:
+- **Centralized Configuration**: Defines all services in one file, as introduced in **14_docker_compose_introduction**.
+- **Single Command**: Starts/stops everything with `docker compose up`/`down`, replacing multiple `docker run` commands.
+- **Networking**: Creates a default network for services to communicate via names (e.g., `redis`, `chat-service-dapr`).
+- **Dependency Management**: Ensures services start in order (e.g., Redis → apps → sidecars).
+- **Observability (Challenge)**: Supports adding Zipkin and Prometheus for tracing and metrics, enhancing production readiness.
+- **Development Efficiency**: Provides a reproducible environment for testing and iteration.
+
+This aligns with Dapr’s sidecar pattern and prepares us for production orchestration.
 
 ---
 
-## Step 3: Create the `docker-compose.yml` File
-We’ll create a `docker-compose.yml` file in the root of the project (`fastapi-daca-tutorial`) to define all services.
+## Step 3: Create Configuration Files
 
-### Step 3.1: Define the `docker-compose.yml`
-Create the `docker-compose.yml` file:
+We’ll create the `compose.yml` file and add new files for the observability challenge: `components/tracing.yaml` for Zipkin and `prometheus.yml` for Prometheus.
+
+### Step 3.1: Define `compose.yml` (Minimal Version)
+This version matches **13_dapr_containerization** without observability features.
+
 ```bash
-touch docker-compose.yml
+touch fastapi-daca-tutorial/compose.yml
 ```
 
-Edit `docker-compose.yml`:
+Edit `compose.yml`:
+
 ```yaml
-version: "3.9"
 services:
   redis:
-    image: redis:6.2
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - dapr-network
+
+  chat-service-app:
+    build: ./chat_service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - dapr-network
+
+  chat-service-dapr:
+    image: daprio/dapr:1.15.1
+    command:
+      - "./daprd"
+      - "--app-id"
+      - "chat-service"
+      - "--app-port"
+      - "8080"
+      - "--dapr-http-port"
+      - "3500"
+      - "--log-level"
+      - "debug"
+      - "--resources-path"
+      - "/components"
+      - "--app-protocol"
+      - "http"
+      - "--app-channel-address"
+      - "chat-service-app"
+    volumes:
+      - ./components:/components
+    depends_on:
+      - chat-service-app
+      - redis
+    networks:
+      - dapr-network
+
+  agent-memory-service-app:
+    build: ./agent_memory_service
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - dapr-network
+
+  agent-memory-service-dapr:
+    image: daprio/dapr:1.15.1
+    command:
+      - "./daprd"
+      - "--app-id"
+      - "agent-memory-service"
+      - "--app-port"
+      - "8001"
+      - "--dapr-http-port"
+      - "3501"
+      - "--log-level"
+      - "debug"
+      - "--resources-path"
+      - "/components"
+      - "--app-protocol"
+      - "http"
+      - "--app-channel-address"
+      - "agent-memory-service-app"
+    volumes:
+      - ./components:/components
+    depends_on:
+      - agent-memory-service-app
+      - redis
+    networks:
+      - dapr-network
+
+networks:
+  dapr-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+```
+
+### Step 3.2: Define `compose.yml` (Enhanced Version with Challenge)
+This version includes Zipkin, Prometheus, metrics ports, and tracing configuration.
+
+Add components/tracing/yml
+
+```yaml
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: tracing
+spec:
+  tracing:
+    samplingRate: "1"
+    zipkin:
+      endpointAddress: "http://zipkin:9411/api/v2/spans"
+```
+
+Edit `compose-v2.yml`:
+
+```yaml
+services:
+  redis:
+    image: redis:latest
     ports:
       - "6379:6379"
     volumes:
@@ -123,7 +257,7 @@ services:
   chat-service-app:
     build: ./chat_service
     ports:
-      - "8000:8000"
+      - "8080:8080"
     depends_on:
       - redis
     environment:
@@ -132,25 +266,29 @@ services:
       - dapr-network
 
   chat-service-dapr:
-    image: daprio/dapr:1.12
+    image: daprio/dapr:1.15.1
     command:
       - "./daprd"
       - "--app-id"
       - "chat-service"
       - "--app-port"
-      - "8000"
+      - "8080"
       - "--dapr-http-port"
       - "3500"
-      - "--dapr-grpc-port"
-      - "50001"
       - "--metrics-port"
       - "9090"
       - "--log-level"
       - "debug"
+      - "--resources-path"
+      - "/components"
       - "--config"
       - "/components/tracing.yaml"
-      - "--components-path"
-      - "/components"
+      - "--app-protocol"
+      - "http"
+      - "--app-channel-address"
+      - "chat-service-app"
+    ports:
+      - "3500:3500"
     volumes:
       - ./components:/components
     depends_on:
@@ -161,8 +299,8 @@ services:
     networks:
       - dapr-network
 
-  analytics-service-app:
-    build: ./analytics_service
+  agent-memory-service-app:
+    build: ./agent_memory_service
     ports:
       - "8001:8001"
     depends_on:
@@ -172,12 +310,12 @@ services:
     networks:
       - dapr-network
 
-  analytics-service-dapr:
-    image: daprio/dapr:1.12
+  agent-memory-service-dapr:
+    image: daprio/dapr:1.15.1
     command:
       - "./daprd"
       - "--app-id"
-      - "analytics-service"
+      - "agent-memory-service"
       - "--app-port"
       - "8001"
       - "--dapr-http-port"
@@ -186,14 +324,20 @@ services:
       - "9091"
       - "--log-level"
       - "debug"
+      - "--resources-path"
+      - "/components"
       - "--config"
       - "/components/tracing.yaml"
-      - "--components-path"
-      - "/components"
+      - "--app-protocol"
+      - "http"
+      - "--app-channel-address"
+      - "agent-memory-service-app"
+    ports:
+      - "3501:3501"
     volumes:
       - ./components:/components
     depends_on:
-      - analytics-service-app
+      - agent-memory-service-app
       - redis
       - zipkin
       - prometheus
@@ -208,68 +352,32 @@ volumes:
   redis-data:
 ```
 
-#### Explanation of the `docker-compose.yml`
-- `version: "3.9"`: Specifies the Docker Compose file format version.
-- `services`:
-  - `redis`:
-    - `image: redis:6.2`: Uses the Redis 6.2 image.
-    - `ports: - "6379:6379"`: Exposes Redis on port `6379`.
-    - `volumes: - redis-data:/data`: Persists Redis data in a named volume.
-    - `networks: - dapr-network`: Connects to the custom network.
-  - `zipkin`:
-    - `image: openzipkin/zipkin`: Uses the Zipkin image for distributed tracing.
-    - `ports: - "9411:9411"`: Exposes the Zipkin UI on port `9411`.
-    - `networks: - dapr-network`: Connects to the custom network.
-  - `prometheus`:
-    - `image: prom/prometheus`: Uses the Prometheus image for metrics.
-    - `ports: - "9090:9090"`: Exposes the Prometheus UI on port `9090`.
-    - `volumes: - ./prometheus.yml:/etc/prometheus/prometheus.yml`: Mounts the `prometheus.yml` configuration file.
-    - `networks: - dapr-network`: Connects to the custom network.
-  - `chat-service-app`:
-    - `build: ./chat_service`: Builds the image from the `Dockerfile` in the `chat_service` directory.
-    - `ports: - "8000:8000"`: Exposes the Chat Service on port `8000`.
-    - `depends_on: - redis`: Ensures Redis starts before the Chat Service.
-    - `environment: - PYTHONUNBUFFERED=1`: Ensures Python output is unbuffered for better logging.
-    - `networks: - dapr-network`: Connects to the custom network.
-  - `chat-service-dapr`:
-    - `image: daprio/dapr:1.12`: Uses the Dapr runtime image (version 1.12 as of April 2025).
-    - `command`: Specifies the Dapr sidecar command with the same arguments as in **13_dapr_containerization** (e.g., `--app-id`, `--app-port`, `--dapr-http-port`).
-    - `volumes: - ./components:/components`: Mounts the `components` directory for Dapr configuration.
-    - `depends_on`: Ensures the Chat Service, Redis, Zipkin, and Prometheus start first.
-    - `networks: - dapr-network`: Connects to the custom network.
-  - `analytics-service-app`:
-    - `build: ./analytics_service`: Builds the image from the `Dockerfile` in the `analytics_service` directory.
-    - `ports: - "8001:8001"`: Exposes the Analytics Service on port `8001`.
-    - `depends_on: - redis`: Ensures Redis starts first.
-    - `environment: - PYTHONUNBUFFERED=1`: Ensures Python output is unbuffered.
-    - `networks: - dapr-network`: Connects to the custom network.
-  - `analytics-service-dapr`:
-    - Similar to `chat-service-dapr`, but configured for the Analytics Service (e.g., `--app-id analytics-service`, `--app-port 8001`).
-- `networks`:
-  - `dapr-network`: Defines a custom bridge network for all services to communicate. Unlike `--network host` in **13_dapr_containerization**, this provides proper isolation and allows services to communicate using service names (e.g., `redis`, `zipkin`).
-- `volumes`:
-  - `redis-data`: A named volume to persist Redis data.
+#### Explanation of Enhanced Version
+- **redis**: Unchanged, provides state store and pub/sub backend.
+- **zipkin**:
+  - `image: openzipkin/zipkin`: Adds Zipkin for tracing.
+  - `ports: - "9411:9411"`: Exposes Zipkin UI.
+- **prometheus**:
+  - `image: prom/prometheus`: Adds Prometheus for metrics.
+  - `ports: - "9090:9090"`: Exposes Prometheus UI.
+  - `volumes: - ./prometheus.yml:/etc/prometheus/prometheus.yml`: Mounts configuration.
+- **chat-service-dapr**:
+  - Added `--metrics-port 9090` for Dapr metrics.
+  - Added `--config /components/tracing.yaml` for Zipkin integration.
+  - `depends_on: - zipkin, - prometheus`: Ensures observability services start first.
+- **agent-memory-service-dapr**:
+  - Added `--metrics-port 9091` to avoid conflicts.
+  - Added `--config /components/tracing.yaml`.
+  - Same `depends_on` for Zipkin and Prometheus.
+- **ports**: Exposed only HTTP ports (`3500`, `3501`) to keep the setup minimal; metrics and gRPC ports are internal to the network unless needed externally.
 
-### Step 3.2: Update `prometheus.yml`
-Since we’re no longer using `--network host`, Prometheus needs to scrape metrics from the Dapr sidecars using their service names on the `dapr-network`. Update `prometheus.yml` to use the service names:
-```yaml
-global:
-  scrape_interval: 15s
-
-scrape_configs:
-  - job_name: 'dapr'
-    static_configs:
-      - targets: ['chat-service-dapr:9090', 'analytics-service-dapr:9091']
+### Step 3.3: Create `tracing.yaml` for Zipkin
+```bash
+touch components/tracing.yaml
 ```
 
-#### Explanation of the Update
-- `targets: ['chat-service-dapr:9090', 'analytics-service-dapr:9091']`: Uses the service names (`chat-service-dapr`, `analytics-service-dapr`) and their metrics ports on the `dapr-network`. Docker Compose’s DNS resolution allows Prometheus to reach these services by name.
-
-### Step 3.3: Update Dapr Components for Networking
-Since we’re using a custom network (`dapr-network`), we need to update the Dapr components to reference services by their service names instead of `localhost`.
-
-#### Update `components/tracing.yaml`
 Edit `components/tracing.yaml`:
+
 ```yaml
 apiVersion: dapr.io/v1alpha1
 kind: Configuration
@@ -281,89 +389,108 @@ spec:
     zipkin:
       endpointAddress: "http://zipkin:9411/api/v2/spans"
 ```
-- Changed `endpointAddress` from `http://localhost:9411/api/v2/spans` to `http://zipkin:9411/api/v2/spans` to use the `zipkin` service name on the network.
 
-#### Update Dapr Component References (if needed)
-The default Dapr components for Redis (state store and pub/sub) are configured via `dapr init`, but since we’re running Redis as a service in Docker Compose, Dapr will use the default Redis host (`localhost:6379`) unless overridden. We’ll override this by setting environment variables for the Dapr sidecars to use the `redis` service name.
+**Explanation**:
+- `samplingRate: "1"`: Captures all traces for debugging.
+- `endpointAddress`: Points to the `zipkin` service on the `dapr-network`.
 
-Add the following environment variables to the `chat-service-dapr` and `analytics-service-dapr` services in `docker-compose.yml`:
-
-Update the `chat-service-dapr` and `analytics-service-dapr` services in `docker-compose.yml`:
-```yaml
-  chat-service-dapr:
-    image: daprio/dapr:1.12
-    command:
-      - "./daprd"
-      - "--app-id"
-      - "chat-service"
-      - "--app-port"
-      - "8000"
-      - "--dapr-http-port"
-      - "3500"
-      - "--dapr-grpc-port"
-      - "50001"
-      - "--metrics-port"
-      - "9090"
-      - "--log-level"
-      - "debug"
-      - "--config"
-      - "/components/tracing.yaml"
-      - "--components-path"
-      - "/components"
-    environment:
-      - DAPR_REDIS_HOST=redis:6379
-    volumes:
-      - ./components:/components
-    depends_on:
-      - chat-service-app
-      - redis
-      - zipkin
-      - prometheus
-    networks:
-      - dapr-network
-
-  analytics-service-dapr:
-    image: daprio/dapr:1.12
-    command:
-      - "./daprd"
-      - "--app-id"
-      - "analytics-service"
-      - "--app-port"
-      - "8001"
-      - "--dapr-http-port"
-      - "3501"
-      - "--metrics-port"
-      - "9091"
-      - "--log-level"
-      - "debug"
-      - "--config"
-      - "/components/tracing.yaml"
-      - "--components-path"
-      - "/components"
-    environment:
-      - DAPR_REDIS_HOST=redis:6379
-    volumes:
-      - ./components:/components
-    depends_on:
-      - analytics-service-app
-      - redis
-      - zipkin
-      - prometheus
-    networks:
-      - dapr-network
+### Step 3.4: Create `prometheus.yml` for Prometheus
+```bash
+touch prometheus.yml
 ```
-- `environment: - DAPR_REDIS_HOST=redis:6379`: Overrides the default Redis host for Dapr to use the `redis` service name on the network.
+
+Edit `prometheus.yml`:
+
+```yaml
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: 'dapr'
+    static_configs:
+      - targets: ['chat-service-dapr:9090', 'agent-memory-service-dapr:9091']
+```
+
+**Explanation**:
+- `scrape_interval: 15s`: Polls metrics every 15 seconds.
+- `targets`: Scrapes Dapr sidecars’ metrics endpoints (`/metrics` on ports `9090`, `9091`).
+
+### Step 3.5: Verify Component Files
+The core Dapr components from **13_dapr_containerization** remain unchanged, with `tracing.yaml` added for the challenge.
+
+Run:
+
+```bash
+ls components/
+```
+
+**Expected Output**:
+```
+pubsub.yaml  statestore.yaml  subscriptions.yaml  tracing.yaml
+```
+
+**Core Components** (Unchanged):
+- **pubsub.yaml**:
+  ```yaml
+  apiVersion: dapr.io/v1alpha1
+  kind: Component
+  metadata:
+    name: pubsub
+  spec:
+    type: pubsub.redis
+    version: v1
+    metadata:
+      - name: redisHost
+        value: redis:6379
+      - name: redisPassword
+        value: ""
+  ```
+- **statestore.yaml**:
+  ```yaml
+  apiVersion: dapr.io/v1alpha1
+  kind: Component
+  metadata:
+    name: statestore
+  spec:
+    type: state.redis
+    version: v1
+    metadata:
+      - name: redisHost
+        value: redis:6379
+      - name: redisPassword
+        value: ""
+      - name: actorStateStore
+        value: "true"
+  ```
+- **subscriptions.yaml**:
+  ```yaml
+  apiVersion: dapr.io/v1alpha1
+  kind: Subscription
+  metadata:
+    name: conversation-subscription
+  spec:
+    pubsubname: pubsub
+    topic: conversations
+    route: /conversations
+  ```
 
 ---
 
 ## Step 4: Run the Application with Docker Compose
-### Step 4.1: Start the Application
-From the project root (`fastapi-daca-tutorial`), start the application:
+
+### Step 4.1: Choose Your Setup
+- **Minimal Version**: Use the first `compose.yml` to replicate **13_dapr_containerization** exactly (no Zipkin or Prometheus).
+- **Enhanced Version (Challenge)**: Use the second `compose.yml` to include Zipkin and Prometheus.
+
+For this tutorial, we’ll proceed with the **Enhanced Version** to complete the observability challenge.
+
+### Step 4.2: Start the Application
+Ensure `components/tracing.yaml` and `prometheus.yml` are created, then run:
+
 ```bash
-docker-compose up -d
+docker-compose up
 ```
 
-Output:
+**Expected Output**:
 ```
 Creating network "fastapi-daca-tutorial_dapr-network" with driver "bridge"
 Creating volume "fastapi-daca-tutorial_redis-data" with default driver
@@ -371,303 +498,272 @@ Creating fastapi-daca-tutorial_redis_1 ... done
 Creating fastapi-daca-tutorial_zipkin_1 ... done
 Creating fastapi-daca-tutorial_prometheus_1 ... done
 Building chat-service-app
-Step 1/7 : FROM python:3.9-slim
- ---> abc123def456
-Step 2/7 : WORKDIR /app
- ---> Using cache
- ---> 123abc456def
+Step 1/7 : FROM python:3.12-slim
+ ---> 85824326bc4a
 ...
-Successfully built 456xyz789def
+Successfully built d0924e0b62e5
 Successfully tagged fastapi-daca-tutorial_chat-service-app:latest
-Building analytics-service-app
-Step 1/7 : FROM python:3.9-slim
- ---> abc123def456
+Building agent-memory-service-app
+Step 1/7 : FROM python:3.12-slim
+ ---> 85824326bc4a
 ...
-Successfully built 789def123xyz
-Successfully tagged fastapi-daca-tutorial_analytics-service-app:latest
+Successfully built 10f5f9e79347
+Successfully tagged fastapi-daca-tutorial_agent-memory-service-app:latest
 Creating fastapi-daca-tutorial_chat-service-app_1 ... done
-Creating fastapi-daca-tutorial_analytics-service-app_1 ... done
 Creating fastapi-daca-tutorial_chat-service-dapr_1 ... done
-Creating fastapi-daca-tutorial_analytics-service-dapr_1 ... done
+Creating fastapi-daca-tutorial_agent-memory-service-app_1 ... done
+Creating fastapi-daca-tutorial_agent-memory-service-dapr_1 ... done
 ```
 
-### Step 4.2: Verify the Services Are Running
-List the running containers:
+### Step 4.3: Verify Services Are Running
 ```bash
 docker-compose ps
 ```
-Output:
+
+**Expected Output** (Enhanced Version):
 ```
-                Name                              Command               State           Ports         
-------------------------------------------------------------------------------------------------------
-fastapi-daca-tutorial_analytics-service-app_1    uv run uvicorn main:app -- ...   Up      0.0.0.0:8001->8001/tcp
-fastapi-daca-tutorial_analytics-service-dapr_1   ./daprd --app-id analytics ...   Up                            
-fastapi-daca-tutorial_chat-service-app_1         uv run uvicorn main:app -- ...   Up      0.0.0.0:8000->8000/tcp
-fastapi-daca-tutorial_chat-service-dapr_1        ./daprd --app-id chat-serv ...   Up                            
-fastapi-daca-tutorial_prometheus_1               /bin/prometheus --config.f ...   Up      0.0.0.0:9090->9090/tcp
-fastapi-daca-tutorial_redis_1                    docker-entrypoint.sh redis ...   Up      0.0.0.0:6379->6379/tcp
-fastapi-daca-tutorial_zipkin_1                   start-zipkin                     Up      0.0.0.0:9411->9411/tcp
+                         Name                                       Command               State           Ports         
+----------------------------------------------------------------------------------------------------------------
+fastapi-daca-tutorial_agent-memory-service-app_1    uv run uvicorn main:app -- ...   Up      0.0.0.0:8001->8001/tcp
+fastapi-daca-tutorial_agent-memory-service-dapr_1   ./daprd --app-id agent-mem ...   Up      0.0.0.0:3501->3501/tcp
+fastapi-daca-tutorial_chat-service-app_1           uv run uvicorn main:app -- ...   Up      0.0.0.0:8080->8080/tcp
+fastapi-daca-tutorial_chat-service-dapr_1          ./daprd --app-id chat-serv ...   Up      0.0.0.0:3500->3500/tcp
+fastapi-daca-tutorial_prometheus_1                 /bin/prometheus --config.f ...   Up      0.0.0.0:9090->9090/tcp
+fastapi-daca-tutorial_redis_1                      docker-entrypoint.sh redis ...   Up      0.0.0.0:6379->6379/tcp
+fastapi-daca-tutorial_zipkin_1                     start-zipkin                     Up      0.0.0.0:9411->9411/tcp
 ```
 
-#### What Happened?
-- Docker Compose created a custom network (`dapr-network`) for all services to communicate.
-- It created a named volume (`redis-data`) for Redis persistence.
-- It built the `chat-service-app` and `analytics-service-app` images from their respective Dockerfiles.
-- It pulled the images for Redis, Zipkin, Prometheus, and Dapr.
-- It started all services in the correct order based on `depends_on` (e.g., Redis before Dapr sidecars, Dapr sidecars before application services).
-- Services can communicate using their service names (e.g., `chat-service-dapr` reaches `redis` at `redis:6379`).
+**Action**:
+- If any service is not `Up`, check logs:
+  ```bash
+  docker-compose logs <service-name>
+  ```
+  E.g., `docker-compose logs chat-service-dapr`.
 
 ---
 
 ## Step 5: Test the Application
-We’ll run the same tests from **13_dapr_containerization** to verify the application works as expected in the Docker Compose setup.
+We’ll run the same tests from **13_dapr_containerization** to verify core functionality, then add challenge-specific tests for Zipkin and Prometheus.
 
-### Step 5.1: Initialize State for Testing
-Initialize message counts for `alice` and `bob`:
-- For `alice`:
-  ```bash
-  curl -X POST http://localhost:8001/analytics/alice/initialize -H "Content-Type: application/json" -d '{"message_count": 5}'
-  ```
-  Output:
-  ```json
-  {"status": "success", "user_id": "alice", "message_count": 5}
-  ```
-- For `bob`:
-  ```bash
-  curl -X POST http://localhost:8001/analytics/bob/initialize -H "Content-Type: application/json" -d '{"message_count": 3}'
-  ```
-  Output:
-  ```json
-  {"status": "success", "user_id": "bob", "message_count": 3}
-  ```
-
-### Step 5.2: Test the Chat Service
-Send a request to the Chat Service to trigger the workflow:
+### Step 5.1: Initialize State
 ```bash
-curl -X POST http://localhost:8000/chat/ -H "Content-Type: application/json" -d '{"user_id": "bob", "text": "Hi, how are you?", "metadata": {"timestamp": "2025-04-06T12:00:00Z", "session_id": "123e4567-e89b-12d3-a456-426614174001"}, "tags": ["greeting"]}'
+curl -X POST http://localhost:8001/memories/junaid/initialize \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Junaid", "preferred_style": "casual", "user_summary": "Junaid is building Agents WorkForce."}'
 ```
 
-Expected response (actual reply may vary):
+**Expected Output**:
+```json
+{"status":"success","user_id":"junaid","metadata":{"name":"Junaid","preferred_style":"casual","user_summary":"Junaid is building Agents WorkForce."}}
+```
+
+### Step 5.2: Test Chat Service
+**First Request**:
+```bash
+curl -X POST http://localhost:8080/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "junaid", "text": "I need to schedule a coding session."}'
+```
+
+**Expected Response**:
+```json
+{"user_id":"junaid","reply":"Hey Junaid!  Sounds good. What time works best for you?  I can help you figure out the time if you like.\n","metadata":{"timestamp":"2025-04-12T05:05:42.107924+00:00","session_id":"afe61d23-2d73-44b3-adb3-ad9a64ac299a"}}
+```
+
+**Second Request (Same Session)**:
+Use the `session_id` from the response above:
+```bash
+curl -X POST http://localhost:8080/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "junaid", "text": "What was my last msg?", "metadata": {"session_id": "afe61d23-2d73-44b3-adb3-ad9a64ac299a"}}'
+```
+
+**Expected Response**:
+```json
+{"user_id":"junaid","reply":"Your last message was: \"I need to schedule a coding session.\"\n","metadata":{"timestamp":"2025-04-12T05:06:12.523282+00:00","session_id":"afe61d23-2d73-44b3-adb3-ad9a64ac299a"}}% 
+```
+
+### Step 5.3: Verify Metadata Update
+```bash
+curl http://localhost:8001/memories/junaid
+```
+
+**Expected Output**:
 ```json
 {
-  "user_id": "bob",
-  "reply": "Hi Bob! You've sent 3 messages so far. No previous conversation. How can I help you today?",
+  "name": "Junaid",
+  "preferred_style": "casual",
+  "user_summary": "Junaid needs to schedule a coding session."
+}
+```
+
+### Step 5.4: Test Background Memories
+**Continue Session**:
+```bash
+curl -X POST http://localhost:8080/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "junaid", "text": "Tomorrow we will pack for SF?", "metadata": {"session_id": "98289651-62fb-45eb-804a-21c7ee59384c"}}'
+```
+
+**Expected Response**:
+```json
+{
+  "user_id": "junaid",
+  "reply": "Okay, cool! Packing for San Francisco tomorrow. Anything specific you need to remember to pack?",
   "metadata": {
-    "timestamp": "2025-04-06T04:01:00Z",
-    "session_id": "some-uuid"
+    "session_id": "98289651-62fb-45eb-804a-21c7ee59384c"
   }
 }
 ```
 
-#### Observe Logs
-Check the Chat Service logs:
+**New Session**:
+```bash
+curl -X POST http://localhost:8080/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "junaid", "text": "Where was I planning to go tomorrow?"}'
+```
+
+**Expected Response**:
+```json
+{
+  "user_id": "junaid",
+  "reply": "Hey Junaid! Looks like you're heading to San Francisco tomorrow! Safe travels!",
+  "metadata": {
+    "session_id": "5cdf5f65-3853-43ff-a1db-e4cb7d901b11"
+  }
+}
+```
+
+### Step 5.6: Check Logs
+**Chat Service**:
 ```bash
 docker-compose logs chat-service-app
 ```
-Output:
+
+**Expected**:
 ```
-fastapi-daca-tutorial_chat-service-app_1  | 2025-04-06 04:01:00,123 - ChatService - INFO - Received chat request for user bob: Hi, how are you?
-fastapi-daca-tutorial_chat-service-app_1  | 2025-04-06 04:01:00,124 - ChatService - INFO - Scheduling workflow with instance_id: chat-bob-1744064460
-fastapi-daca-tutorial_chat-service-app_1  | 2025-04-06 04:01:00,125 - ChatService - INFO - Starting workflow for user bob with message: Hi, how are you?
-...
-fastapi-daca-tutorial_chat-service-app_1  | 2025-04-06 04:01:00,161 - ChatService - INFO - Completed workflow for user bob
+fastapi-daca-tutorial_chat-service-app_1  | INFO:main:Successfully fetched metadata for junaid
+fastapi-daca-tutorial_chat-service-app_1  | INFO:main:Fetching history from http://agent-memory-service-dapr:3501/v1.0/invoke/agent-memory-service/method/conversations/98289651-62fb-45eb-804a-21c7ee59384c
+fastapi-daca-tutorial_chat-service-app_1  | INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/invoke/agent-memory-service/method/conversations/98289651-62fb-45eb-804a-21c7ee59384c "HTTP/1.1 200 OK"
+fastapi-daca-tutorial_chat-service-app_1  | INFO:main:Successfully fetched history for session 98289651-62fb-45eb-804a-21c7ee59384c
+fastapi-daca-tutorial_chat-service-app_1  | INFO:httpx:HTTP Request: POST http://chat-service-dapr:3500/v1.0/publish/pubsub/conversations "HTTP/1.1 204 No Content"
+fastapi-daca-tutorial_chat-service-app_1  | INFO:main:Published ConversationUpdated event for junaid, session 98289651-62fb-45eb-804a-21c7ee59384c
 ```
 
-Check the Analytics Service logs:
+**Agent Memory Service**:
 ```bash
-docker-compose logs analytics-service-app
-```
-Output:
-```
-fastapi-daca-tutorial_analytics-service-app_1  | 2025-04-06 04:01:00,162 - AnalyticsService - INFO - Received event: {'user_id': 'bob', 'event_type': 'MessageSent'}
-fastapi-daca-tutorial_analytics-service-app_1  | 2025-04-06 04:01:00,163 - AnalyticsService - INFO - Incrementing message count for user bob
-...
-fastapi-daca-tutorial_analytics-service-app_1  | 2025-04-06 04:01:00,169 - AnalyticsService - INFO - Processed MessageSent event for user bob
+docker-compose logs agent-memory-service-app
 ```
 
-#### Observe Traces in Zipkin
-- Open `http://localhost:9411` and find the trace for the `/chat/` request. It should show the same spans as in **13_dapr_containerization** (e.g., service invocation, actor interactions, pub/sub).
+**Expected**:
+```
+fastapi-daca-tutorial_agent-memory-service-app_1  | Received event: {'data': {'user_id': 'junaid', 'event_type': 'ConversationUpdated', ...}}
+fastapi-daca-tutorial_agent-memory-service-app_1  | INFO:main:Stored conversation history for session 98289651-62fb-45eb-804a-21c7ee59384c
+fastapi-daca-tutorial_agent-memory-service-app_1  | INFO:main:Stored metadata for junaid: {'name': 'Junaid', 'preferred_style': 'casual', 'user_summary': 'Junaid needs to schedule a coding session.'}
+```
 
-#### Observe Metrics in Prometheus
-- Open `http://localhost:9090` and query metrics like `dapr_http_server_request_count` and `dapr_actor_active_actors`. The metrics should reflect the containerized setup.
+**Dapr Sidecars**:
+```bash
+docker-compose logs chat-service-dapr
+docker-compose logs agent-memory-service-dapr
+```
 
-### Step 5.3: Verify Message Count
-Check the updated message count for `bob`:
-- Visit `http://localhost:8001/docs` and test `/analytics/bob`:
-  - Expected: `{"message_count": 4}`
+**Expected**:
+- `chat-service-dapr`: Shows component loading, tracing enabled, no errors.
+- `agent-memory-service-dapr`: Shows `Subscribed to topic 'conversations'`, tracing enabled.
 
----
+
 
 ## Step 6: Why Docker Compose with Dapr for DACA?
-Using Docker Compose with Dapr enhances our DACA architecture by:
-- **Simplified Management**: We can start and stop the entire application (services, Dapr sidecars, Redis, Zipkin, Prometheus) with a single command.
-- **Proper Networking**: The custom `dapr-network` provides isolation and allows services to communicate using service names, improving security and maintainability.
-- **Dependency Handling**: Docker Compose ensures services start in the correct order (e.g., Redis before Dapr sidecars, Dapr sidecars before application services).
-- **Reproducibility**: The `docker-compose.yml` file ensures the application can be consistently reproduced across environments, making it easier to share and deploy.
-- **Production Readiness**: This setup mirrors how the application might run in a production environment (e.g., Kubernetes), where multiple containers need to work together.
+Docker Compose enhances our DACA architecture by:
+- **Simplified Management**: One command (`docker compose up`) replaces multiple `docker run` commands, as highlighted in **14_docker_compose_introduction**.
+- **Proper Networking**: The `dapr-network` ensures isolated, name-based communication.
+- **Dependency Handling**: Guarantees correct startup order (Redis → Zipkin/Prometheus → apps → sidecars).
+- **Observability (Challenge)**: Zipkin and Prometheus provide tracing and metrics, making the system production-ready.
+- **Reproducibility**: The `compose.yml` file ensures consistent setups across environments.
+- **Production Readiness**: Mirrors multi-container orchestration patterns used in Kubernetes or cloud platforms.
 
 ---
 
-## Step 7: Next Steps
-You’ve successfully used Docker Compose to manage the Chat Service, Analytics Service, Dapr sidecars, and supporting services in a single `docker-compose.yml` file! 
+## Step 7: Challenge - Implementing Observability
+### Objective
+Enhance the DACA setup with tracing and metrics to monitor microservices interactions and performance.
 
-### Exercises for Students
-1. Add health checks to the `docker-compose.yml` file for each service (e.g., using `healthcheck` to ensure Redis and the application services are healthy).
-2. Scale the Chat Service using Docker Compose (e.g., `docker-compose up -d --scale chat-service-app=2`) and observe how Dapr handles multiple instances.
-3. Add a Grafana service to the `docker-compose.yml` file to visualize Prometheus metrics.
+
+### Step 5.5: Challenge: Setup Advanced Compose File - Verify Observability
+**Zipkin (Tracing)**:
+1. Open `http://localhost:9411` in a browser.
+2. Search for traces related to `/chat/` or `/conversations`.
+3. **Expected**: A trace showing:
+   - `POST /chat/` on `chat-service`.
+   - Service invocation to `agent-memory-service` for `/memories/junaid` and `/conversations/{session_id}`.
+   - Pub/sub event to `conversations` topic.
+   - `POST /conversations` on `agent-memory-service`.
+
+**Prometheus (Metrics)**:
+1. Open `http://localhost:9090` in a browser.
+2. Query metrics like:
+   - `dapr_http_server_request_count`: Counts HTTP requests to Dapr sidecars.
+   - `dapr_pubsub_message_total`: Counts pub/sub messages (e.g., `ConversationUpdated` events).
+3. **Expected**: Metrics showing:
+   - Requests to `chat-service-dapr:9090` for `/chat/` and pub/sub.
+   - Requests to `agent-memory-service-dapr:9091` for state store and subscriptions.
+
+### Steps
+1. **Enable Zipkin**:
+   - Add the `zipkin` service to `compose.yml`.
+   - Create `components/tracing.yaml` with Zipkin configuration.
+   - Update Dapr sidecars with `--config /components/tracing.yaml`.
+   - Verify traces at `http://localhost:9411` after running tests.
+2. **Enable Prometheus**:
+   - Add the `prometheus` service to `compose.yml`.
+   - Create `prometheus.yml` with Dapr metrics targets.
+   - Add `--metrics-port 9090` (Chat Service) and `9091` (Agent Memory Service) to Dapr sidecars.
+   - Verify metrics at `http://localhost:9090` (e.g., `dapr_http_server_request_count`).
+3. **Test Observability**:
+   - Run the `/chat/` tests and check Zipkin for request traces.
+   - Query Prometheus for Dapr metrics to confirm pub/sub and HTTP activity.
+
+**Zipkin**:
+```bash
+docker-compose logs zipkin
+```
+
+**Expected**:
+- Confirms Zipkin is running and receiving spans from Dapr sidecars.
+
+**Prometheus**:
+```bash
+docker-compose logs prometheus
+```
+
+**Expected**:
+- Confirms Prometheus is scraping metrics from `chat-service-dapr:9090` and `agent-memory-service-dapr:9091`.
+
+---
+### Why It Matters
+- **Tracing**: Helps debug request flows (e.g., Chat Service → Agent Memory Service → Redis).
+- **Metrics**: Monitors system health (e.g., request rates, errors), critical for scaling.
+
+---
+
+## Step 8: Next Steps
+You’ve successfully used Docker Compose to manage the DACA microservices, adding Zipkin and Prometheus as a challenge. Explore Step 8, 9, 10, 11 with Docker Compose:
+
+### Cleanup
+To stop and remove containers:
+```bash
+docker-compose down
+```
+
+To remove volumes:
+```bash
+docker-compose down -v
+```
 
 ---
 
 ## Conclusion
-In this tutorial, we used Docker Compose to define and run our DACA microservices (Chat Service and Analytics Service) with Dapr sidecars, Redis, Zipkin, and Prometheus. The `docker-compose.yml` file simplified the management of our multi-container application, allowing us to start everything with a single command and ensuring proper networking and dependency handling. The application works the same as in **13_dapr_containerization**, as verified by our tests.
+We’ve transitioned the DACA microservices from manual `docker run` commands in **13_dapr_containerization** to a streamlined Docker Compose setup, applying concepts from **14_docker_compose_introduction**. The `compose.yml` file defines the Chat Service, Agent Memory Service, Dapr sidecars, Redis, Zipkin, and Prometheus, maintaining core functionality (history, metadata, events) while adding observability through tracing and metrics. This setup is now easier to manage, production-ready, and extensible for future tutorials.
 
 ---
-
-### Final `docker-compose.yml`
-```yaml
-version: "3.9"
-services:
-  redis:
-    image: redis:6.2
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    networks:
-      - dapr-network
-
-  zipkin:
-    image: openzipkin/zipkin
-    ports:
-      - "9411:9411"
-    networks:
-      - dapr-network
-
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - dapr-network
-
-  chat-service-app:
-    build: ./chat_service
-    ports:
-      - "8000:8000"
-    depends_on:
-      - redis
-    environment:
-      - PYTHONUNBUFFERED=1
-    networks:
-      - dapr-network
-
-  chat-service-dapr:
-    image: daprio/dapr:1.12
-    command:
-      - "./daprd"
-      - "--app-id"
-      - "chat-service"
-      - "--app-port"
-      - "8000"
-      - "--dapr-http-port"
-      - "3500"
-      - "--dapr-grpc-port"
-      - "50001"
-      - "--metrics-port"
-      - "9090"
-      - "--log-level"
-      - "debug"
-      - "--config"
-      - "/components/tracing.yaml"
-      - "--components-path"
-      - "/components"
-    environment:
-      - DAPR_REDIS_HOST=redis:6379
-    volumes:
-      - ./components:/components
-    depends_on:
-      - chat-service-app
-      - redis
-      - zipkin
-      - prometheus
-    networks:
-      - dapr-network
-
-  analytics-service-app:
-    build: ./analytics_service
-    ports:
-      - "8001:8001"
-    depends_on:
-      - redis
-    environment:
-      - PYTHONUNBUFFERED=1
-    networks:
-      - dapr-network
-
-  analytics-service-dapr:
-    image: daprio/dapr:1.12
-    command:
-      - "./daprd"
-      - "--app-id"
-      - "analytics-service"
-      - "--app-port"
-      - "8001"
-      - "--dapr-http-port"
-      - "3501"
-      - "--metrics-port"
-      - "9091"
-      - "--log-level"
-      - "debug"
-      - "--config"
-      - "/components/tracing.yaml"
-      - "--components-path"
-      - "/components"
-    environment:
-      - DAPR_REDIS_HOST=redis:6379
-    volumes:
-      - ./components:/components
-    depends_on:
-      - analytics-service-app
-      - redis
-      - zipkin
-      - prometheus
-    networks:
-      - dapr-network
-
-networks:
-  dapr-network:
-    driver: bridge
-
-volumes:
-  redis-data:
-```
-
-### Final `prometheus.yml`
-```yaml
-global:
-  scrape_interval: 15s
-
-scrape_configs:
-  - job_name: 'dapr'
-    static_configs:
-      - targets: ['chat-service-dapr:9090', 'analytics-service-dapr:9091']
-```
-
-### Final `components/tracing.yaml`
-```yaml
-apiVersion: dapr.io/v1alpha1
-kind: Configuration
-metadata:
-  name: tracing
-spec:
-  tracing:
-    samplingRate: "1"
-    zipkin:
-      endpointAddress: "http://zipkin:9411/api/v2/spans"
-```
-
----
-
-This tutorial successfully integrated Docker Compose with our DACA microservices, streamlining the development workflow. 
