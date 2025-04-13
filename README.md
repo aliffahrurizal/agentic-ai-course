@@ -14,7 +14,9 @@ Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning
 
 **[Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)**
 
-![DACA](./architecture.png)
+![DACA](./architecture1.png)
+
+![](./ascent.png)
 
 
 ### Core Libraries

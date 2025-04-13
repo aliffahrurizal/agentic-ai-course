@@ -242,57 +242,7 @@ A2A enables interaction between a "client" agent and a "remote" agent. The clien
 
 DACA’s “ascent” refers to its progressive deployment pipeline, scaling from local development to planetary-scale production while optimizing cost and complexity.
 
-+----------------------------------------------------+
-
-| 🌐 Planet-Scale Deployment (Millions of Users)         |
-| ------------------------------------------------------ |
-| - Kubernetes with self-hosted LLMs                     |
-| - Kafka on Kubernetes, Postgres on Kubernetes          |
-| - Dapr on Kubernetes, Dapr Agents                      |
-| +----------------------------------------------------+ |
-
-```
-                    ▲
-                    |
-```
-
-+----------------------------------------------------+
-
-| ☁️ Medium-Scale Deployment (Thousands of  Users)       |
-| ------------------------------------------------------ |
-| - Azure Container Apps (ACA)                           |
-| - Azure Container Jobs                                 |
-| - CockroachDB for distributed storage                  |
-| +----------------------------------------------------+ |
-
-```
-                    ▲
-                    |
-```
-
-+----------------------------------------------------+
-
-| 🧪 Prototyping Environment (10 -100 Users)             |
-| ------------------------------------------------------ |
-| - Hugging Face Spaces, CronJob.org                     |
-| - Upstash Redis, CockroachDB                           |
-| - CloudAMQP (RabbitMQ)                                 |
-| +----------------------------------------------------+ |
-
-```
-                    ▲
-                    |
-```
-
-+----------------------------------------------------+
-
-| 💻 Local Development Stage (0-10 Users)                              |
-| -------------------------------------------------------------------- |
-| - Docker Compose, DevContainer                                       |
-| - Docker, FastAPI, Dapr, Dapr Workflows, OpenAI Agents SDK, MCP, A2A |
-| - Local Redis & RabbitMQ, Human-in-the-loop (HITL)                   |
-| +----------------------------------------------------+               |
-
+![](./ascent.png)
 
 ### 1. Local Development: Open-Source Stack
 
