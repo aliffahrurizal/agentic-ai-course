@@ -15,8 +15,8 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework
 ## What is DACA?
 
 **Dapr Agentic Cloud Ascent (DACA)** is a design pattern for building and scaling agentic AI systems using a minimalist, cloud-first approach. It integrates the OpenAI Agents SDK for agent logic, MCP for tool calling, Dapr for distributed resilience, and a staged deployment pipeline that ascends from local development to planetary-scale production. DACA emphasizes:
-- **Agentic AI and MCP Servers**: Autonomous AI agents that perceive, decide, and act to achieve goals using MCP Servers for tool execution.
-- **Agentic AI with A2A**: Autonomous AI agents that communicating via A2A’s standardized protocol across platforms and domains.
+- **AI-First Agentic Design**: Autonomous AI agents, powered by the OpenAI Agents SDK, perceive, decide, and act, with **MCP** enabling tool access and **A2A** facilitating intelligent agent-to-agent dialogues.
+- **Cloud-First Scalability**: Stateless containers deploy on cloud platforms (e.g., Azure Container Apps, Kubernetes), leveraging managed services for efficiency.
 - **Stateless Design**: Containers that scale efficiently without retaining state.
 - **Dapr Sidecar**: Provides state management, messaging, and workflows.
 - **Cloud-Free Tiers**: Leverages free services for cost efficiency.
@@ -50,6 +50,24 @@ DACA, enhanced by A2A, is a comprehensive blueprint for realizing Agentia World.
 **Developing sophisticated AI agents, especially those intended for production environments and widespread use, is deeply intertwined with cloud-native principles and technologies.** This strong connection stems from the **inherent needs of agentic systems: massive scalability** to handle fluctuating user loads and data volumes, efficient management of intensive computational resources (including GPUs/TPUs often required for complex models), and robust deployment mechanisms. Cloud-native architectures, leveraging containers (like Docker), orchestration platforms (like Kubernetes), serverless computing, and microservices, provide the ideal foundation for building, deploying, and managing these complex agent applications. They enable the elasticity, resource optimization, automated CI/CD pipelines for rapid iteration, resilience, and observability crucial for real-world performance. Furthermore, cloud platforms offer vital managed services for data storage, processing, and AI/ML model lifecycles that streamline agent development. While basic agent experimentation might occur outside a cloud-native context, building professional, scalable, and maintainable AI agents effectively necessitates a strong proficiency in cloud-native practices, making it **a critical, almost essential, complementary skill set for developers in the field**.
 
 Think of it this way: You might be able to design a brilliant engine (the AI agent's core logic), but without understanding the chassis, transmission, and assembly line (cloud-native infrastructure and practices), you can't effectively build, deploy, and run the car (the complete agent application) reliably and at scale. **The two domains are deeply intertwined for practical success**.
+
+---
+
+### AI-First and Cloud-First: Foundational Tenets of DACA
+
+DACA’s power lies in its dual commitment to AI-first and cloud-first development:
+
+**AI-First Development**:
+- **Why It Matters**: AI agents are the system’s brain, driving autonomy, decision-making, and adaptability. By prioritizing AI from the start, DACA ensures systems are inherently intelligent, capable of natural language dialogues, tool integration, and dynamic collaboration.
+- **How It’s Implemented**: Uses the OpenAI Agents SDK for agent logic, A2A for agent-to-agent communication, and MCP for tool access, enabling agents to handle complex tasks (e.g., coordinating logistics or automating homes).
+-**Agentia Alignment**: Supports a world where every entity is an AI agent, interacting via intelligent dialogues rather than rigid APIs.
+
+**Cloud-First Development**:
+- **Why It Matters**: Cloud-native infrastructure provides scalability, resilience, and managed services, allowing AI agents to operate globally without manual infrastructure management.
+- **How It’s Implemented**: Leverages containers (Docker), orchestration (Kubernetes), serverless platforms (Azure Container Apps), and managed services (CockroachDB, Upstash Redis) to deploy and scale agents efficiently.
+- **Agentia Alignment**: Enables Agentia’s global reach, ensuring agents can scale from prototypes to millions of users using cloud resources.
+
+Together, these tenets make DACA a forward-looking framework, blending AI’s intelligence with the cloud’s scalability to create a cohesive, planet-scale agent ecosystem.
 
 ---
 
