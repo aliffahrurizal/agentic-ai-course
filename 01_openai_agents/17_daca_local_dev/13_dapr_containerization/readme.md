@@ -1,550 +1,946 @@
-# Containerizing DACA Microservices with Docker and Dapr
+# [Containerizing DACA Microservices with Docker and Dapr](https://docs.dapr.io/operations/hosting/self-hosted/self-hosted-with-docker/#run-app-as-a-process-and-sidecar-as-a-docker-container)
 
-Welcome to the thirteenth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll containerize the Chat Service and Analytics Service from **11_dapr_observability** using Docker. We’ll create Dockerfiles for each service, build container images, and run the services as containers with Dapr sidecars. This will prepare our microservices for production deployment and set the stage for using Docker Compose in the next tutorial. Let’s dive in!
+Welcome to the thirteenth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll containerize the **Chat Service** and **Agent Memory Service** from **07_dapr_pubsub_messaging** using **Docker**. We’ll create optimized Dockerfiles, build container images, and run them with **Dapr sidecars** in a custom Docker network to maintain pub/sub messaging functionality. This prepares us for **Docker Compose** in Tutorial 14 while ensuring consistency and scalability.
 
 ---
 
 ## What You’ll Learn
-- How to create Dockerfiles for the Chat Service and Analytics Service.
-- Building container images for the microservices.
-- Running the containerized microservices with Dapr sidecars.
-- Verifying the containerized setup with the same tests from **11_dapr_observability**.
-- Preparing for Docker Compose in the next tutorial.
+
+- How to create optimized Dockerfiles for the Chat Service and Agent Memory Service.
+- Building lightweight container images with the latest Python and Dapr versions.
+- Setting up a custom Docker network for service communication.
+- Running containerized services with Dapr sidecars for pub/sub and state management.
+- Verifying the setup with tests from **07_dapr_pubsub_messaging**.
+
+---
 
 ## Prerequisites
-- Completion of **11_dapr_observability** (codebase with Chat Service and Analytics Service using Dapr Service Invocation, State Management, Pub/Sub Messaging, Workflows, Secrets Management, Actors, and Observability).
-- Completion of **12_docker_and_desktop** (understanding of Docker, Docker Desktop, and containerization concepts).
-- Docker and Docker Desktop installed (from **12_docker_and_desktop**).
-- Dapr CLI and runtime installed (from **04_dapr_theory_and_cli**).
-- Python 3.8+ installed (for local development, though we’ll use containers for running the services).
-- An OpenAI API key (stored in `components/secrets.json`).
+
+- **Completion of Tutorial 7**: Chat Service and Agent Memory Service working with Dapr pub/sub and state management from **07_dapr_pubsub_messaging**.
+- **Docker**: Install [Docker](https://docs.docker.com/get-docker/) and ensure Docker Desktop (or the Docker daemon) is running.
+- **Dapr CLI**: Install the latest Dapr CLI (v1.15 as of April 2025, or newer) via [Dapr’s guide](https://docs.dapr.io/getting-started/install-dapr-cli/). (Optional for this tutorial since we’re running Dapr in containers.)
+- **Python 3.12+**: Required for local development (though containers handle runtime).
+- **Gemini API Key**: Set in `chat_service/.env` and `agent_memory_service/.env` as `GEMINI_API_KEY=<your-key>`.
 
 ---
 
 ## Step 1: Recap of the Current Setup
-In **11_dapr_observability**, we enhanced our microservices with Dapr’s observability features:
-- The **Chat Service**:
-  - Uses a Dapr Workflow to orchestrate message processing: fetching the user’s message count (via Service Invocation), retrieving conversation history (via Actors), generating a reply (using the OpenAI Agents SDK), storing the conversation (via Actors), and publishing a “MessageSent” event (via Pub/Sub).
-  - Retrieves the OpenAI API key from a Dapr secrets store.
-  - Uses a `UserSessionActor` to manage per-user conversation history.
-  - Includes logging, tracing (Zipkin), and metrics (Prometheus) for observability.
-- The **Analytics Service**:
-  - Subscribes to the `messages` topic and updates the user’s message count in the Dapr state store when a “MessageSent” event is received.
-  - Includes logging, tracing, and metrics for observability.
+
+In **07_dapr_pubsub_messaging**, we built an event-driven system:
+
+- **Chat Service**:
+  - Handles user messages, fetches metadata/history via Dapr service invocation.
+  - Uses a Gemini-powered LLM to generate replies.
+  - Publishes “ConversationUpdated” events to a `conversations` topic via Dapr pub/sub.
+  - Runs on port `8080`.
+- **Agent Memory Service**:
+  - Stores user metadata (`name`, `preferred_style`, `user_summary`) and conversation history in a Dapr state store (Redis).
+  - Subscribes to the `conversations` topic to update history and generate `user_summary` using an LLM.
+  - Runs on port `8001`.
 
 ### Current Limitations
-- **Non-Containerized Deployment**: We’ve been running the services directly on the host using `uv run uvicorn`, which doesn’t guarantee consistency across environments (e.g., development, production).
-- **Dependency Management**: Dependencies are installed on the host, which can lead to conflicts or inconsistencies if the host environment changes.
-- **Scalability and Deployment**: Without containerization, it’s harder to scale the services or deploy them to a cloud environment (e.g., Kubernetes).
+
+- **Non-Containerized**: Services run on the host with `uv run uvicorn`, risking inconsistencies.
+- **Dependency Management**: Local installs may conflict.
+- **Production Readiness**: Without containers, scaling or deployment is challenging.
 
 ### Goal for This Tutorial
-We’ll containerize the Chat Service and Analytics Service:
-- Create Dockerfiles to define container images for each service.
-- Build the images and run the services as containers with Dapr sidecars.
-- Ensure the containerized setup works the same as the non-containerized setup by running the same tests from **11_dapr_observability**.
-- Prepare for using Docker Compose in the next tutorial to simplify running the multi-container application.
 
-### Current Project Structure
+- Containerize both services with separate app and Dapr sidecar containers.
+- Use a custom Docker network for communication.
+- Verify pub/sub and state management functionality.
+
+### Project Structure
+
 ```
 fastapi-daca-tutorial/
 ├── chat_service/
-│   ├── main.py
-│   ├── user_session_actor.py
-│   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── analytics_service/
+│   ├── Dockerfile
 │   ├── main.py
 │   ├── models.py
-│   └── tests/
-│       └── test_main.py
+│   ├── test_main.py
+│   ├── pyproject.toml
+│   ├── uv.lock
+│   └── .env
+├── agent_memory_service/
+│   ├── Dockerfile
+│   ├── main.py
+│   ├── models.py
+│   ├── test_main.py
+│   ├── pyproject.toml
+│   ├── uv.lock
+│   └── .env
 ├── components/
 │   ├── subscriptions.yaml
-│   ├── secretstore.yaml
-│   ├── secrets.json
-│   └── tracing.yaml
-├── prometheus.yml
-├── pyproject.toml
-└── uv.lock
+│   ├── statestore.yaml
+│   ├── pubsub.yaml
+└── README.md
 ```
 
 ---
 
-## Step 2: Why Containerize with Docker and Dapr?
-Containerizing our microservices with Docker and Dapr offers several benefits:
-- **Consistency**: Containers ensure the Chat Service and Analytics Service run the same way in any environment (e.g., local development, CI/CD pipelines, production).
-- **Dependency Isolation**: Each service’s dependencies (e.g., Python packages, Dapr SDK) are packaged in its container, avoiding conflicts.
-- **Scalability**: Containers can be easily scaled and orchestrated (e.g., with Kubernetes) in production.
-- **Simplified Deployment**: Dapr sidecars run alongside the application containers, providing consistent access to Dapr building blocks (e.g., state management, pub/sub, actors).
-- **Production Readiness**: Containerization is a standard practice for deploying microservices in cloud-native environments.
+### Why Containerize with Docker and Dapr?
+
+- **Consistency**: Ensures identical environments across development and production.
+- **Isolation**: Encapsulates dependencies, avoiding conflicts.
+- **Scalability**: Simplifies orchestration (e.g., Kubernetes).
+- **Dapr Integration**: Sidecars provide seamless pub/sub and state management.
+
+This approach aligns with Dapr’s recommended sidecar pattern, preparing us for real-world deployments.
 
 ---
 
-## Step 3: Create Dockerfiles for the Microservices
-We’ll create a `Dockerfile` for each service to define how to build their container images. Both services are Python-based FastAPI applications, so the Dockerfiles will be similar but tailored to each service’s requirements.
+## Step 2: Update Code and Components
 
-### Step 3.1: Dockerfile for the Chat Service
-Create a `Dockerfile` in the `chat_service` directory:
+To ensure containers communicate correctly in a custom Docker network:
+
+- Update `chat_service/main.py` and `agent_memory_service/main.py` to use sidecar container names (e.g., `chat-service-dapr`, `agent-memory-service-dapr`).
+- Update `components/statestore.yaml` and `pubsub.yaml` to use `redis:6379`.
+
+### Step 2.1: Update Chat Service Code
+
+Edit `chat_service/main.py` to replace `localhost` with container names.
+
+**Before** (snippet):
+
+```python
+async def publish_conversation_event(user_id: str, session_id: str, user_text: str, reply_text: str, dapr_port: int = 3500):
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/publish/pubsub/conversations"
+    # ...
+metadata_url = f"http://localhost:{dapr_port}/v1.0/invoke/agent-memory-service/method/memories/{message.user_id}"
+history_url = f"http://localhost:{dapr_port}/v1.0/invoke/agent-memory-service/method/conversations/{session_id}"
+```
+
+**After** (full file as provided earlier):
+
+- Change `publish_conversation_event` to use `http://chat-service-dapr:{dapr_port}`.
+- Change `metadata_url` to `http://agent-memory-service-dapr:3501`.
+- Change `history_url` to `http://agent-memory-service-dapr:3501`.
+
+**Instructions**:
+
+1. Open `chat_service/main.py`.
+2. Full Code:
+
+```python
+import os
+import httpx
+import logging
+from typing import cast
+from dotenv import load_dotenv
+from datetime import datetime, UTC
+from uuid import uuid4
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from agents import Agent, Runner, function_tool, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
+
+from models import Message, Response, Metadata, ConversationEntry
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+load_dotenv()
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+if not gemini_api_key:
+    raise ValueError("GEMINI_API_KEY not set in .env file.")
+
+external_client = AsyncOpenAI(
+    api_key=gemini_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+model = OpenAIChatCompletionsModel(
+    model="gemini-1.5-flash", openai_client=external_client)
+config = RunConfig(model=model, model_provider=cast(
+    ModelProvider, external_client), tracing_disabled=True)
+
+app = FastAPI(
+    title="DACA Chat Service",
+    description="A FastAPI-based Chat Service for the DACA tutorial series",
+    version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@function_tool
+def get_current_time() -> str:
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+
+async def publish_conversation_event(user_id: str, session_id: str, user_text: str, reply_text: str):
+    # Get Dapr hostname from environment variable or use default
+    dapr_url = f"http://chat-service-dapr:3500/v1.0/publish/pubsub/conversations"
+
+    logger.info(f"Publishing to Dapr URL: {dapr_url}")
+
+    event_data = {
+        "user_id": user_id,
+        "session_id": session_id,
+        "event_type": "ConversationUpdated",
+        "user_message": user_text,
+        "assistant_reply": reply_text
+    }
+
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        try:
+            response = await client.post(dapr_url, json=event_data)
+            response.raise_for_status()
+            logger.info(
+                f"Published ConversationUpdated event for {user_id}, session {session_id}")
+        except httpx.ConnectError as e:
+            logger.error(
+                f"Connection error with Dapr sidecar: {e}. Check if Dapr sidecar is running and accessible at {dapr_url}")
+            # Continue execution instead of failing completely
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Failed to publish event: {e}")
+            # Continue execution instead of failing completely
+
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the DACA Chat Service! Access /docs for the API documentation."}
+
+
+@app.post("/chat/", response_model=Response)
+async def chat(message: Message):
+    if not message.text.strip():
+        raise HTTPException(
+            status_code=400, detail="Message text cannot be empty")
+
+    # Use existing session_id from metadata if provided, otherwise generate a new one
+    session_id = message.metadata.session_id if message.metadata and message.metadata.session_id else str(
+        uuid4())
+    dapr_port = int(os.getenv("DAPR_HTTP_PORT", "3501"))
+
+    # Get Dapr hostname from environment variable or use default
+    memory_service_host = os.getenv(
+        "MEMORY_SERVICE_HOST", "agent-memory-service-dapr")
+    logger.info(f"Using memory service at: {memory_service_host}:{dapr_port}")
+
+    # Fetch user metadata
+    metadata_url = f"http://{memory_service_host}:{dapr_port}/v1.0/invoke/agent-memory-service/method/memories/{message.user_id}"
+    logger.info(f"Fetching metadata from {metadata_url}")
+
+    memory_data = {"name": message.user_id, "preferred_style": "casual",
+                   "user_summary": f"{message.user_id} is a new user."}
+    history = []
+
+    # Try to get metadata, but use defaults if service is unavailable
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            try:
+                memory_response = await client.get(metadata_url)
+                memory_response.raise_for_status()
+                memory_data = memory_response.json()
+                logger.info(
+                    f"Successfully fetched metadata for {message.user_id}")
+            except httpx.ConnectError as e:
+                logger.error(
+                    f"Connection error to memory service: {e}. Using default metadata.")
+            except httpx.HTTPStatusError as e:
+                logger.error(
+                    f"Failed to fetch metadata: {e}. Using default metadata.")
+    except Exception as e:
+        logger.error(
+            f"Unexpected error fetching metadata: {e}. Using default metadata.")
+
+    # Fetch conversation history
+    history_url = f"http://{memory_service_host}:{dapr_port}/v1.0/invoke/agent-memory-service/method/conversations/{session_id}"
+    logger.info(f"Fetching history from {history_url}")
+
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            try:
+                history_response = await client.get(history_url)
+                history_response.raise_for_status()
+                history = history_response.json()["history"]
+                logger.info(
+                    f"Successfully fetched history for session {session_id}")
+            except httpx.ConnectError as e:
+                logger.error(
+                    f"Connection error fetching history: {e}. Using empty history.")
+            except httpx.HTTPStatusError:
+                logger.info(f"No prior history for session {session_id}")
+    except Exception as e:
+        logger.error(
+            f"Unexpected error fetching history: {e}. Using empty history.")
+
+    name = memory_data.get("name", message.user_id)
+    style = memory_data.get("preferred_style", "casual")
+    summary = memory_data.get("user_summary", f"{name} is a new user.")
+    context = "No prior conversation." if not history else f"Recent chat: {history[-1]['content']}"
+    personalized_instructions = (
+        f"You are a helpful chatbot. Respond in a {style} way. "
+        f"If the user asks for the time, use the get_current_time tool. "
+        f"The user's name is {name}. User summary: {summary}. {context}"
+    )
+    # clean history of timestamps after a copy
+    current_user_message = ConversationEntry(role="user", content=message.text)
+    history.append(current_user_message.model_dump())
+    # Remove timestamps from each entry, instead of filtering out entries that have them
+    history_without_timestamps = [
+        {k: v for k, v in entry.items() if k != "timestamp"} for entry in history
+    ]
+
+    chat_agent = Agent(
+        name="ChatAgent",
+        instructions=personalized_instructions,
+        tools=[get_current_time],
+        model=model
+    )
+
+    result = await Runner.run(chat_agent, input=history_without_timestamps, run_config=config)
+    reply_text = result.final_output
+
+    # Try to publish, but don't fail if Dapr is unavailable
+    try:
+        await publish_conversation_event(message.user_id, session_id, message.text, reply_text)
+    except Exception as e:
+        logger.error(f"Failed to publish conversation event: {e}")
+
+    return Response(
+        user_id=message.user_id,
+        reply=reply_text,
+        metadata=Metadata(session_id=session_id)
+    )
+```
+
+### Step 2.2: Update Agent Memory Service Code
+
+Edit `agent_memory_service/main.py` to use `agent-memory-service-dapr`.
+
+**Before** (snippet):
+
+```python
+async def get_user_metadata(user_id: str, dapr_port: int = 3501) -> dict:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/user:{user_id}"
+async def set_user_metadata(user_id: str, metadata: dict, dapr_port: int = 3501) -> None:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
+async def get_conversation_history(session_id: str, dapr_port: int = 3501) -> list[dict]:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore/session:{session_id}"
+async def set_conversation_history(session_id: str, history: list[dict], dapr_port: int = 3501) -> None:
+    dapr_url = f"http://localhost:{dapr_port}/v1.0/state/statestore"
+```
+
+**After** (full file as provided earlier):
+
+- Update all Dapr URLs to `http://agent-memory-service-dapr:{dapr_port}`.
+
+**Instructions**:
+
+1. Open `agent_memory_service/main.py`.
+2. Full Code:
+
+```python
+import logging
+import httpx
+import os
+from dotenv import load_dotenv
+from typing import cast
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, RunConfig, ModelProvider
+
+from models import UserMetadata, ConversationHistory, ConversationEntry
+
+load_dotenv()
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+external_client = AsyncOpenAI(
+    api_key=os.getenv("GEMINI_API_KEY"),
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
+model = OpenAIChatCompletionsModel(model="gemini-1.5-flash", openai_client=external_client)
+config = RunConfig(model=model, model_provider=cast(ModelProvider, external_client), tracing_disabled=True)
+
+app = FastAPI(
+    title="DACA Agent Memory Service",
+    description="A FastAPI-based service for user metadata and conversation history",
+    version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:8080"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+async def get_user_metadata(user_id: str, dapr_port: int = 3501) -> dict:
+    dapr_url = f"http://agent-memory-service-dapr:{dapr_port}/v1.0/state/statestore/user:{user_id}"
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(dapr_url)
+            response.raise_for_status()
+            # Handle 204 No Content response
+            if response.status_code == 204:
+                return {}
+            return response.json()
+        except httpx.HTTPStatusError:
+            return {}
+
+async def set_user_metadata(user_id: str, metadata: dict, dapr_port: int = 3501) -> None:
+    dapr_url = f"http://agent-memory-service-dapr:{dapr_port}/v1.0/state/statestore"
+    state_data = [{"key": f"user:{user_id}", "value": metadata}]
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(dapr_url, json=state_data)
+            response.raise_for_status()
+            logger.info(f"Stored metadata for {user_id}: {metadata}")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Failed to store metadata: {e}")
+            raise HTTPException(status_code=500, detail="Failed to store metadata")
+
+async def get_conversation_history(session_id: str, dapr_port: int = 3501) -> list[dict]:
+    dapr_url = f"http://agent-memory-service-dapr:{dapr_port}/v1.0/state/statestore/session:{session_id}"
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(dapr_url)
+            response.raise_for_status()
+            if response.status_code == 204:  # No content means no history
+                return []
+            state_data = response.json()
+            return state_data.get("history", [])
+        except httpx.HTTPStatusError:
+            return []  # Return empty list if key doesn't exist or other errors
+
+async def set_conversation_history(session_id: str, history: list[dict], dapr_port: int = 3501) -> None:
+    dapr_url = f"http://agent-memory-service-dapr:{dapr_port}/v1.0/state/statestore"
+    state_data = [{"key": f"session:{session_id}", "value": {"history": history}}]
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(dapr_url, json=state_data)
+            response.raise_for_status()
+            logger.info(f"Stored conversation history for session {session_id}")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Failed to store conversation history: {e}")
+            raise HTTPException(status_code=500, detail="Failed to store conversation")
+
+async def generate_user_summary(user_id: str, history: list[dict]) -> str:
+    summary_agent = Agent(
+        name="SummaryAgent",
+        instructions="Generate a concise summary of the user based on their conversation history (e.g., 'Junaid enjoys coding and scheduling tasks'). Use only the provided history.",
+        model=model
+    )
+    history_text = "\n".join([f"{entry['role']}: {entry['content']}" for entry in history[-5:]])  # Last 5 entries
+    result = await Runner.run(summary_agent, input=history_text, run_config=config)
+    return result.final_output
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the DACA Agent Memory Service! Access /docs for the API documentation."}
+
+@app.get("/memories/{user_id}", response_model=UserMetadata)
+async def get_memories(user_id: str):
+    metadata = await get_user_metadata(user_id)
+    if not metadata:
+        return UserMetadata(name=user_id, preferred_style="casual", user_summary=f"{user_id} is a new user.")
+    return UserMetadata(**metadata)
+
+@app.post("/memories/{user_id}/initialize", response_model=dict)
+async def initialize_memories(user_id: str, metadata: UserMetadata):
+    await set_user_metadata(user_id, metadata.dict())
+    return {"status": "success", "user_id": user_id, "metadata": metadata.dict()}
+
+@app.get("/conversations/{session_id}", response_model=ConversationHistory)
+async def get_conversation(session_id: str):
+    history = await get_conversation_history(session_id)
+    return ConversationHistory(history=[ConversationEntry(**entry) for entry in history])
+
+# NEW
+@app.post("/conversations")
+async def handle_conversation_updated(event: dict):
+    print(f"Received event: {event}")
+    # Extract the actual event data from the "data" field
+    event_data = event.get("data", {})
+    event_type = event_data.get("event_type")
+    user_id = event_data.get("user_id")
+    session_id = event_data.get("session_id")
+    user_message = event_data.get("user_message")
+    assistant_reply = event_data.get("assistant_reply")
+
+    logger.info(f"Event validation: type={event_type}, user_id={user_id}, session_id={session_id}, user_message={user_message}, assistant_reply={assistant_reply}")
+
+    if event_type != "ConversationUpdated" or not all([user_id, session_id, user_message, assistant_reply]):
+        logger.warning("Event ignored due to invalid structure")
+        return {"status": "ignored"}
+
+    history = await get_conversation_history(session_id)
+    history.extend([
+        ConversationEntry(role="user", content=user_message).dict(),
+        ConversationEntry(role="assistant", content=assistant_reply).dict()
+    ])
+    await set_conversation_history(session_id, history)
+
+    metadata = await get_user_metadata(user_id)
+    if not metadata:
+        metadata = {"name": user_id, "preferred_style": "casual", "user_summary": f"{user_id} is a new user."}
+    metadata["user_summary"] = await generate_user_summary(user_id, history)
+    await set_user_metadata(user_id, metadata)
+
+    return {"status": "SUCCESS"}  # Uppercase to match Dapr’s expectation
+```
+
+### Step 2.3: Update Component Files
+
+Update Redis host in `components/` to use the `redis` container.
+
+**`components/statestore.yaml`**:
+
+```yaml
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statestore
+spec:
+  type: state.redis
+  version: v1
+  metadata:
+    - name: redisHost
+      value: redis:6379
+    - name: redisPassword
+      value: ""
+    - name: actorStateStore
+      value: "true"
+```
+
+**`components/pubsub.yaml`**:
+
+```yaml
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+spec:
+  type: pubsub.redis
+  version: v1
+  metadata:
+    - name: redisHost
+      value: redis:6379
+    - name: redisPassword
+      value: ""
+```
+
+**`components/subscriptions.yaml`**:
+
+- No changes needed (it defines topic and route, no host references).
+
+**Instructions**:
+
+1. Open `components/statestore.yaml` and replace `redisHost` value with `redis:6379`.
+2. Open `components/pubsub.yaml` and replace `redisHost` value with `redis:6379`.
+
+## Step 3: Create Optimized Dockerfiles
+
+We’ll use `python:3.12-slim` for lightweight app containers. Dapr sidecars use the official `[daprio/dapr:1.15](https://blog.dapr.io/posts/2025/02/27/dapr-v1.15-is-now-available/)` image.
+
+### Step 3.1: Dockerfile for Chat Service
+
+In `chat_service/`:
+
 ```bash
 touch chat_service/Dockerfile
 ```
 
 Edit `chat_service/Dockerfile`:
+
 ```dockerfile
-# Use a base image with Python 3.9
-FROM python:3.9-slim
-
-# Set the working directory inside the container
+FROM python:3.12-slim
 WORKDIR /app
-
-# Copy the dependency files
-COPY pyproject.toml uv.lock /app/
-
-# Install uv for dependency management
+COPY pyproject.toml uv.lock .env /app/
 RUN pip install uv
-
-# Install dependencies using uv
 RUN uv sync --frozen
-
-# Copy the application code
 COPY . /app
-
-# Expose the port the Chat Service will run on
-EXPOSE 8000
-
-# Define the command to run the Chat Service
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 8080
+CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 ```
 
-#### Explanation of the Dockerfile
-- `FROM python:3.9-slim`: Uses a lightweight Python 3.9 image as the base.
-- `WORKDIR /app`: Sets the working directory inside the container to `/app`.
-- `COPY pyproject.toml uv.lock /app/`: Copies the dependency files to the container.
-- `RUN pip install uv`: Installs `uv` for dependency management.
-- `RUN uv sync --frozen`: Installs the dependencies specified in `pyproject.toml` and `uv.lock`.
-- `COPY . /app`: Copies the entire `chat_service` directory (including `main.py`, `user_session_actor.py`, etc.) to the container.
-- `EXPOSE 8000`: Documents that the container listens on port `8000` (used by Uvicorn/FastAPI).
-- `CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]`: Runs the Chat Service using `uv run uvicorn`.
+Create `.dockerignore`:
 
-### Step 3.2: Dockerfile for the Analytics Service
-Create a `Dockerfile` in the `analytics_service` directory:
+```
+.venv
+.mypy_cache
+__pycache__
+.pytest_cache
+```
+
+### Step 3.2: Dockerfile for Agent Memory Service
+
+In `agent_memory_service/`:
+
 ```bash
-touch analytics_service/Dockerfile
+touch agent_memory_service/Dockerfile
 ```
 
-Edit `analytics_service/Dockerfile`:
+Edit `agent_memory_service/Dockerfile`:
+
 ```dockerfile
-# Use a base image with Python 3.9
-FROM python:3.9-slim
-
-# Set the working directory inside the container
+FROM python:3.12-slim
 WORKDIR /app
-
-# Copy the dependency files
-COPY pyproject.toml uv.lock /app/
-
-# Install uv for dependency management
+COPY pyproject.toml uv.lock .env /app/
 RUN pip install uv
-
-# Install dependencies using uv
 RUN uv sync --frozen
-
-# Copy the application code
 COPY . /app
-
-# Expose the port the Analytics Service will run on
 EXPOSE 8001
-
-# Define the command to run the Analytics Service
 CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
 ```
 
-#### Explanation of the Dockerfile
-- Similar to the Chat Service’s Dockerfile, but:
-  - `EXPOSE 8001`: The Analytics Service runs on port `8001`.
-  - `CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]`: Runs the Analytics Service on port `8001`.
+Create `.dockerignore`:
 
-### Step 3.3: Update the Project Structure
-The updated project structure now includes the Dockerfiles:
 ```
-fastapi-daca-tutorial/
-├── chat_service/
-│   ├── Dockerfile
-│   ├── main.py
-│   ├── user_session_actor.py
-│   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── analytics_service/
-│   ├── Dockerfile
-│   ├── main.py
-│   ├── models.py
-│   └── tests/
-│       └── test_main.py
-├── components/
-│   ├── subscriptions.yaml
-│   ├── secretstore.yaml
-│   ├── secrets.json
-│   └── tracing.yaml
-├── prometheus.yml
-├── pyproject.toml
-└── uv.lock
+.venv
+.mypy_cache
+__pycache__
+.pytest_cache
 ```
-
----
 
 ## Step 4: Build the Container Images
-We’ll build container images for both services using the `docker build` command.
 
-### Step 4.1: Build the Chat Service Image
-Navigate to the `chat_service` directory and build the image:
+Since we updated `main.py` files, rebuild the images.
+
+### Step 4.1: Build Chat Service Image
+
 ```bash
 cd chat_service
 docker build -t chat-service:latest .
+cd ..
 ```
 
-Output:
-```
-Sending build context to Docker daemon  10.24kB
-Step 1/7 : FROM python:3.9-slim
- ---> abc123def456
-Step 2/7 : WORKDIR /app
- ---> Running in 789xyz
- ---> 123abc456def
-Step 3/7 : COPY pyproject.toml uv.lock /app/
- ---> 456def789xyz
-Step 4/7 : RUN pip install uv
- ---> Running in def123abc456
-Collecting uv
-  Downloading uv-0.1.0-py3-none-any.whl (1.2 MB)
-     |████████████████████████████████| 1.2 MB 5.0 MB/s
-Installing collected packages: uv
-Successfully installed uv-0.1.0
- ---> 789xyz123abc
-Step 5/7 : RUN uv sync --frozen
- ---> Running in abc456def123
-Resolved 10 packages in 1.23s
-Downloaded 10 packages in 2.45s
-Installed 10 packages in 0.89s
- ---> def123abc789
-Step 6/7 : COPY . /app
- ---> 123xyz456abc
-Step 7/7 : EXPOSE 8000
- ---> Running in 456abc789def
- ---> 789def123abc
-Step 8/8 : CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
- ---> Running in abc123xyz456
- ---> 456xyz789def
-Successfully built 456xyz789def
-Successfully tagged chat-service:latest
-```
+### Step 4.2: Build Agent Memory Service Image
 
-### Step 4.2: Build the Analytics Service Image
-Navigate to the `analytics_service` directory and build the image:
 ```bash
-cd ../analytics_service
-docker build -t analytics-service:latest .
+cd agent_memory_service
+docker build -t agent-memory-service:latest .
+cd ..
 ```
 
-Output:
-```
-Sending build context to Docker daemon  8.192kB
-Step 1/7 : FROM python:3.9-slim
- ---> abc123def456
-Step 2/7 : WORKDIR /app
- ---> Using cache
- ---> 123abc456def
-Step 3/7 : COPY pyproject.toml uv.lock /app/
- ---> 789xyz123abc
-Step 4/7 : RUN pip install uv
- ---> Using cache
- ---> 789xyz123abc
-Step 5/7 : RUN uv sync --frozen
- ---> Running in def123abc456
-Resolved 8 packages in 0.98s
-Downloaded 8 packages in 1.89s
-Installed 8 packages in 0.67s
- ---> 123xyz456abc
-Step 6/7 : COPY . /app
- ---> 456abc789def
-Step 7/7 : EXPOSE 8001
- ---> Running in xyz789abc123
- ---> def123abc789
-Step 8/8 : CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
- ---> Running in abc456xyz789
- ---> 789def123xyz
-Successfully built 789def123xyz
-Successfully tagged analytics-service:latest
-```
+### Step 4.3: Verify Images
 
-### Step 4.3: Verify the Images
-List the images to confirm they were built:
 ```bash
 docker images
 ```
-Output:
+
+**Expected Output**:
+
 ```
-REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
-chat-service        latest    456xyz789def   2 minutes ago   150MB
-analytics-service   latest    789def123xyz   1 minute ago    145MB
-python              3.9-slim  abc123def456   1 week ago      45MB
+REPOSITORY             TAG                       IMAGE ID       CREATED              SIZE
+agent-memory-service   latest                    10f5f9e79347   41 seconds ago       431MB
+chat-service           latest                    d0924e0b62e5   About a minute ago   430MB
+python                 3.12-slim                 85824326bc4a   3 days ago           211MB
 ```
 
 ---
 
-## Step 5: Run the Containerized Microservices with Dapr
-We’ll run the Chat Service and Analytics Service as containers, with Dapr sidecars providing access to Dapr building blocks (e.g., state management, pub/sub, actors). Since the services are now containerized, we’ll use `docker run` instead of `dapr run` with `uv run uvicorn`. Dapr provides a containerized runtime, so we’ll run Dapr sidecars as separate containers alongside our application containers.
+## Step 5: Run Containerized Services with Dapr
 
-### Step 5.1: Prepare the Environment
-Before running the containers, ensure the following are running (from **11_dapr_observability**):
-- **Redis**: Used for Dapr state store and pub/sub (should already be running from `dapr init`).
-- **Zipkin**: For distributed tracing.
-  ```bash
-  docker run -d -p 9411:9411 openzipkin/zipkin
-  ```
-- **Prometheus**: For metrics collection.
-  ```bash
-  docker run -d -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
-  ```
+Use `dapr-network` and manually start Redis.
 
-### Step 5.2: Run the Analytics Service with Dapr
-We’ll run the Analytics Service container and its Dapr sidecar container, ensuring they can communicate with each other and with Redis, Zipkin, and Prometheus.
+### Step 5.1: Create Docker Network
 
-1. **Run the Analytics Service Container**:
+```bash
+docker network create dapr-network
+```
+
+### Step 5.2: Start Redis
+
+```bash
+docker run -d --name redis --network dapr-network -p 6379:6379 redis:latest
+```
+
+### Step 5.3: Run Agent Memory Service
+
+From `fastapi-daca-tutorial/`:
+
+1. **App Container**:
+
    ```bash
-   docker run -d --name analytics-service-app -p 8001:8001 --network host analytics-service:latest
-   ```
-   - `--name analytics-service-app`: Names the container.
-   - `-p 8001:8001`: Maps port `8001` on the host to port `8001` in the container.
-   - `--network host`: Uses the host network for simplicity (so the container can communicate with Redis, Zipkin, etc., on localhost). In production, you’d use a Docker network.
-   - `analytics-service:latest`: The image to run.
-
-2. **Run the Dapr Sidecar for the Analytics Service**:
-   ```bash
-   docker run -d --name analytics-service-dapr \
-     -v $(pwd)/components:/components \
-     --network host \
-     daprio/dapr:1.12 \
-     dapr run \
-     --app-id analytics-service \
-     --app-port 8001 \
-     --dapr-http-port 3501 \
-     --metrics-port 9091 \
-     --log-level debug \
-     --config /components/tracing.yaml \
-     --components-path /components
-   ```
-   - `--name analytics-service-dapr`: Names the Dapr sidecar container.
-   - `-v $(pwd)/components:/components`: Mounts the `components` directory into the container so Dapr can access `subscriptions.yaml`, `secretstore.yaml`, etc.
-   - `--network host`: Uses the host network for communication.
-   - `daprio/dapr:1.12`: The Dapr runtime image (version 1.12 as of April 2025; adjust if a newer version is available).
-   - `dapr run ...`: The Dapr command to start the sidecar, with the same arguments we used previously:
-     - `--app-id analytics-service`: Identifies the application.
-     - `--app-port 8001`: The port the Analytics Service runs on.
-     - `--dapr-http-port 3501`: The port for Dapr’s HTTP API.
-     - `--metrics-port 9091`: The port for Dapr metrics.
-     - `--log-level debug`: Enables detailed logging.
-     - `--config /components/tracing.yaml`: Applies the tracing configuration.
-     - `--components-path /components`: Specifies the path to Dapr components.
-
-### Step 5.3: Run the Chat Service with Dapr
-Similarly, we’ll run the Chat Service container and its Dapr sidecar.
-
-1. **Run the Chat Service Container**:
-   ```bash
-   docker run -d --name chat-service-app -p 8000:8000 --network host chat-service:latest
+   docker run -d --name agent-memory-service-app \
+     --network dapr-network \
+     -p 8001:8001 \
+     agent-memory-service:latest
    ```
 
-2. **Run the Dapr Sidecar for the Chat Service**:
+2. **Dapr Sidecar**:
    ```bash
-   docker run -d --name chat-service-dapr \
-     -v $(pwd)/components:/components \
-     --network host \
-     daprio/dapr:1.12 \
-     dapr run \
-     --app-id chat-service \
-     --app-port 8000 \
-     --dapr-http-port 3500 \
-     --dapr-grpc-port 50001 \
-     --metrics-port 9090 \
-     --log-level debug \
-     --config /components/tracing.yaml \
-     --components-path /components
+docker run -d \
+  --name agent-memory-service-dapr \
+  --network dapr-network \
+  -p 3501:3501 \
+  -v $(pwd)/components:/components \
+  daprio/dapr:1.15.1 \
+  ./daprd \
+  --app-id agent-memory-service \
+  --app-port 8001 \
+  --dapr-http-port 3501 \
+  --log-level debug \
+  --components-path /components \
+  --app-protocol http \
+  --app-channel-address agent-memory-service-app
    ```
 
-### Step 5.4: Verify the Containers Are Running
-List the running containers:
+### Step 5.4: Run Chat Service
+
+From `fastapi-daca-tutorial/`:
+
+1. **App Container**:
+
+   ```bash
+   docker run -d --name chat-service-app \
+     --network dapr-network \
+     -p 8080:8080 \
+     chat-service:latest
+   ```
+
+2. **Dapr Sidecar**:
+   ```bash
+docker run -d \
+  --name chat-service-dapr \
+  --network dapr-network \
+  -p 3500:3500 \
+  -v $(pwd)/components:/components \
+  daprio/dapr:1.15.1 \
+  ./daprd \
+  --app-id chat-service \
+  --app-port 8080 \
+  --dapr-http-port 3500 \
+  --log-level debug \
+  --components-path /components \
+  --app-protocol http \
+  --app-channel-address chat-service-app
+   ```
+
+### Step 5.5: Verify Containers
+
 ```bash
 docker ps
 ```
-Output:
-```
-CONTAINER ID   IMAGE              COMMAND                  CREATED         STATUS         PORTS                    NAMES
-abc123def456   chat-service       "uv run uvicorn main…"   1 minute ago    Up 1 minute                             chat-service-app
-789xyz123abc   daprio/dapr:1.12   "dapr run --app-id c…"   1 minute ago    Up 1 minute                             chat-service-dapr
-def456abc789   analytics-service  "uv run uvicorn main…"   2 minutes ago   Up 2 minutes                            analytics-service-app
-123abc789xyz   daprio/dapr:1.12   "dapr run --app-id a…"   2 minutes ago   Up 2 minutes                            analytics-service-dapr
-xyz789abc123   openzipkin/zipkin  "start-zipkin"           5 minutes ago   Up 5 minutes   9410/tcp, 9411/tcp       zipkin
-456def123abc   prom/prometheus    "/bin/prometheus --c…"   5 minutes ago   Up 5 minutes   0.0.0.0:9090->9090/tcp  prometheus
-```
 
-#### Notes on Networking
-- We used `--network host` for simplicity, allowing containers to communicate with each other and with Redis, Zipkin, and Prometheus on `localhost`. In a production setup, you’d create a Docker network (e.g., `docker network create dapr-network`) and run all containers on that network, using container names or service discovery for communication.
-- The Dapr sidecars communicate with their respective applications (e.g., `chat-service-app` on port `8000`) and with each other (e.g., for service invocation).
+**Expected Output**:
+
+```
+mjs@Muhammads-MacBook-Pro-3 agent_memory_service % docker ps
+
+CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                                            NAMES
+949b71c9604c   daprio/dapr:1.15.1            "./daprd --app-id ch…"   4 seconds ago    Up 4 seconds    0.0.0.0:3500->3500/tcp                           chat-service-dapr
+cb9532670d84   chat-service:latest           "uv run uvicorn main…"   8 seconds ago    Up 8 seconds    0.0.0.0:8080->8080/tcp                           chat-service-app
+a7752bb571c5   daprio/dapr:1.15.1            "./daprd --app-id ag…"   13 seconds ago   Up 13 seconds   0.0.0.0:3501->3501/tcp                           agent-memory-service-dapr
+0b96d39e2ccf   agent-memory-service:latest   "uv run uvicorn main…"   18 seconds ago   Up 18 seconds   0.0.0.0:8001->8001/tcp                           agent-memory-service-app
+5db9ef8136ee   redis:latest                  "docker-entrypoint.s…"   44 seconds ago   Up 44 seconds   0.0.0.0:6379->6379/tcp                           redis
+```
 
 ---
 
-## Step 6: Test the Containerized Microservices
-We’ll run the same tests from **11_dapr_observability** to verify the containerized setup works as expected.
+## Step 6: Test the Containerized Setup
 
-### Step 6.1: Initialize State for Testing
-Initialize message counts for `alice` and `bob`:
-- For `alice`:
-  ```bash
-  curl -X POST http://localhost:8001/analytics/alice/initialize -H "Content-Type: application/json" -d '{"message_count": 5}'
-  ```
-  Output:
-  ```json
-  {"status": "success", "user_id": "alice", "message_count": 5}
-  ```
-- For `bob`:
-  ```bash
-  curl -X POST http://localhost:8001/analytics/bob/initialize -H "Content-Type: application/json" -d '{"message_count": 3}'
-  ```
-  Output:
-  ```json
-  {"status": "success", "user_id": "bob", "message_count": 3}
-  ```
+### Step 6.1: Initialize State
 
-### Step 6.2: Test the Chat Service
-Send a request to the Chat Service to trigger the workflow:
-```json
-{
-  "user_id": "bob",
-  "text": "Hi, how are you?",
-  "metadata": {
-    "timestamp": "2025-04-06T12:00:00Z",
-    "session_id": "123e4567-e89b-12d3-a456-426614174001"
-  },
-  "tags": ["greeting"]
-}
+```bash
+curl -X POST http://localhost:8001/memories/junaid/initialize \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Junaid", "preferred_style": "casual", "user_summary": "Junaid is building Agents WorkForce."}'
 ```
-Expected response (actual reply may vary):
+
+**Expected Output**:
+
+```json
+{"status":"success","user_id":"junaid","metadata":{"name":"Junaid","preferred_style":"casual","user_summary":"Junaid is building Agents WorkForce."}}%
+```
+
+### Step 6.2: Test Chat Service
+
+First request:
+
+```bash
+curl -X POST http://localhost:8080/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "junaid", "text": "I need to schedule a coding session."}'
+```
+
+**Expected Response**:
+
+```json
+{"user_id":"junaid","reply":"Hey Junaid!  Sounds good. What time works best for you?  I can help you figure that out.\n","metadata":{"timestamp":"2025-04-12T04:01:04.035603+00:00","session_id":"98289651-62fb-45eb-804a-21c7ee59384c"}}% 
+```
+
+Second request (same session):
+
+```bash
+curl -X POST http://localhost:8080/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "junaid", "text": "What was my last msg?", "metadata": {"session_id": "98289651-62fb-45eb-804a-21c7ee59384c"}}'
+```
+
+**Expected Response**:
+
+```json
+{"user_id":"junaid","reply":"Your last message was: \"I need to schedule a coding session.\"\n","metadata":{"timestamp":"2025-04-12T04:02:03.001332+00:00","session_id":"98289651-62fb-45eb-804a-21c7ee59384c"}}
+```
+
+### Step 6.3: Verify Metadata Update
+
+```bash
+curl http://localhost:8001/memories/junaid
+```
+
+**Expected Output**:
+
+```json
+{"name":"Junaid","preferred_style":"casual","user_summary":"Junaid needs to schedule a coding session.\n"}%                          
+```
+
+### Step 6.4: Test Background Memories
+
+```bash
+curl -X POST http://localhost:8080/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "junaid", "text": "Tomorrow we will pack for SF?", "metadata": {"session_id": "98289651-62fb-45eb-804a-21c7ee59384c"}}'
+```
+
+New session:
+
+```bash
+curl -X POST http://localhost:8080/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "junaid", "text": "Where was I planning to go tomorrow?"}'
+```
+
+**Expected Response**:
+
 ```json
 {
-  "user_id": "bob",
-  "reply": "Hi Bob! You've sent 3 messages so far. No previous conversation. How can I help you today?",
+  "user_id": "junaid",
+  "reply": "Based on our previous conversation, you, Junaid, are planning a trip to San Francisco tomorrow.",
   "metadata": {
-    "timestamp": "2025-04-06T04:01:00Z",
-    "session_id": "some-uuid"
+    "timestamp": "2025-04-11T12:02:00Z",
+    "session_id": "new-uuid"
   }
 }
 ```
 
-#### Observe Logs
-Check the Chat Service container logs:
-```bash
-docker logs chat-service-app
-```
-Output (similar to **11_dapr_observability**):
-```
-2025-04-06 04:01:00,123 - ChatService - INFO - Received chat request for user bob: Hi, how are you?
-2025-04-06 04:01:00,124 - ChatService - INFO - Scheduling workflow with instance_id: chat-bob-1744064460
-2025-04-06 04:01:00,125 - ChatService - INFO - Starting workflow for user bob with message: Hi, how are you?
-...
-2025-04-06 04:01:00,161 - ChatService - INFO - Completed workflow for user bob
-```
+### Step 6.5: Check Logs
 
-Check the Analytics Service container logs:
-```bash
-docker logs analytics-service-app
-```
-Output:
-```
-2025-04-06 04:01:00,162 - AnalyticsService - INFO - Received event: {'user_id': 'bob', 'event_type': 'MessageSent'}
-2025-04-06 04:01:00,163 - AnalyticsService - INFO - Incrementing message count for user bob
-...
-2025-04-06 04:01:00,169 - AnalyticsService - INFO - Processed MessageSent event for user bob
-```
+- Chat Service:
 
-#### Observe Traces in Zipkin
-- Open `http://localhost:9411` and find the trace for the `/chat/` request. It should show the same spans as in **11_dapr_observability** (e.g., service invocation, actor interactions, pub/sub).
+  ```bash
+  docker logs chat-service-app
+  ```
 
-#### Observe Metrics in Prometheus
-- Open `http://localhost:9090` and query metrics like `dapr_http_server_request_count` and `dapr_actor_active_actors`. The metrics should reflect the containerized setup.
+  **Expected**: 
+  
+  ```bash
+  200 OK"
+  INFO:main:Successfully fetched metadata for junaid
+  INFO:main:Fetching history from http://agent-memory-service-dapr:3501/v1.0/invoke/agent-memory-service/method/conversations/5cdf5f65-3853-43ff-a1db-e4cb7d901b11
+  INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/invoke/agent-memory-service/method/conversations/5cdf5f65-3853-43ff-a1db-e4cb7d901b11 "HTTP/1.1 200 OK"
+  INFO:main:Successfully fetched history for session 5cdf5f65-3853-43ff-a1db-e4cb7d901b11
+  INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+  INFO:main:Publishing to Dapr URL: http://chat-service-dapr:3500/v1.0/publish/pubsub/conversations
+  INFO:httpx:HTTP Request: POST http://chat-service-dapr:3500/v1.0/publish/pubsub/conversations "HTTP/1.1 204 No Content"
+  INFO:main:Published ConversationUpdated event for junaid, session 5cdf5f65-3853-43ff-a1db-e4cb7d901b11
+  INFO:     192.168.65.1:26287 - "POST /chat/ HTTP/1.1" 200 OK
+  mjs@Muhammads-MacBook-Pro-3 fastapi-daca-tutorial % 
+  ```
 
-### Step 6.3: Verify Message Count
-Check the updated message count for `bob`:
-- Visit `http://localhost:8001/docs` and test `/analytics/bob`:
-  - Expected: `{"message_count": 4}`
+- Agent Memory Service:
+  ```bash
+  docker logs agent-memory-service-app
+  ```
+  **Expected**: 
+  
+```
+INFO:     172.19.0.6:39566 - "POST /conversations HTTP/1.1" 200 OK
+INFO:     192.168.65.1:42786 - "GET /docs HTTP/1.1" 200 OK
+INFO:     192.168.65.1:42786 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/session:98289651-62fb-45eb-804a-21c7ee59384c "HTTP/1.1 200 OK"
+INFO:     192.168.65.1:43679 - "GET /conversations/98289651-62fb-45eb-804a-21c7ee59384c HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
+INFO:     172.19.0.6:58152 - "GET /memories/junaid HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/session:98289651-62fb-45eb-804a-21c7ee59384c "HTTP/1.1 200 OK"
+INFO:     172.19.0.6:58152 - "GET /conversations/98289651-62fb-45eb-804a-21c7ee59384c HTTP/1.1" 200 OK
+INFO:main:Event validation: type=ConversationUpdated, user_id=junaid, session_id=98289651-62fb-45eb-804a-21c7ee59384c, user_message=What was my last msg?, assistant_reply=Your last message was: "I need to schedule a coding session."
+
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/session:98289651-62fb-45eb-804a-21c7ee59384c "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://agent-memory-service-dapr:3501/v1.0/state/statestore "HTTP/1.1 204 No Content"
+INFO:main:Stored conversation history for session 98289651-62fb-45eb-804a-21c7ee59384c
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://agent-memory-service-dapr:3501/v1.0/state/statestore "HTTP/1.1 204 No Content"
+INFO:main:Stored metadata for junaid: {'name': 'Junaid', 'preferred_style': 'casual', 'user_summary': 'Junaid needs to schedule a coding session.\n'}
+Received event: {'data': {'assistant_reply': 'Your last message was: "I need to schedule a coding session."\n', 'event_type': 'ConversationUpdated', 'session_id': '98289651-62fb-45eb-804a-21c7ee59384c', 'user_id': 'junaid', 'user_message': 'What was my last msg?'}, 'datacontenttype': 'application/json', 'id': 'f81f3caf-bc07-4866-8258-82fff5e15f47', 'pubsubname': 'pubsub', 'source': 'chat-service', 'specversion': '1.0', 'time': '2025-04-12T04:02:02Z', 'topic': 'conversations', 'traceid': '00-00000000000000000000000000000000-0000000000000000-00', 'traceparent': '00-00000000000000000000000000000000-0000000000000000-00', 'tracestate': '', 'type': 'com.dapr.event.sent'}
+INFO:     172.19.0.6:58152 - "POST /conversations HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
+INFO:     192.168.65.1:55010 - "GET /memories/junaid HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
+INFO:     172.19.0.6:41924 - "GET /memories/junaid HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/session:98289651-62fb-45eb-804a-21c7ee59384c "HTTP/1.1 200 OK"
+INFO:     172.19.0.6:41924 - "GET /conversations/98289651-62fb-45eb-804a-21c7ee59384c HTTP/1.1" 200 OK
+INFO:main:Event validation: type=ConversationUpdated, user_id=junaid, session_id=98289651-62fb-45eb-804a-21c7ee59384c, user_message=Tomorrow we will pack for SF?, assistant_reply=Okay, cool!  Packing for San Francisco tomorrow.  Anything specific you need to remember to pack?
+
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/session:98289651-62fb-45eb-804a-21c7ee59384c "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://agent-memory-service-dapr:3501/v1.0/state/statestore "HTTP/1.1 204 No Content"
+INFO:main:Stored conversation history for session 98289651-62fb-45eb-804a-21c7ee59384c
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://agent-memory-service-dapr:3501/v1.0/state/statestore "HTTP/1.1 204 No Content"
+INFO:main:Stored metadata for junaid: {'name': 'Junaid', 'preferred_style': 'casual', 'user_summary': 'Junaid needs to schedule a coding session and is packing for a trip to San Francisco.\n'}
+Received event: {'data': {'assistant_reply': 'Okay, cool!  Packing for San Francisco tomorrow.  Anything specific you need to remember to pack?\n', 'event_type': 'ConversationUpdated', 'session_id': '98289651-62fb-45eb-804a-21c7ee59384c', 'user_id': 'junaid', 'user_message': 'Tomorrow we will pack for SF?'}, 'datacontenttype': 'application/json', 'id': 'b5269213-676e-4d1c-999e-be7b61a0efb8', 'pubsubname': 'pubsub', 'source': 'chat-service', 'specversion': '1.0', 'time': '2025-04-12T04:02:40Z', 'topic': 'conversations', 'traceid': '00-00000000000000000000000000000000-0000000000000000-00', 'traceparent': '00-00000000000000000000000000000000-0000000000000000-00', 'tracestate': '', 'type': 'com.dapr.event.sent'}
+INFO:     172.19.0.6:41924 - "POST /conversations HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
+INFO:     172.19.0.6:41924 - "GET /memories/junaid HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/session:5cdf5f65-3853-43ff-a1db-e4cb7d901b11 "HTTP/1.1 204 No Content"
+INFO:     172.19.0.6:41924 - "GET /conversations/5cdf5f65-3853-43ff-a1db-e4cb7d901b11 HTTP/1.1" 200 OK
+INFO:main:Event validation: type=ConversationUpdated, user_id=junaid, session_id=5cdf5f65-3853-43ff-a1db-e4cb7d901b11, user_message=Where was I planning to go tomorrow?, assistant_reply=Hey Junaid!  Looks like you're heading to San Francisco tomorrow!  Safe travels!
+
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/session:5cdf5f65-3853-43ff-a1db-e4cb7d901b11 "HTTP/1.1 204 No Content"
+INFO:httpx:HTTP Request: POST http://agent-memory-service-dapr:3501/v1.0/state/statestore "HTTP/1.1 204 No Content"
+INFO:main:Stored conversation history for session 5cdf5f65-3853-43ff-a1db-e4cb7d901b11
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://agent-memory-service-dapr:3501/v1.0/state/statestore "HTTP/1.1 204 No Content"
+INFO:main:Stored metadata for junaid: {'name': 'Junaid', 'preferred_style': 'casual', 'user_summary': 'Junaid is planning a trip to San Francisco tomorrow.\n'}
+Received event: {'data': {'assistant_reply': "Hey Junaid!  Looks like you're heading to San Francisco tomorrow!  Safe travels!\n", 'event_type': 'ConversationUpdated', 'session_id': '5cdf5f65-3853-43ff-a1db-e4cb7d901b11', 'user_id': 'junaid', 'user_message': 'Where was I planning to go tomorrow?'}, 'datacontenttype': 'application/json', 'id': '13e97c18-611e-4e9b-a470-6bad9c528f77', 'pubsubname': 'pubsub', 'source': 'chat-service', 'specversion': '1.0', 'time': '2025-04-12T04:02:47Z', 'topic': 'conversations', 'traceid': '00-00000000000000000000000000000000-0000000000000000-00', 'traceparent': '00-00000000000000000000000000000000-0000000000000000-00', 'tracestate': '', 'type': 'com.dapr.event.sent'}
+INFO:     172.19.0.6:41924 - "POST /conversations HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
+INFO:     192.168.65.1:59600 - "GET /memories/junaid HTTP/1.1" 200 OK
+mjs@Muhammads-MacBook-Pro-3 fastapi-daca-tutorial % 
+```
 
 ---
 
-## Step 7: Why Containerization for DACA?
-Containerizing the Chat Service and Analytics Service with Docker and Dapr enhances our architecture by:
-- **Consistency**: The services now run in containers, ensuring they behave the same way in any environment.
-- **Dependency Isolation**: Dependencies are packaged in the container images, avoiding conflicts on the host.
-- **Scalability**: Containers can be easily scaled in a production environment (e.g., with Kubernetes).
-- **Simplified Deployment**: Dapr sidecars run as containers alongside the application containers, providing consistent access to Dapr building blocks.
+## Step 7: Benefits of Containerization for DACA
+
+- **Consistency**: Uniform environments across setups.
+- **Isolation**: Dependency conflicts eliminated.
+- **Scalability**: Ready for orchestration.
+- **Event-Driven Integrity**: Dapr sidecars ensure pub/sub works seamlessly.
 
 ---
 
 ## Step 8: Next Steps
-You’ve successfully containerized the Chat Service and Analytics Service with Docker and Dapr! In the next tutorial (**14_docker_compose**), we’ll introduce **Docker Compose** to simplify running our multi-container application, including the services, Dapr sidecars, Redis, Zipkin, and Prometheus.
+
+In **Tutorial 14**, we’ll use **Docker Compose** to streamline this multi-container setup.
 
 ### Optional Exercises
-1. Push the `chat-service` and `analytics-service` images to Docker Hub:
-   - Tag the images: `docker tag chat-service:latest <your-dockerhub-username>/chat-service:latest`.
-   - Log in to Docker Hub: `docker login`.
-   - Push the images: `docker push <your-dockerhub-username>/chat-service:latest`.
-2. Create a Docker network and run the containers on that network instead of using `--network host`.
-3. Add health checks to the Dockerfiles (e.g., using `HEALTHCHECK`) to monitor the services’ health.
+
+1. **Push to Docker Hub**: `docker tag chat-service:latest yourusername/chat-service:latest && docker push yourusername/chat-service:latest`
+2. **Health Checks**: Add `HEALTHCHECK CMD curl -f http://localhost:8080/ || exit 1` to Dockerfiles.
 
 ---
 
-## Conclusion
-In this tutorial, we containerized the Chat Service and Analytics Service using Docker, created Dockerfiles, built container images, and ran the services with Dapr sidecars. The containerized setup works the same as the non-containerized setup, as verified by our tests, and prepares us for production deployment. We’re now ready to explore Docker Compose in the next tutorial to simplify running our multi-container application!
+## Step 9: Conclusion
 
----
-
-### Final Dockerfile for `chat_service/Dockerfile`
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-
-COPY pyproject.toml uv.lock /app/
-
-RUN pip install uv
-
-RUN uv sync --frozen
-
-COPY . /app
-
-EXPOSE 8000
-
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Final Dockerfile for `analytics_service/Dockerfile`
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-
-COPY pyproject.toml uv.lock /app/
-
-RUN pip install uv
-
-RUN uv sync --frozen
-
-COPY . /app
-
-EXPOSE 8001
-
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
-```
-
----
-
-This tutorial successfully containerized our DACA microservices, setting the stage for using Docker Compose in the next tutorial. 
+We’ve containerized the Chat Service and Agent Memory Service using separate app and Dapr sidecar containers, fixed previous errors by using `./daprd`, and set up a custom Docker network. The setup mirrors production best practices while remaining beginner-friendly, verified by Tutorial 7’s tests. Next, we’ll simplify this with Docker Compose!
