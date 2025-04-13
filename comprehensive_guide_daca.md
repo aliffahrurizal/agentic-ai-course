@@ -4,9 +4,11 @@
 <img src="./daca_report.png" width="300">
 </p>
 
-If you are a beginner start with [The Rise of the AI Agents Presentation](https://docs.google.com/presentation/d/1VNFGsCYMDT1VTe8W1wxFbmAwYsJ1I0Y-6CnTvuCEn98/edit?usp=sharing).
+For those new to agentic AI, start with [The Rise of the AI Agents Presentation](https://docs.google.com/presentation/d/1VNFGsCYMDT1VTe8W1wxFbmAwYsJ1I0Y-6CnTvuCEn98/edit?usp=sharing) for foundational context.
 
-The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework for building and deploying scalable, resilient, and cost-effective agentic AI systems. It combines the simplicity of the OpenAI Agents SDK for agent logic, the Model Context Protocol (MCP) for standardized tool and data integration, the interoperability of Google’s Agent2Agent Protocol (A2A) for agent-to-agent communication, the distributed capabilities of Dapr, and a progressive deployment strategy that leverages free-tier cloud services and Kubernetes to achieve planetary-scale intelligence. DACA integrates event-driven architecture (EDA), a three-tier microservices structure, stateless computing, scheduled workflows (CronJobs), and human-in-the-loop (HITL) oversight to meet the autonomy, real-time demands, scalability, and complexity of AI agents.This guide consolidates DACA’s architecture, components, deployment stages, and benefits, with OpenAI Agents SDK, A2A and MCP as pivotal enablers of our vision: **Agentia World**.
+## Introduction
+
+The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework for building and deploying scalable, resilient, and cost-effective agentic AI systems, grounded in **AI-first** and **cloud-first development** as its core tenets. It harnesses the simplicity of the OpenAI Agents SDK for intelligent agent logic, the Model Context Protocol (MCP) for standardized tool integration, the interoperability of Google’s Agent2Agent Protocol (A2A) for seamless agent communication, and the distributed capabilities of Dapr, all deployed through a progressive cloud-native pipeline that leverages free-tier services and Kubernetes to achieve planetary-scale intelligence. DACA integrates event-driven architecture (EDA), a three-tier microservices structure, stateless computing, scheduled workflows (CronJobs), and human-in-the-loop (HITL) oversight to meet the autonomy, real-time demands, scalability, and complexity of AI agents. This guide consolidates DACA’s architecture, components, deployment stages, and benefits, positioning AI-first and cloud-first principles, alongside A2A and MCP, as pivotal enablers of our vision: **Agentia World**.
 
 ---
 
@@ -239,6 +241,58 @@ A2A enables interaction between a "client" agent and a "remote" agent. The clien
 ## DACA Deployment Stages: The Ascent
 
 DACA’s “ascent” refers to its progressive deployment pipeline, scaling from local development to planetary-scale production while optimizing cost and complexity.
+
++----------------------------------------------------+
+
+| 🌐 Planet-Scale Deployment (Millions of Users)         |
+| ------------------------------------------------------ |
+| - Kubernetes with self-hosted LLMs                     |
+| - Kafka on Kubernetes, Postgres on Kubernetes          |
+| - Dapr on Kubernetes, Dapr Agents                      |
+| +----------------------------------------------------+ |
+
+```
+                    ▲
+                    |
+```
+
++----------------------------------------------------+
+
+| ☁️ Medium-Scale Deployment (Thousands of  Users)       |
+| ------------------------------------------------------ |
+| - Azure Container Apps (ACA)                           |
+| - Azure Container Jobs                                 |
+| - CockroachDB for distributed storage                  |
+| +----------------------------------------------------+ |
+
+```
+                    ▲
+                    |
+```
+
++----------------------------------------------------+
+
+| 🧪 Prototyping Environment (10 -100 Users)             |
+| ------------------------------------------------------ |
+| - Hugging Face Spaces, CronJob.org                     |
+| - Upstash Redis, CockroachDB                           |
+| - CloudAMQP (RabbitMQ)                                 |
+| +----------------------------------------------------+ |
+
+```
+                    ▲
+                    |
+```
+
++----------------------------------------------------+
+
+| 💻 Local Development Stage (0-10 Users)                              |
+| -------------------------------------------------------------------- |
+| - Docker Compose, DevContainer                                       |
+| - Docker, FastAPI, Dapr, Dapr Workflows, OpenAI Agents SDK, MCP, A2A |
+| - Local Redis & RabbitMQ, Human-in-the-loop (HITL)                   |
+| +----------------------------------------------------+               |
+
 
 ### 1. Local Development: Open-Source Stack
 
