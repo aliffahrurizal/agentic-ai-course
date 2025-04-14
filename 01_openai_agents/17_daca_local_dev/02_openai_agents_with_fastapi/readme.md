@@ -1,6 +1,6 @@
 # Integrating [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) with FastAPI
 
-Welcome to the second tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll enhance our FastAPI-based chatbot by integrating the **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)**, a powerful toolkit released by OpenAI in March 2025. This SDK allows us to build autonomous AI agents that can make decisions, use tools, and coordinate workflows. We’ll transform our simple chatbot into an agentic system capable of processing user messages intelligently and responding with context-aware replies. Let’s dive in!
+Welcome to the second tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! In this step, we’ll enhance our FastAPI-based chatbot by integrating the **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)**, a powerful toolkit released by OpenAI on 12 March 2025. This SDK allows us to build autonomous AI agents that can make decisions, use tools, and coordinate workflows. We’ll transform our simple chatbot into an agentic system capable of processing user messages intelligently and responding with context-aware replies. Let’s dive in!
 
 ---
 
@@ -14,13 +14,13 @@ Welcome to the second tutorial in our **Dapr Agentic Cloud Ascent (DACA)** serie
 ## Prerequisites
 - Completion of the previous tutorial.
 - Python 3.12+ installed.
-- An OpenAI API key (set as an environment variable: `OPENAI_API_KEY`). You can also use Google Gemini Flash 2.0 using it's OpenAI Chat Completion Compatiable API.
+- An OpenAI API key (set as an environment variable: `OPENAI_API_KEY`). You can also use Google Gemini Flash 2.0 (set as an environment variable: `GEMINI_API_KEY`) using it's OpenAI Chat Completion Compatiable API.
 - Basic familiarity with FastAPI, Pydantic, and Python async programming.
 
 ---
 
 ## Step 1: Introduction to the OpenAI Agents SDK
-The **OpenAI Agents SDK**, released in March 2025, is an open-source toolkit designed to build agentic AI applications. It’s a production-ready evolution of OpenAI’s earlier Swarm framework, offering a lightweight, Python-first approach to creating autonomous AI agents. Key features include:
+The **OpenAI Agents SDK**, released on **12 March 2025**, is an open-source toolkit designed to build agentic AI applications. It’s a production-ready evolution of OpenAI’s earlier Swarm framework, offering a lightweight, Python-first approach to creating autonomous AI agents. Key features include:
 
 - **Agents**: Large language models (LLMs) configured with instructions and tools to perform tasks.
 - **Tools**: Functions that agents can call to execute actions (e.g., fetching data, performing calculations).
@@ -71,7 +71,7 @@ dependencies = [
 ```
 
 ### Set Up the OpenAI API Key
-The OpenAI Agents SDK requires an API key to interact with AI models. Create a .env file and add environment variable:
+The OpenAI Agents SDK requires an API key to interact with AI models. Create a `.env` file and add environment variable:
 ```bash
 GEMINI_API_KEY="your-api-key-here"
 ```
