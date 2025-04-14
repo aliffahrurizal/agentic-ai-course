@@ -68,7 +68,13 @@ powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 uv --version
 ```
 
-You should see output like `uv 0.6.12` (or the latest version).
+OR
+
+```bash
+uv version
+```
+
+You should see output like `uv 0.6.14` (or the latest version).
 
 ---
 
@@ -165,8 +171,20 @@ Run the server with following command in terminal:
 ```bash
 fastapi dev main.py
 ```
+The command `fastapi dev main.py` is used to run a FastAPI application in development mode. Here's a breakdown:
 
-Note: If you can get any error ensure fastapi is not installed globally or remove it. Alternatively you can also use this command
+- **FastAPI**: A modern, high-performance Python web framework for building APIs.
+- **dev**: A subcommand provided by FastAPI's CLI (introduced in FastAPI 0.100.0 and later) to run the application in development mode with automatic reloading.
+- **main.py**: The Python file containing your FastAPI application code (typically where the `FastAPI()` instance is defined).
+
+
+**Notes:**
+- Requires FastAPI and Uvicorn installed (`uv add fastapi[standard]` or `pip install fastapi[standard]`).
+- Use `fastapi dev` for development only, not production.
+- If your app instance isn’t named `app` or is in a different file/module, you may need to specify it (e.g., `fastapi dev myapp:app`).
+- If you can get any error ensure fastapi is not installed globally or remove it. Alternatively you can also use this command
+
+OR
 
 ```bash
 uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
@@ -439,11 +457,11 @@ async def chat(message: Message):
 
 #### Run Code
 
-````bash
-fastapi dev chat.py
 ```bash
+fastapi dev chat.py
+```
 
-## Step 6: Writing Unit Tests with Pytest
+## Step 5: Writing Unit Tests with Pytest
 
 ### Why Unit Tests?
 
@@ -545,7 +563,7 @@ tests/test_chat.py::test_chat PASSED
    - `test_get_user`: Tests the `/users/{user_id}` endpoint with and without query parameters.
    - `test_chat`: Tests the `/chat/` endpoint with both valid and invalid requests, including nested `metadata`.
 
-## Step 7: Why FastAPI and Pydantic for DACA?
+## Step 6: Why FastAPI and Pydantic for DACA?
 
 - **FastAPI**:
   - **Asynchronous Support**: Handles high-concurrency workloads.
@@ -558,7 +576,7 @@ tests/test_chat.py::test_chat PASSED
 
 ---
 
-## Step 8: Next Steps
+## Step 7: Next Steps
 
 You’ve built a robust FastAPI app with complex Pydantic models, and unit tests! In the next tutorial (**02_openai_agents_with_fastapi**), we’ll integrate the OpenAI Agents SDK to make our chatbot agentic, enabling autonomous task execution.
 
