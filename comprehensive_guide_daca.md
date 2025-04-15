@@ -270,7 +270,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 
 - **Goal**: Rapid iteration with production-like features.
 - **Setup**:
-  - **Docker Compose**: Runs the agent app, Dapr sidecar, A2A endpoints and local services.
+  - **Docker Compose (or Rancher Desktop with Lens)**: Runs the agent app, Dapr sidecar, A2A endpoints and local services.
     ```yaml
     version: "3.8"
     services:
