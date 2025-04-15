@@ -271,6 +271,10 @@ A2A enables interaction between a "client" agent and a "remote" agent. The clien
 - **Collaboration**: Agents exchange messages to share context, responses, artifacts, or user guidance.
 - **User experience negotiation**: Messages contain “parts,” fully developed content pieces like generated images, each with a defined content type. This allows the agents to agree on the proper format and adapt to the user’s interface preferences, such as support for iframes, videos, web forms, and other elements.
 
+<p align="center">
+<img src="./a2a.webp" width="400">
+</p>
+
 ---
 
 ## DACA Deployment Stages: The Ascent
