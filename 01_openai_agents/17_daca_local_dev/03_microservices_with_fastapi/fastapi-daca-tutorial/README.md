@@ -29,7 +29,16 @@ Each service is managed using the `uv` Python package manager for efficient depe
    ```bash
    ./run_services.sh
    ```
-
+   **output**
+   
+   ```bash
+   Server started at http://127.0.0.1:8001
+   server   Documentation at http://127.0.0.1:8001/docs
+   
+   Server started at http://127.0.0.1:8000
+   server   Documentation at http://127.0.0.1:8000/docs
+ 
+   ```
 
    This script will start both microservices concurrently in the background.
 
