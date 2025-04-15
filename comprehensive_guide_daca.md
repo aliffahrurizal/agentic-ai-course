@@ -29,7 +29,7 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework
 - Use containers (Docker/OCI) as the standard for development environments for Agentic AI.
 - Ensure consistency across developer machines (macOS, Windows, Linux) and minimize "it works on my machine" issues.
 - Leverage tools like VS Code Dev Containers for reproducible, isolated development environments inside containers.
-- Use open-source programming languages like Python, libraries such as Dapr, orchestration platforms like Kubernetes, applications like Rancher Desktop, and protocols like MCP and A2A.
+- Use open-source programming languages like Python, libraries such as Dapr, orchestration platforms like Kubernetes, applications like Rancher Desktop,databases like Postgres, and protocols like MCP and A2A.
 - The goal is OS-agnostic, location-agnostic, consistent Agentic AI development.
 
 2. **Cloud Anywhere**:
