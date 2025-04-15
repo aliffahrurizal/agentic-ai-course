@@ -65,33 +65,34 @@ DACA, enhanced by A2A, is a comprehensive blueprint for realizing Agentia World.
 <img src="./a2a.webp" width="400">
 </p>
 
-This diagram outlines the technology architecture for an "Agentic Application" in the envisioned "Agentia World." Here's a breakdown of the components and their interactions:
 
-1. **Agentic Application**: The overarching system where agents operate. It serves as the environment for agent interactions and task execution.
+This diagram represents the technology architecture for an "Agentic Application" in the envisioned "Agentia World":
 
-2. **Agent**: The central entity in the architecture, likely the primary AI or system that coordinates activities. It interacts with sub-agents and external blackbox agents.
+1. **Agentic Application**: The environment where agents operate, facilitating their interactions and task execution.
 
-3. **Sub-Agents**: Smaller, specialized agents within the Agentic Application. They communicate with the main Agent and each other (as shown by the bidirectional arrows) to perform specific tasks or handle subtasks. This suggests a hierarchical or modular structure for task delegation.
+2. **Agent**: The central AI or system coordinating activities, interacting with sub-agents and external blackbox agents.
 
-4. **Agent Framework**: A foundational layer (highlighted in yellow) that provides the structure and protocols for agent operations. It likely includes libraries, APIs, or rules that enable agents to function cohesively within the application.
+3. **Sub-Agents**: Specialized agents within the Agentic Application, communicating with the main Agent and each other to handle specific tasks, indicating a modular structure.
 
-5. **LLM (Large Language Model)**: Highlighted in green, the LLM serves as the core intelligence for the agents, powering their natural language understanding, decision-making, and task execution. It sits within the Agent Framework, indicating it’s a critical component for agent functionality.
+4. **Agent Framework**: A foundational layer (in yellow) providing the structure and protocols for agent operations, including libraries or rules for cohesive functionality.
 
-6. **MCP (Middleware Communication Protocol)**: This protocol facilitates communication between the Agent Framework and external entities. It handles the exchange of resources, tools, and other data, ensuring seamless integration with external systems.
+5. **LLM (Large Language Model)**: Highlighted in green, the LLM powers the agents' intelligence for natural language processing, decision-making, and task execution. It’s integrated within the Agent Framework.
 
-7. **Resources/Tools**: Represented as external inputs (e.g., /resources, /tools), these are accessed via the MCP. They could include databases, APIs, or other services that the agents use to complete tasks.
+6. **MCP (Model Context Protocol)**: MCP is a protocol that manages the context and state of the LLM during interactions. It facilitates the exchange of contextual data (e.g., /resources, /tools) between the Agent Framework and external systems, ensuring the LLM maintains relevant context for tasks.
 
-8. **Blackbox Agents (1 and 2)**: External agents that interact with the main Agent using the A2A (Agent-to-Agent) protocol. These blackbox agents likely represent third-party or independent systems that the main Agent collaborates with to achieve goals. The "GET agent card" label suggests a specific interaction where the main Agent retrieves information or capabilities from Blackbox Agent 2.
+7. **Resources/Tools**: External inputs (e.g., /resources, /tools) accessed via the MCP. These could include databases, APIs, or services that agents use, with the MCP ensuring the LLM understands the context of these resources.
 
-9. **A2A Protocol**: The Agent-to-Agent protocol governs communication between the main Agent and external blackbox agents. It ensures standardized and secure data exchange between different agent systems.
+8. **Blackbox Agents (1 and 2)**: External agents interacting with the main Agent using the A2A (Agent-to-Agent) protocol. They likely represent third-party systems collaborating with the main Agent, with interactions like "GET agent card" indicating specific data or capability requests.
 
-### Workflow Summary:
-- The **Agent** orchestrates tasks by delegating to **Sub-Agents** within the **Agentic Application**.
-- The **Agent Framework** provides the operational structure, powered by an **LLM** for intelligent processing.
-- The **MCP** enables the Agent Framework to access external **Resources/Tools**.
-- The **Agent** communicates with **Blackbox Agents** via the **A2A Protocol** for collaborative tasks or data exchange.
+9. **A2A Protocol**: The Agent-to-Agent protocol standardizing communication between the main Agent and external blackbox agents for secure and efficient collaboration.
 
-This architecture supports a modular, scalable system where agents can work independently or collaboratively, leveraging both internal frameworks and external systems to achieve complex goals in the "Agentia World."
+### Updated Workflow Summary:
+- The **Agent** delegates tasks to **Sub-Agents** within the **Agentic Application**.
+- The **Agent Framework**, powered by the **LLM**, provides the operational structure. For example, OpenAI's Agents SDK, Dapr Agents, LangGraph, AutoGen, ADK, etc.
+- The **MCP (Model Context Protocol)** ensures the LLM maintains proper context while accessing external **Resources/Tools**.
+- The **Agent** collaborates with **Blackbox Agents** via the **A2A Protocol** for external interactions.
+
+This architecture supports a modular, context-aware system where agents, powered by an LLM, operate cohesively using the MCP and A2A Protocols to manage interactions with external resources and agents in the "Agentia World."
 
 ---
 ## The Indispensable Role of Cloud-Native Technologies in Agentic AI Development
