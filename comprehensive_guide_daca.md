@@ -59,7 +59,39 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework
 
 DACA, enhanced by A2A, is a comprehensive blueprint for realizing Agentia World. A2A enables agents to collaborate across platforms, organizations, and physical-digital boundaries, while DACA’s progressive deployment strategy—spanning free-tier clouds to Kubernetes—delivers planetary-scale intelligence. This fusion empowers AI agents to operate seamlessly at vast scale, transforming homes, offices, and cities into an interconnected, intelligent ecosystem.
 
+## The Technology Architecture for Agentia World
 
+<p align="center">
+<img src="./a2a.webp" width="400">
+</p>
+
+This diagram outlines the technology architecture for an "Agentic Application" in the envisioned "Agentia World." Here's a breakdown of the components and their interactions:
+
+1. **Agentic Application**: The overarching system where agents operate. It serves as the environment for agent interactions and task execution.
+
+2. **Agent**: The central entity in the architecture, likely the primary AI or system that coordinates activities. It interacts with sub-agents and external blackbox agents.
+
+3. **Sub-Agents**: Smaller, specialized agents within the Agentic Application. They communicate with the main Agent and each other (as shown by the bidirectional arrows) to perform specific tasks or handle subtasks. This suggests a hierarchical or modular structure for task delegation.
+
+4. **Agent Framework**: A foundational layer (highlighted in yellow) that provides the structure and protocols for agent operations. It likely includes libraries, APIs, or rules that enable agents to function cohesively within the application.
+
+5. **LLM (Large Language Model)**: Highlighted in green, the LLM serves as the core intelligence for the agents, powering their natural language understanding, decision-making, and task execution. It sits within the Agent Framework, indicating it’s a critical component for agent functionality.
+
+6. **MCP (Middleware Communication Protocol)**: This protocol facilitates communication between the Agent Framework and external entities. It handles the exchange of resources, tools, and other data, ensuring seamless integration with external systems.
+
+7. **Resources/Tools**: Represented as external inputs (e.g., /resources, /tools), these are accessed via the MCP. They could include databases, APIs, or other services that the agents use to complete tasks.
+
+8. **Blackbox Agents (1 and 2)**: External agents that interact with the main Agent using the A2A (Agent-to-Agent) protocol. These blackbox agents likely represent third-party or independent systems that the main Agent collaborates with to achieve goals. The "GET agent card" label suggests a specific interaction where the main Agent retrieves information or capabilities from Blackbox Agent 2.
+
+9. **A2A Protocol**: The Agent-to-Agent protocol governs communication between the main Agent and external blackbox agents. It ensures standardized and secure data exchange between different agent systems.
+
+### Workflow Summary:
+- The **Agent** orchestrates tasks by delegating to **Sub-Agents** within the **Agentic Application**.
+- The **Agent Framework** provides the operational structure, powered by an **LLM** for intelligent processing.
+- The **MCP** enables the Agent Framework to access external **Resources/Tools**.
+- The **Agent** communicates with **Blackbox Agents** via the **A2A Protocol** for collaborative tasks or data exchange.
+
+This architecture supports a modular, scalable system where agents can work independently or collaboratively, leveraging both internal frameworks and external systems to achieve complex goals in the "Agentia World."
 
 ---
 ## The Indispensable Role of Cloud-Native Technologies in Agentic AI Development
@@ -270,10 +302,6 @@ A2A enables interaction between a "client" agent and a "remote" agent. The clien
 - **Task management**: The client and remote agents focus on completing tasks to meet user needs. Tasks, defined by the protocol, follow a lifecycle—some are finished quickly, while others, especially prolonged ones, require ongoing communication to keep both agents aligned on progress. The result of a task is called an “artifact.”
 - **Collaboration**: Agents exchange messages to share context, responses, artifacts, or user guidance.
 - **User experience negotiation**: Messages contain “parts,” fully developed content pieces like generated images, each with a defined content type. This allows the agents to agree on the proper format and adapt to the user’s interface preferences, such as support for iframes, videos, web forms, and other elements.
-
-<p align="center">
-<img src="./a2a.webp" width="400">
-</p>
 
 ---
 
