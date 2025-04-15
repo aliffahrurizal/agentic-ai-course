@@ -1,4 +1,5 @@
 # 🧠 FastAPI DACA Microservices
+![Demo](output.gif)
 
 This project comprises two FastAPI microservices:
 
@@ -20,15 +21,15 @@ Each service is managed using the `uv` Python package manager for efficient depe
 
    ```bash
    chmod +x run_services.sh
-   ``
-
+   ```
+
 
 2. **Run the script**:
 
    ```bash
    ./run_services.sh
-   ``
-
+   ```
+
 
    This script will start both microservices concurrently in the background.
 
@@ -40,11 +41,13 @@ Each service is managed using the `uv` Python package manager for efficient depe
 
    ```cmd
    run_services.bat
-   ``
-
+   ```
+
 
    This will open two separate Command Prompt windows, each running one of the microservices.
 
 ## 📝 Notes
-- Both scripts utilize `uv run fastapi dev` to start the FastAPI applications in development moe.- Ensure that each microservice directory contains a valid `pyproject.toml` file with the necessary configuratios.- If you encounter issues with dependencies, consider running `uv sync` in each microservice directory to synchronize dependencies as specified in the `pyproject.toml` fils.
+- Both scripts utilize `uv run fastapi dev` to start the FastAPI applications in development mode.
+- Ensure that each microservice directory contains a valid `pyproject.toml` file with the necessary configuratios.
+- If you encounter issues with dependencies, consider running `uv sync` in each microservice directory to synchronize dependencies as specified in the `pyproject.toml` fils.
 
