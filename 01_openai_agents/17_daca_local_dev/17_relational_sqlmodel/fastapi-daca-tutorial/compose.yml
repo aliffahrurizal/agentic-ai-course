@@ -1,0 +1,99 @@
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - daca-network
+
+  chat-service-app:
+    build: ./chat_service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    env_file:
+      - ./chat_service/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - daca-network
+
+  chat-service-dapr:
+    image: daprio/dapr:1.15.1
+    command:
+      - "./daprd"
+      - "--app-id"
+      - "chat-service"
+      - "--app-port"
+      - "8080"
+      - "--dapr-http-port"
+      - "3500"
+      - "--log-level"
+      - "debug"
+      - "--resources-path"
+      - "/components"
+      - "--app-protocol"
+      - "http"
+      - "--app-channel-address"
+      - "chat-service-app"
+    ports:
+      - "3500:3500"
+    volumes:
+      - ./components:/components
+    depends_on:
+      - chat-service-app
+      - redis
+    networks:
+      - daca-network
+
+  agent-memory-service-app:
+    build: ./agent_memory_service
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+    env_file:
+      - ./agent_memory_service/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - daca-network
+
+  agent-memory-service-dapr:
+    image: daprio/dapr:1.15.1
+    command:
+      - "./daprd"
+      - "--app-id"
+      - "agent-memory-service"
+      - "--app-port"
+      - "8001"
+      - "--dapr-http-port"
+      - "3501"
+      - "--log-level"
+      - "debug"
+      - "--resources-path"
+      - "/components"
+      - "--app-protocol"
+      - "http"
+      - "--app-channel-address"
+      - "agent-memory-service-app"
+    ports:
+      - "3501:3501"
+    volumes:
+      - ./components:/components
+      - ./agent_memory_service/.env:/components/.env:ro
+    depends_on:
+      - agent-memory-service-app
+      - redis
+    networks:
+      - daca-network
+
+networks:
+  daca-network:
+    driver: bridge
+
+volumes:
+  redis-data:
