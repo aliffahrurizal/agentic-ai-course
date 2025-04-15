@@ -22,6 +22,23 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic framework
 - **Cloud-Free Tiers**: Leverages free services for cost efficiency.
 - **Progressive Scaling**: From local dev to Kubernetes with self-hosted LLMs.
 
+### The Core Ideas of DACA are:
+
+1. **Develop Anywhere**:
+
+- Use containers (Docker/OCI) as the standard for development environments for Agentic AI.
+- Ensure consistency across developer machines (macOS, Windows, Linux) and minimize "it works on my machine" issues.
+- Leverage tools like VS Code Dev Containers for reproducible, isolated development environments inside containers.
+- The goal is OS-agnostic, location-agnostic, consistent Agentic AI development.
+
+2. **Cloud Anywhere**:
+- Use Kubernetes as the standard orchestration layer for AI Agent deployment. This allows agentic applications packaged as containers to run consistently across different cloud providers (AWS, GCP, Azure) or on-premises clusters.
+- Use Dapr to simplify building distributed, scalable, and resilient AI Agents and workflows.
+- Leverage tools like Helm for packaging and GitOps tools (Argo CD) for deployment automation.
+- The goal is deployment portability and avoiding cloud vendor lock-in.
+
+
+
 ### Core Principles
 1. **Simplicity**: Minimize predefined constructs, empowering developers to craft custom workflows with A2A’s flexible communication.
 2. **Scalability**: Ascends from single machines to planetary scale using stateless containers, Kubernetes, and MCP and A2A’s interoperability.
