@@ -450,6 +450,6 @@ Each service is managed using the `uv` Python package manager for efficient depe
    This will open two separate Command Prompt windows, each running one of the microservices.
 
 ### 📝 Notes
-- Both scripts utilize `uv run fastapi dev` to start the FastAPI applications in development moe.
+- Both scripts utilize `uv run fastapi dev` to start the FastAPI applications in development mode.
 - Ensure that each microservice directory contains a valid `pyproject.toml` file with the necessary configuratios.
 - If you encounter issues with dependencies, consider running `uv sync` in each microservice directory to synchronize dependencies as specified in the `pyproject.toml` fils.
