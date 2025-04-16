@@ -121,7 +121,7 @@ DACA, enhanced by A2A, is a comprehensive blueprint for realizing Agentia World.
 ## The Technology Architecture for Agentia World
 
 <p align="center">
-<img src="./a2a.webp" width="600">
+<img src="./a2a.webp" width="700">
 </p>
 
 
@@ -233,7 +233,7 @@ The DACA architecture is a layered, event-driven, stateless system that integrat
 
 ### Architecture Diagram Breakdown
 <p align="center">
-<img src="./architecture1.png" width="600">
+<img src="./architecture1.png" width="700">
 </p>
 
 The provided architecture diagram illustrates the DACA framework:
