@@ -321,26 +321,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 
 - **Goal**: Rapid iteration with production-like features.
 - **Setup**:
-  - **Docker Compose (or Rancher Desktop with Lens)**: Runs the agent app, Dapr sidecar, A2A endpoints and local services.
-    ```yaml
-    version: "3.8"
-    services:
-      agent-app:
-        build: .
-        ports:
-          - "8080:8080"
-        environment:
-          - OPENAI_API_KEY=sk-...
-        depends_on:
-          - dapr-sidecar
-      dapr-sidecar:
-        image: daprio/daprd:latest
-        command: ["./daprd", "-app-id", "agent-app", "-app-port", "8080"]
-        depends_on:
-          - redis
-      redis:
-        image: redis:latest
-    ```
+  - **Rancher Desktop with Lens**: Runs the agent app, Dapr sidecar, A2A endpoints and local services on local Kubernetes.
   - **LLM APIs**: OpenAI Chat Completion, Google Gemini (free tier).
   - **Agents and MCP Servers**: OpenAI Agents SDK with MCP Servers and with A2A integration.
   - **REST APIs**: FastAPI.
@@ -510,7 +491,7 @@ DACA’s flexibility makes it applicable to a wide range of agentic AI systems, 
 
 - **Local Development**:
   - Build the moderation agent using the OpenAI Agents SDK in a Docker container, with a Dapr sidecar for state management (local Redis) and messaging (local RabbitMQ).
-  - Test the agent locally with Docker Compose, simulating posts and flagging content based on predefined rules (e.g., profanity detection).
+  - Test the agent locally with Rancher Desktop, simulating posts and flagging content based on predefined rules (e.g., profanity detection).
   - Use FastAPI to expose a REST endpoint for submitting posts and retrieving moderation results.
 - **Prototyping**:
   - Deploy to Hugging Face Docker Spaces (free tier) for public testing.
@@ -533,7 +514,7 @@ DACA’s flexibility makes it applicable to a wide range of agentic AI systems, 
 - **Local Development**:
   - Develop the diagnosis agent with OpenAI Agents SDK, running in a Docker container with a Dapr sidecar.
   - Use a local Postgres container to store patient data (symptoms, history) and Redis for caching medical knowledge graphs.
-  - Test locally with Docker Compose, simulating patient inputs (e.g., "fever, cough") and generating diagnosis suggestions (e.g., "Possible flu, 80% confidence").
+  - Test locally with Rancher Desktop, simulating patient inputs (e.g., "fever, cough") and generating diagnosis suggestions (e.g., "Possible flu, 80% confidence").
 - **Prototyping**:
   - Deploy to Hugging Face Docker Spaces for free testing with a small user base (e.g., 100 patients/day).
   - Use CockroachDB Serverless (free tier) for patient data persistence and Upstash Redis for caching.
@@ -555,7 +536,7 @@ DACA’s flexibility makes it applicable to a wide range of agentic AI systems, 
 - **Local Development**:
   - Build the recommendation agent using OpenAI Agents SDK in a Docker container, with Dapr for state (Redis) and messaging (RabbitMQ).
   - Use a local Postgres container to store user browsing history and product catalogs.
-  - Test with Docker Compose, simulating user actions (e.g., "viewed electronics") and generating recommendations (e.g., "suggest laptops").
+  - Test with Rancher Desktop, simulating user actions (e.g., "viewed electronics") and generating recommendations (e.g., "suggest laptops").
 - **Prototyping**:
   - Deploy to Hugging Face Docker Spaces for free testing with early users.
   - Use CockroachDB Serverless to store user data and Upstash Redis to cache recommendations for low-latency access.
@@ -667,7 +648,7 @@ A **framework** is a more concrete, reusable set of libraries, tools, or runtime
    - But DACA isn’t Dapr—it uses Dapr as a component within its broader design pattern. DACA’s scope extends beyond Dapr to include the entire architecture (EDA, three-tier, statelessness, deployment stages).
 
 3. **Unified Stack Across Stages**:
-   - DACA’s consistent stack (same tools from local to production, differing only in deployment) feels framework-like, as it provides a cohesive development experience. For example, the use of Docker Compose locally, Hugging Face Spaces for prototyping, and ACA/Kubernetes for production follows a structured pipeline.
+   - DACA’s consistent stack (same tools from local to production, differing only in deployment) feels framework-like, as it provides a cohesive development experience. For example, the use of Rancher Desktop locally, Hugging Face Spaces for prototyping, and ACA/Kubernetes for production follows a structured pipeline.
    - However, this is a *strategy* for deployment, not a framework’s runtime enforcement. You could deploy DACA on entirely different platforms (e.g., GCP Cloud Run) and still adhere to the pattern.
 
 ---
@@ -708,7 +689,7 @@ To further clarify:
 
 ### Why DACA Feels Framework-Like in Practice
 In your specific implementation, DACA might feel like a framework because:
-- **Detailed Reference Stack**: The comprehensive stack (OpenAI Agents SDK, Dapr, FastAPI, CockroachDB, etc.) and deployment pipeline (Docker Compose → HF Spaces → ACA → Kubernetes) provide a ready-to-use blueprint, much like a framework’s scaffold.
+- **Detailed Reference Stack**: The comprehensive stack (OpenAI Agents SDK, Dapr, FastAPI, CockroachDB, etc.) and deployment pipeline (Rancher Desktop → HF Spaces → ACA → Kubernetes) provide a ready-to-use blueprint, much like a framework’s scaffold.
 - **Dapr’s Framework Nature**: Dapr’s sidecar and components (e.g., `state.redis`, `pubsub.rabbitmq`) give a framework-like experience within DACA’s architecture.
 - **Unified Workflow**: The consistent tooling across stages (local, prototype, production) mimics a framework’s cohesive development experience.
 
