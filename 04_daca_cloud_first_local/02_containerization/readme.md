@@ -1,51 +1,58 @@
-# Introduction to Docker, Docker Desktop, and App Containerization
+# Introduction to [Containers](https://www.docker.com/resources/what-container/) and [Kubernetes](https://kubernetes.io/docs/concepts/overview/) with [Rancher Desktop](https://docs.rancherdesktop.io/)
 
-Welcome to the twelfth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! Before we containerize our microservices in the next tutorial, we need to build a solid understanding of **Docker**, **Docker Desktop**, and the concepts behind application containerization. In this tutorial, we’ll explore what Docker is, how Docker Desktop simplifies container management, and the principles of containerization. We’ll also walk through practical examples to illustrate these concepts, setting the stage for containerizing our DACA microservices in the next tutorial. Let’s dive in!
+Welcome to the twelfth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** series! This tutorial lays the foundation for containerizing our agentic AI microservices by introducing **containers**, **Kubernetes**, and **Rancher Desktop**. We’ll explore how containers package applications for consistency, how Kubernetes orchestrates them for scalability, and how Rancher Desktop simplifies both on your local machine using the `containerd` engine. Through hands-on examples, we’ll containerize a DACA agent app and deploy it in a Kubernetes cluster, setting the stage for Dapr integration in the next tutorial. Let’s get started!
 
 ---
 
 ## What You’ll Learn
-- What Docker is and why it’s used for application containerization.
-- The core concepts of containerization (e.g., containers, images, Dockerfiles).
-- How Docker Desktop simplifies container development and management.
-- Practical examples of building, running, and managing containers with Docker.
-- Key Docker commands and workflows for containerization.
+
+- Core concepts of containerization (containers, images, Dockerfiles).
+- Basics of Kubernetes (pods, Deployments, Services).
+- How Rancher Desktop manages containers with `containerd` and provides a local Kubernetes cluster.
+- Practical examples of building, running, and deploying a DACA agent app in containers and Kubernetes.
+- Key commands for `nerdctl` (containerd CLI) and Kubernetes (`kubectl`).
 
 ## Prerequisites
-- A computer with administrative privileges to install software.
-- Basic familiarity with the command line (e.g., terminal on macOS/Linux, Command Prompt/PowerShell on Windows).
-- No prior Docker experience is required—we’ll start from the basics!
+
+- A computer with administrative privileges (macOS, Windows, or Linux).
+- Basic command-line familiarity (e.g., Terminal on macOS/Linux, PowerShell on Windows).
+- No prior container or Kubernetes experience needed—we start from scratch!
+- Recommended: 8 GB RAM, 4 CPUs.
 
 ---
 
-## Step 1: What is Docker?
-**Docker** is an open-source platform that enables developers to build, ship, and run applications inside **containers**. Containers are lightweight, portable units that package an application and its dependencies (e.g., libraries, runtime, configuration) together, ensuring the application runs consistently across different environments (e.g., development, testing, production).
+## Step 1: Understanding Containers
 
-### Why Use Docker?
-Docker solves the classic problem of “it works on my machine, but not in production” by providing a standardized way to package and deploy applications. Key benefits include:
-- **Consistency**: Containers include everything an application needs to run (code, dependencies, system libraries), ensuring it behaves the same way everywhere.
-- **Portability**: Containers can run on any system with Docker installed, whether it’s a developer’s laptop, a cloud server, or a Kubernetes cluster.
-- **Isolation**: Each container runs in its own isolated environment, preventing conflicts between applications (e.g., different versions of Python or Node.js).
-- **Efficiency**: Containers are lightweight compared to virtual machines (VMs) because they share the host operating system’s kernel, reducing resource overhead.
-- **Scalability**: Docker makes it easy to scale applications by running multiple container instances, often orchestrated by tools like Kubernetes.
+**Containers** are lightweight, portable units that package an application and its dependencies (code, libraries, runtime) to run consistently across environments. In DACA, containers ensure our agentic AI microservices (e.g., Chat Service with OpenAI Agents SDK) behave the same in development and production.
 
-### Docker vs. Virtual Machines
-To understand Docker, it’s helpful to compare containers to virtual machines (VMs):
-- **Virtual Machines**:
-  - Run a full guest operating system (e.g., Ubuntu, Windows) on top of a hypervisor (e.g., VMware, VirtualBox).
-  - Include the entire OS, making them heavyweight (several GBs in size).
-  - Slower to start because they boot a full OS.
-- **Containers**:
-  - Share the host OS kernel, only including the application and its dependencies.
-  - Lightweight (often MBs in size).
-  - Start almost instantly because they don’t need to boot an OS.
+### Why Containers?
 
-**Analogy**: Think of a VM as a house with its own plumbing, electricity, and foundation (full OS). A container is like an apartment in a building—each apartment has its own furniture (application and dependencies), but they share the building’s infrastructure (host OS).
+- **Consistency**: Packages dependencies (e.g., Python, OpenAI SDK), avoiding “it works on my machine” issues.
+- **Portability**: Runs on any compatible system, from laptops to cloud clusters.
+- **Isolation**: Each container is sandboxed, preventing conflicts (e.g., different Python versions).
+- **Efficiency**: Shares the host OS kernel, using less RAM than virtual machines (VMs).
+- **Scalability**: Easily scaled with orchestration tools like Kubernetes.
+
+### Containers vs. Virtual Machines
+
+- **VMs**: Run a full OS (e.g., Ubuntu) on a hypervisor, heavy (GBs), slow to start.
+- **Containers**: Share host OS, include only app dependencies, lightweight (MBs), instant start.
+
+**Analogy**: VMs are houses with separate utilities; containers are apartments sharing a building’s infrastructure.
 
 ---
 
-## Step 2: Core Concepts of App Containerization
-Containerization is the process of packaging an application and its dependencies into a container. Let’s break down the key concepts:
+## Step 2: Core Container Concepts
+
+Containerization packages apps into containers. Key terms:
+
+- **Container**: A running instance of an image, isolating the app (e.g., FastAPI agent).
+- **Image**: Immutable snapshot of app + dependencies (e.g., `python:3.11-slim`).
+- **Dockerfile**: Script to build images (e.g., install OpenAI SDK, copy code).
+- **Registry**: Stores images (e.g., Docker Hub, private registries like AWS ECR).
+- **Container Engine**: Runtime to build/run containers (we’ll use `containerd` via Rancher Desktop).
+
+Let's understand the **Core Concepts of App Containerization**. Containerization is the process of packaging an application and its dependencies into a container. Let’s break down the key concepts:
 
 ### 2.1 Containers
 A **container** is a running instance of a container image. It’s an isolated environment that contains:
@@ -61,6 +68,7 @@ A **container image** is a lightweight, immutable snapshot of an application and
 
 - Images are stored in a **registry**, such as **Docker Hub** (a public registry) or a private registry (e.g., AWS ECR, Google Artifact Registry).
 - Example: The `python:3.9-slim` image on Docker Hub contains a minimal Python 3.9 environment.
+
 
 ### 2.3 Dockerfile
 A **Dockerfile** is a script that defines how to build a container image. It contains instructions like:
@@ -87,357 +95,515 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Define the command to run the app
 CMD ["python", "app.py"]
 ```
+---
 
-### 2.4 Docker Engine
-The **Docker Engine** is the runtime that builds and runs containers. It consists of:
-- **Docker Daemon**: A background process (`dockerd`) that manages containers, images, networks, and storage.
-- **Docker CLI**: The `docker` command-line tool that interacts with the daemon (e.g., `docker run`, `docker build`).
-- **Docker API**: A REST API for programmatic interaction with the daemon.
+## Step 3: Understanding Kubernetes
 
-### 2.5 Docker Hub
-**Docker Hub** is a public registry for storing and sharing container images. You can pull pre-built images (e.g., `nginx`, `redis`) or push your own images to share with others.
+**Kubernetes** is an open-source platform for orchestrating containers, automating deployment, scaling, and management. In DACA, Kubernetes scales our agent microservices and aligns with options like Azure Container Apps (ACA) for serverless deployment.
+
+### Why Kubernetes?
+
+- **Orchestration**: Manages multiple containers (e.g., agent app, CockroachDB) across clusters.
+- **Scaling**: Autoscales pods (container groups) based on demand.
+- **Resilience**: Restarts failed containers, ensures high availability.
+- **Deployment**: Simplifies rollouts to ACA/Kubernetes clusters.
+
+### Key Concepts
+
+- **Pod**: Smallest unit, runs one or more containers (e.g., agent app + Dapr sidecar).
+- **Deployment**: Manages pod replicas, updates, and rollbacks.
+- **Service**: Exposes pods via a stable network endpoint (e.g., `agent-app:8080`).
+- **Cluster**: Nodes (machines) running Kubernetes, managed by a control plane.
+
+**Analogy**: Kubernetes is an orchestra conductor, directing containers (musicians) to play in harmony.
 
 ---
 
-## Step 3: What is Docker Desktop?
-**Docker Desktop** is a user-friendly application that simplifies Docker development on your local machine. It’s available for Windows, macOS, and Linux, and includes:
-- The Docker Engine (daemon and CLI).
-- A graphical user interface (GUI) to manage containers, images, and volumes.
-- Integration with Docker Hub for pulling and pushing images.
-- Support for Kubernetes (a container orchestration tool) for local development.
-- Tools like Docker Compose for running multi-container applications.
+## Step 4: Introducing Rancher Desktop
 
-### Why Use Docker Desktop?
-- **Ease of Use**: The GUI makes it easy to visualize and manage containers, images, and volumes.
-- **Local Development**: Provides a consistent environment for building and testing containers on your laptop.
-- **Integrated Tools**: Includes Docker Compose, Kubernetes, and extensions for development workflows.
-- **Cross-Platform**: Works seamlessly on Windows, macOS, and Linux.
+**Rancher Desktop** is a lightweight app for container management and Kubernetes on macOS, Windows, and Linux. It uses `containerd` as the container engine (with `nerdctl` CLI) and includes a built-in Kubernetes cluster (k3s), ideal for DACA’s ACA/Kubernetes focus.
+
+### Why Rancher Desktop?
+
+- **Containers**: Build/run images with `containerd` and `nerdctl`.
+- **Kubernetes**: Provides k3s, a low-RAM cluster (2-3 GB).
+- **Simplicity**: GUI + CLI for managing containers/pods.
+- **DACA Fit**: Prepares for Step 13’s Dapr in Kubernetes.
 
 ---
 
-## Step 4: Install Docker Desktop
-Let’s install Docker Desktop to get started with containerization.
+## Step 5: [Install Rancher Desktop](https://docs.rancherdesktop.io/getting-started/installation/)
 
-### Step 4.1: Download and Install
-1. **Download Docker Desktop**:
-   - Visit the [Docker Desktop download page](https://www.docker.com/products/docker-desktop/).
-   - Choose the version for your operating system (Windows, macOS, or Linux).
-   - For Windows/macOS, download the installer. For Linux, follow the distribution-specific instructions (e.g., for Ubuntu, you’d install via `apt`).
+Let’s install Rancher Desktop to manage containers and Kubernetes, selecting `containerd` as the container engine.
 
-2. **Install Docker Desktop**:
-   - **Windows**:
-     - Run the installer (`Docker Desktop Installer.exe`).
-     - Ensure WSL 2 (Windows Subsystem for Linux 2) is enabled if prompted (Docker Desktop uses WSL 2 for better performance on Windows).
-     - Follow the installation wizard and launch Docker Desktop.
+### Step 5.1: System Requirements
+
+- **macOS**: Ventura (13) or higher, 8 GB RAM, 4 CPUs (your M2 meets this).
+- **Windows**: Windows 10/11 (Home OK), WSL 2, 8 GB RAM, 4 CPUs.
+- **Linux**: .deb/.rpm/AppImage support, /dev/kvm access, 8 GB RAM, 4 CPUs.
+- Internet connection for initial image downloads.
+
+### Step 5.2: Download and Install
+
+1. **Download**:
+
+   - Visit Rancher Desktop releases.
+   - Choose your OS:
+     - **macOS**: `Rancher.Desktop-X.Y.Z.dmg` (e.g., for M2, aarch64).
+     - **Windows**: `Rancher.Desktop.Setup.X.Y.Z.msi`.
+     - **Linux**: `.deb`, `.rpm`, or AppImage.
+
+2. **Install**:
+
    - **macOS**:
-     - Open the `.dmg` file and drag Docker Desktop to the Applications folder.
-     - Launch Docker Desktop from the Applications folder.
-   - **Linux**:
-     - Follow the instructions for your distribution. For Ubuntu, you might run:
+
+     - Open the `.dmg` file.
+     - Drag Rancher Desktop to Applications.
+     - Launch from Applications.
+
+   - **Windows**:
+
+     - Run the `.msi` installer.
+     - Enable WSL 2 if prompted.
+     - Choose “Install for all users” for full features.
+     - Complete the wizard.
+
+   - **Linux** (e.g., Ubuntu):
+
+     ```bash
+     curl -s https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/Release.key | gpg --dearmor | sudo dd status=none of=/usr/share/keyrings/isv-rancher-stable-archive-keyring.gpg
+     echo 'deb [signed-by=/usr/share/keyrings/isv-rancher-stable-archive-keyring.gpg] https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/ ./' | sudo dd status=none of=/etc/apt/sources.list.d/isv-rancher-stable.list
+     sudo apt update
+     sudo apt install rancher-desktop
+     ```
+
+     - Ensure `/dev/kvm` access:
+
        ```bash
-       sudo apt-get update
-       sudo apt-get install docker-desktop
+       [ -r /dev/kvm ] && [ -w /dev/kvm ] || echo 'insufficient privileges'
+       sudo usermod -a -G kvm "$USER"
        ```
 
-3. **Start Docker Desktop**:
-   - Launch Docker Desktop. It will start the Docker Engine in the background.
-   - On first launch, you may need to sign in with a Docker Hub account (or create one—it’s free).
+     - Reboot if needed.
 
-### Step 4.2: Verify Installation
-Open a terminal and run:
+3. **Configure Rancher Desktop**:
+
+   - Launch the app. On first run, a setup window appears:
+     - **Enable Kubernetes**: Check this box (enables k3s).
+     - **Kubernetes Version**: Select `v1.32.3 (stable, latest)` for stability and Dapr compatibility.
+     - **Container Engine**: Select `containerd` (uses `nerdctl` CLI, namespaced images).
+     - **Configure PATH**: Choose `Automatic` to add `nerdctl`, `kubectl`, and `helm` to your PATH.
+   - Click **OK**. Rancher Desktop downloads k3s images (\~5-10 min first run).
+
+![Rancher Desktop Installation](./install-ranch-dekstop.png)
+
+4. **Verify in GUI**:
+
+   - Open Rancher Desktop and check the Containers, Images, and Kubernetes tabs.
+
+### Step 5.3: Verify Installation
+
+Open a terminal:
+
 ```bash
-docker --version
+nerdctl --version
 ```
+
 Output:
-```
-Docker version 24.0.7, build afdd53b
-```
-(The version number may vary depending on the release.)
 
-Run the following to verify the Docker Engine is running:
+```
+nerdctl version 2.0.3
+```
+
+Verify Kubernetes:
+
 ```bash
-docker info
+kubectl version --client
 ```
-Output should include details about the Docker Engine, such as the number of containers and images.
 
-You can also open the Docker Desktop GUI to see the dashboard, which shows running containers, images, and other resources.
+Output:
+
+```
+Client Version: v1.32.3
+Kustomize Version: v5.5.0
+```
+
+Check cluster:
+
+```bash
+kubectl get nodes
+```
+
+Output:
+
+```
+NAME                   STATUS   ROLES                  AGE   VERSION
+lima-rancher-desktop   Ready    control-plane,master   14m   v1.32.3+k3s1
+```
+
+**Note**: If `nerdctl` or `kubectl` commands aren’t found, restart your terminal or ensure PATH is updated (`$HOME/.rd/bin`).
+
+- If kubectl get nodes command fails then you will have to check and configure context to racher desktop. I faced this issue as a user switching from Docker.
+
+```bash
+kubectl config current-context
+kubectl config get-contexts
+kubectl config use-context rancher-desktop
+kubectl config current-context
+kubectl get nodes
+```
 
 ---
 
-## Step 5: Practical Example 1 – Running a Simple Container
-Let’s run a simple container to get familiar with Docker.
+## Step 6: Practical Example 1 – Running a Simple Container
 
-### Step 5.1: Run an Nginx Container
-**Nginx** is a popular web server. We’ll pull the official Nginx image from Docker Hub and run it as a container.
+Let’s run a container to learn container basics, using Rancher Desktop’s `containerd` engine and `nerdctl` CLI.
 
-1. **Pull the Nginx Image**:
+### Step 6.1: Run an Nginx Container
+
+1. **Pull Nginx Image**:
+
    ```bash
-   docker pull nginx
+   nerdctl pull nginx:alpine
    ```
+
+   - Uses lightweight `alpine` (5 MB, M2-friendly).
+
+2. **Run Container**:
+
+   ```bash
+   nerdctl run -d -p 8080:80 --name my-nginx nginx:alpine
+   ```
+
+   - `-d`: Background mode.
+   - `-p 8080:80`: Maps host port 8080 to container port 80.
+   - `--name my-nginx`: Names the container.
+
+   **Note**: With `containerd`, images are namespaced (e.g., `nginx:alpine` is in the `default` namespace), but `nerdctl` handles this transparently for most commands.
+
+3. **Verify**:
+
+   ```bash
+   nerdctl ps
+   ```
+
    Output:
+
    ```
-   Using default tag: latest
-   latest: Pulling from library/nginx
-   Digest: sha256:abc123...
-   Status: Downloaded newer image for nginx:latest
-   docker.io/library/nginx:latest
+   CONTAINER ID    IMAGE                             COMMAND                   CREATED           STATUS    PORTS                   NAMES
+   6c73ef9cda7a    docker.io/library/nginx:alpine    "/docker-entrypoint.…"    10 seconds ago    Up        0.0.0.0:8080->80/tcp    my-nginx
    ```
 
-2. **Run the Nginx Container**:
+4. **Access**:
+
+   - Open `http://localhost:8080` to see Nginx’s welcome page.
+
+5. **Clean Up**:
+
    ```bash
-   docker run -d -p 8080:80 --name my-nginx nginx
+   nerdctl stop my-nginx
+   nerdctl rm my-nginx
    ```
-   - `-d`: Runs the container in detached mode (in the background).
-   - `-p 8080:80`: Maps port `8080` on your host to port `80` in the container (Nginx listens on port `80` by default).
-   - `--name my-nginx`: Names the container `my-nginx`.
-   - `nginx`: The image to use.
-
-3. **Verify the Container is Running**:
-   ```bash
-   docker ps
-   ```
-   Output:
-   ```
-   CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                    NAMES
-   abc123def456   nginx     "/docker-entrypoint.…"   10 seconds ago  Up 10 seconds  0.0.0.0:8080->80/tcp     my-nginx
-   ```
-
-4. **Access the Nginx Web Server**:
-   Open a browser and navigate to `http://localhost:8080`. You should see the default Nginx welcome page:
-   ```
-   Welcome to nginx!
-   If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
-   ```
-
-5. **Stop and Remove the Container**:
-   ```bash
-   docker stop my-nginx
-   docker rm my-nginx
-   ```
-
-#### What Happened?
-- `docker pull nginx` downloaded the Nginx image from Docker Hub.
-- `docker run` created a container from the `nginx` image and started it.
-- The container ran Nginx, and port mapping (`-p 8080:80`) allowed us to access it from the host.
-- `docker stop` and `docker rm` cleaned up the container.
 
 ---
 
-## Step 6: Practical Example 2 – Building a Custom Container
-Let’s build a custom container for a simple Python application.
+## Step 7: Practical Example 2 – Building a DACA Agent Container
 
-### Step 6.1: Create a Simple Python App
-Create a directory for the app:
+Let’s build a container for a DACA agent app (FastAPI with OpenAI Agents SDK), mimicking the Chat Service.
+
+### Step 7.1: Create the App
+
+#### Create a project:
+
 ```bash
-mkdir my-python-app
-cd my-python-app
+uv init daca-agent
+cd daca-agent
 ```
 
-Create a file `app.py`:
+#### Setup Virtual Environment and install dependencies
+
+On macOS/Linux:
+
+```bash
+uv venv
+source .venv/bin/activate
+```
+
+On Windows:
+
+```bash
+uv venv
+.venv\Scripts\activate
+```
+
+```bash
+uv add "fastapi[standard]"
+```
+
+#### Create `main.py`:
+
 ```python
-from flask import Flask
+from fastapi import FastAPI
 
-app = Flask(__name__)
+app = FastAPI()
 
-@app.route('/')
-def hello():
-    return "Hello from Docker!"
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+@app.get("/")
+async def root():
+    return {"message": f"Hello from DACA Agent!"}
 ```
 
-Create a `requirements.txt` file:
-```
-flask==2.3.2
-```
 
-### Step 6.2: Create a Dockerfile
-In the `my-python-app` directory, create a `Dockerfile`:
+### Step 7.2: Create Dockerfile
+
+Create `Dockerfile`:
+
 ```dockerfile
-# Use a base image with Python 3.9
-FROM python:3.9-slim
+FROM python:3.12-slim
 
-# Set the working directory inside the container
-WORKDIR /app
+# Set working directory
+WORKDIR /code
 
-# Copy the application code
+# Copy code
 COPY . .
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install uv
 
-# Expose the port the app will run on
-EXPOSE 5000
+RUN uv sync --frozen
 
-# Define the command to run the app
-CMD ["python", "app.py"]
+# Expose port
+EXPOSE 8000
+
+# Run FastAPI
+CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-### Step 6.3: Build the Container Image
-Build the image using the `docker build` command:
+Create `.dockerignore` file:
+```
+.venv
+.git
+.gitignore
+.env
+__pycache__
+```
+
+### Step 7.3: Build and Run
+
+Build:
+
 ```bash
-docker build -t my-python-app .
+nerdctl build -t daca-agent .
 ```
-- `-t my-python-app`: Tags the image as `my-python-app`.
-- `.`: Specifies the build context (current directory, where the `Dockerfile` is located).
+
+Check Image
+```bash
+nerdctl images
+```
+
+OUTPUT:
+```bash
+(daca-agent) (chat-service) mjs@Muhammads-MacBook-Pro-3 daca-agent % nerdctl images
+REPOSITORY    TAG       IMAGE ID        CREATED           PLATFORM       SIZE       BLOB SIZE
+daca-agent    latest    3ec4183b0331    21 seconds ago    linux/arm64    366.6MB    118MB
+nginx         alpine    4ff102c5d78d    13 minutes ago    linux/arm64    53.72MB    21.67MB
+```
+
+Run:
+
+```bash
+nerdctl run -d -p 8000:8000 --name daca-agent  daca-agent
+```
+
+- **Note**: `containerd` uses namespaces, so the image `daca-agent` is in the `default` namespace (`default/daca-agent`).
+
+Verify:
+
+```bash
+nerdctl ps
+```
+
+Access `http://localhost:8000`:
+
+```
+{"message": "Hello from DACA Agent!"}
+```
+
+Logs:
+
+```bash
+nerdctl logs daca-agent
+```
+
+Clean up:
+
+```bash
+nerdctl stop daca-agent
+nerdctl rm daca-agent
+```
+
+---
+
+## Step 8: Practical Example 3 – Deploying to Kubernetes
+
+Let’s deploy the DACA agent app to Rancher Desktop’s k3s cluster, introducing Kubernetes.
+
+### Step 8.1: Create Kubernetes Manifest
+
+Create `agent-deployment.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: daca
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-app
+  namespace: daca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-app
+  template:
+    metadata:
+      labels:
+        app: agent-app
+    spec:
+      containers:
+      - name: agent-app
+        image: default/daca-agent:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-app
+  namespace: daca
+spec:
+  selector:
+    app: agent-app
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: ClusterIP
+```
+
+- **Note**: `image: default/daca-agent:latest` reflects `containerd`’s namespacing. `imagePullPolicy: Never` ensures k3s uses the local image.
+
+### Step 8.2: Build and Load Image
+
+Build (if not done):
+
+```bash
+nerdctl build -t daca-agent .
+```
+
+Tag image to use default name space
+
+
+```bash
+nerdctl tag daca-agent:latest k8s.io/daca-agent:latest
+```
+
+```bash
+nerdctl save k8s.io/daca-agent:latest | nerdctl --namespace k8s.io load
+```
+
+```bash
+nerdctl images --namespace k8s.io
+```
+
+
+### Step 8.3: Deploy
+
+Apply:
+
+```bash
+kubectl apply -f agent-deployment.yaml
+```
+
+Verify:
+
+```bash
+kubectl get pods -n daca
+```
 
 Output:
+
 ```
-Sending build context to Docker daemon  3.072kB
-Step 1/6 : FROM python:3.9-slim
- ---> abc123def456
-Step 2/6 : WORKDIR /app
- ---> Running in 789xyz
- ---> 123abc456def
-Step 3/6 : COPY . .
- ---> 456def789xyz
-Step 4/6 : RUN pip install --no-cache-dir -r requirements.txt
- ---> Running in def123abc456
-Collecting flask==2.3.2
-  Downloading Flask-2.3.2-py3-none-any.whl (96 kB)
-     |████████████████████████████████| 96 kB 5.2 MB/s
-...
-Successfully installed flask-2.3.2 ...
- ---> 789xyz123abc
-Step 5/6 : EXPOSE 5000
- ---> Running in abc456def123
- ---> def123abc789
-Step 6/6 : CMD ["python", "app.py"]
- ---> Running in 123xyz456abc
- ---> 456abc789def
-Successfully built 456abc789def
-Successfully tagged my-python-app:latest
+NAME                         READY   STATUS    RESTARTS   AGE
+agent-app-6cd8d64b48-5n4cz   1/1     Running   0          12s
 ```
 
-### Step 6.4: Run the Container
-Run a container from the image:
+Access:
+
 ```bash
-docker run -d -p 5000:5000 --name my-python-container my-python-app
+kubectl port-forward svc/agent-app 8000:8000 -n daca
 ```
 
-Verify it’s running:
+Open `http://localhost:8000` to see the agent app.
+
+### Step 8.4: Clean Up
+
 ```bash
-docker ps
+kubectl delete -f agent-deployment.yaml
 ```
-Output:
-```
-CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS                    NAMES
-xyz789abc123   my-python-app   "python app.py"          5 seconds ago   Up 5 seconds   0.0.0.0:5000->5000/tcp   my-python-container
-```
-
-Access the app at `http://localhost:5000`. You should see:
-```
-Hello from Docker!
-```
-
-### Step 6.5: View Container Logs
-Check the container’s logs to see Flask’s output:
-```bash
-docker logs my-python-container
-```
-Output:
-```
- * Serving Flask app 'app'
- * Debug mode: off
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://172.17.0.2:5000
-```
-
-### Step 6.6: Stop and Clean Up
-```bash
-docker stop my-python-container
-docker rm my-python-container
-```
-
-#### What Happened?
-- The `Dockerfile` defined how to build the image: starting from `python:3.9-slim`, copying the app code, installing dependencies, and setting the command to run.
-- `docker build` created the image `my-python-app`.
-- `docker run` started a container from the image, mapping port `5000` to the host.
-- We accessed the Flask app and viewed its logs.
 
 ---
 
-## Step 7: Practical Example 3 – Using Docker Desktop
-Let’s use Docker Desktop to manage the containers and images we’ve created.
+## Step 9: Using Rancher Desktop GUI
 
-1. **Open Docker Desktop**:
-   - Launch Docker Desktop and sign in if prompted.
-   - You’ll see the dashboard with tabs for **Containers**, **Images**, **Volumes**, etc.
-
-2. **View Images**:
-   - Go to the **Images** tab.
-   - You should see `my-python-app`, `nginx`, and `python:3.9-slim` in the list.
-   - You can click an image to see its details, such as size and creation date.
-
-3. **Run a Container from the GUI**:
-   - In the **Images** tab, find `my-python-app`.
-   - Click the “Run” button.
-   - In the dialog, map port `5000` on the host to `5000` in the container, and give the container a name (e.g., `my-python-container-2`).
-   - Click “Run” to start the container.
-
-4. **View Running Containers**:
-   - Go to the **Containers** tab.
-   - You should see `my-python-container-2` running.
-   - Click on it to see its logs, inspect its configuration, or stop it.
-
-5. **Stop the Container**:
-   - In the **Containers** tab, click the “Stop” button next to `my-python-container-2`.
-
-#### What Happened?
-- Docker Desktop provided a visual interface to manage images and containers.
-- We ran a container without using the CLI, demonstrating how Docker Desktop simplifies workflows.
+1. Open Rancher Desktop.
+2. **Images**: See `default/daca-agent`, `nginx:alpine`.
+3. **Containers**: Run `default/daca-agent` via GUI, map port 8000.
+4. **Kubernetes**: View `daca` namespace, `agent-app` pod, and Service.
+5. Stop/delete resources via GUI.
 
 ---
 
-## Step 8: Key Docker Commands
-Here are some essential Docker commands to know:
+## Step 10: Key Commands
 
-- **Image Management**:
-  - `docker pull <image>`: Pull an image from a registry (e.g., `docker pull nginx`).
-  - `docker build -t <name> .`: Build an image from a Dockerfile.
-  - `docker images`: List all images on your system.
-  - `docker rmi <image>`: Remove an image.
-
-- **Container Management**:
-  - `docker run -d -p <host-port>:<container-port> <image>`: Run a container.
-  - `docker ps`: List running containers.
-  - `docker ps -a`: List all containers (including stopped ones).
-  - `docker stop <container>`: Stop a running container.
-  - `docker rm <container>`: Remove a container.
-  - `docker logs <container>`: View a container’s logs.
-
-- **Cleanup**:
-  - `docker system prune`: Remove unused containers, images, and networks.
-  - `docker volume prune`: Remove unused volumes.
+- **Container (nerdctl)**:
+  - `nerdctl build -t <name> .`: Build image.
+  - `nerdctl run -d -p <port> <namespace>/<image>`: Run container.
+  - `nerdctl ps`: List running containers.
+  - `nerdctl logs/stop/rm <container>`: Manage containers.
+- **Kubernetes**:
+  - `kubectl apply -f <file>`: Deploy resources.
+  - `kubectl get pods/services -n <namespace>`: List resources.
+  - `kubectl port-forward svc/<name> <port>`: Access Service.
+  - `kubectl delete -f <file>`: Remove resources.
 
 ---
 
-## Step 9: Why Containerization for DACA?
-Containerization is a critical step for our DACA project because:
-- **Consistency**: Containers ensure the Chat Service and Analytics Service run the same way in development, testing, and production.
-- **Dependency Management**: Containers package dependencies (e.g., Python, Flask, Dapr SDK) with the application, avoiding conflicts.
-- **Scalability**: Containers can be easily scaled in a Kubernetes cluster (which we’ll explore later).
-- **Deployment**: Containers simplify deployment to cloud platforms (e.g., AWS, Azure, GCP) with Dapr.
+## Step 11: Why Containers and Kubernetes for DACA?
 
-In the next tutorial (**13_dapr_containerization**), we’ll containerize our Chat Service and Analytics Service, building on the concepts we’ve learned here.
+- **Consistency**: Containers ensure agent apps (e.g., Chat Service) run identically everywhere.
+- **Scalability**: Kubernetes scales pods for DACA’s event-driven architecture.
+- **Deployment**: Prepares for ACA/Kubernetes, avoiding Compose’s rework.
+- **Resilience**: Kubernetes restarts failed pods, supporting CockroachDB state management.
+
+Next, in **13_dapr_containerization**, we’ll add a Dapr sidecar to this agent app in Kubernetes, enabling state and pub/sub.
 
 ---
 
-## Step 10: Next Steps
-You’ve gained a foundational understanding of Docker, Docker Desktop, and application containerization! In the next tutorial (**13_dapr_containerization**), we’ll return to our DACA example and containerize the Chat Service and Analytics Service, preparing them for deployment with Dapr.
+## Step 12: Next Steps
+
+You’ve learned containers and Kubernetes with Rancher Desktop! In **13_dapr_containerization**, we’ll containerize the Chat Service with Dapr in Kubernetes, building on this foundation.
 
 ### Optional Exercises
-1. Create a Dockerfile for a Node.js application and run it as a container.
-2. Use Docker Compose to run a multi-container application (e.g., a web app with a database).
-3. Push the `my-python-app` image to Docker Hub:
-   - Tag the image: `docker tag my-python-app <your-dockerhub-username>/my-python-app`.
-   - Log in to Docker Hub: `docker login`.
-   - Push the image: `docker push <your-dockerhub-username>/my-python-app`.
+
+1. Deploy a Redis pod in Kubernetes (`redis:alpine`).
+2. Push `default/daca-agent` to Docker Hub (requires `nerdctl push`).
+3. Explore `kubectl describe pod` for debugging.
 
 ---
 
 ## Conclusion
-In this tutorial, we introduced Docker and Docker Desktop, explored the core concepts of application containerization, and walked through practical examples of building and running containers. You now have the foundational knowledge needed to containerize our DACA microservices in the next tutorial. 
+
+We’ve covered containerization (images, `Dockerfile`, containers) and Kubernetes (pods, Deployments, Services) using Rancher Desktop with the `containerd` engine. With hands-on DACA examples, you’re ready to containerize microservices with Dapr in Kubernetes, paving the way for scalable agentic AI.
