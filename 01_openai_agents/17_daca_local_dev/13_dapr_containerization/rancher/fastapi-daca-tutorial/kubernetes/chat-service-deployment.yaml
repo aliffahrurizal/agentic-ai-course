@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-service
+  namespace: daca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-service
+  template:
+    metadata:
+      labels:
+        app: chat-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "chat-service"
+        dapr.io/app-port: "8080"
+        dapr.io/http-port: "3500"
+    spec:
+      containers:
+        - name: app
+          image: chat-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gemini-api-key
+                  key: gemini-api-key
+            - name: REDIS_HOST
+              value: "redis.daca.svc.cluster.local"
+            - name: DAPR_HOST
+              value: "localhost"
+            - name: DAPR_HTTP_PORT
+              value: "3500"
+            - name: MEMORY_SERVICE_HOST
+              value: "agent-memory-service.daca.svc.cluster.local"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-service
+  namespace: daca
+spec:
+  selector:
+    app: chat-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP

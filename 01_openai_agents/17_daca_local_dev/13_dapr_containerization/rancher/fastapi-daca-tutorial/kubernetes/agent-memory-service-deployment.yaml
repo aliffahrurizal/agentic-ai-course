@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-memory-service
+  namespace: daca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-memory-service
+  template:
+    metadata:
+      labels:
+        app: agent-memory-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "agent-memory-service"
+        dapr.io/app-port: "8001"
+    spec:
+      containers:
+        - name: app
+          image: agent-memory-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8001
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gemini-api-key
+                  key: gemini-api-key
+            - name: REDIS_HOST
+              value: "redis.daca.svc.cluster.local"
+            - name: DAPR_HOST
+              value: "localhost" # Dapr sidecar runs in the same pod
+            - name: MEMORY_SERVICE_HOST
+              value: "agent-memory-service.daca.svc.cluster.local" # Kubernetes service name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-memory-service
+  namespace: daca
+spec:
+  selector:
+    app: agent-memory-service
+  ports:
+    - port: 8001
+      targetPort: 8001
+  type: ClusterIP
