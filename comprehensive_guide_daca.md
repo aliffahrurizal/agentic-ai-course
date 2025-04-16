@@ -121,7 +121,7 @@ DACA, enhanced by A2A, is a comprehensive blueprint for realizing Agentia World.
 ## The Technology Architecture for Agentia World
 
 <p align="center">
-<img src="./a2a.webp" width="400">
+<img src="./a2a.webp" width="600">
 </p>
 
 
