@@ -50,11 +50,11 @@ If your priority is ease of use, flexibility, and quick iteration in agentic dev
 - ⁠Agentic & DACA Theory - 1 week
 - UV & ⁠OpenAI Agents SDK - 5 weeks
 - ⁠Agentic Design Patterns - 2 weeks 
-- ⁠Memory [LangMem & mem0] 1 weeks 
-- Postgres/Redis (Managed Cloud) - 1 weeks
+- ⁠Memory [LangMem & mem0] 1 week
+- Postgres/Redis (Managed Cloud) - 1 week
 - FastAPI (Basic)  - 2 weeks
-- ⁠Containerization (Rancher Desktop) - 1 weeks
-- Hugging Face Docker Spaces - 1 weeks
+- ⁠Containerization (Rancher Desktop) - 1 week
+- Hugging Face Docker Spaces - 1 week
 
 
 **[AI-201 Video Playlist](https://www.youtube.com/playlist?list=PL0vKVrkG4hWovpr0FX6Gs-06hfsPDEUe6)**
@@ -78,7 +78,7 @@ Prerequisite: Successful completion of AI-201
 - ⁠A2A Protocol - 2 weeks
 - ⁠Voice Agents - 2 weeks
 - ⁠Dapr Agents/Google ADK - 2 weeks
-- ⁠Self-LLMs Hosting - 1 weeks
+- ⁠Self-LLMs Hosting - 1 week
 - Finetuning LLMs - 3 weeks
 
 Prerequisite: Successful completion of AI-201 & AI-202
