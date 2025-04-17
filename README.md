@@ -2,7 +2,9 @@
 
 This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201, AI-202 and AI-301 courses.
 
-## This initiative tackles the critical challenge: “How do we design AI agents that can handle 10 million concurrent users without failing?”
+## Our Panaversity initiative tackles the critical challenge: “How do we design AI agents that can handle 10 million concurrent users without failing?”
+
+https://github.com/panaversity/learn-agentic-ai/blob/main/README.md#this-initiative-tackles-the-critical-challenge-how-do-we-design-ai-agents-that-can-handle-10-million-concurrent-users-without-failing 
 
 Note: The challenge is intensified as we must guide our students to solve this issue with minimal financial resources available during training.
 
