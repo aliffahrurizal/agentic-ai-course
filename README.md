@@ -2,11 +2,11 @@
 
 This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201, AI-202 and AI-301 courses.
 
-![Agentic AI Top Trend](./toptrend.webp)
+![Agentic AI Top Trend](./img/toptrend.webp)
 
 **Complex Agentic AI Systems will be deployed on Cloud Native Technologies.**
 
-![Cloud Native](./cloud-native-platforms-market-size.webp)
+![Cloud Native](./img/cloud-native-platforms-market-size.webp)
 
 ## Our Dapr Agentic Cloud Ascent (DACA) Design Pattern
 
@@ -14,9 +14,9 @@ Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning
 
 **[Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)**
 
-![DACA](./architecture1.png)
+![DACA](./img/architecture1.png)
 
-![](./ascent.png)
+![](./img/ascent.png)
 
 
 ### Target User

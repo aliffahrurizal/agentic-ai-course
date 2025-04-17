@@ -1,7 +1,7 @@
 # Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern
 
 <p align="center">
-<img src="./daca_report.png" width="300">
+<img src="./img/daca_report.png" width="300">
 </p>
 
 For those new to agentic AI, start with [The Rise of the AI Agents Presentation](https://docs.google.com/presentation/d/1VNFGsCYMDT1VTe8W1wxFbmAwYsJ1I0Y-6CnTvuCEn98/edit?usp=sharing) for foundational context.
@@ -111,7 +111,7 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic blueprint
 **Imagine a world where everything is an AI agent**, from your coffee machine to your car, from businesses to entire cities. Picture a world transformed into Agentia—a dynamic, living network of intelligent AI agents seamlessly integrated into our daily lives.  From our homes and offices to entire cities, systems no longer communicate through outdated APIs but through sophisticated, intelligent dialogues driven by state-of-the-art AI frameworks. Agentia scales effortlessly across the globe, thanks to its foundation in cloud-native technologies. Agentia is more than digital—it's also physical, brought to life by robots that serve as embodied agents interacting with and enhancing our physical world.
 
 <p align="center">
-<img src="./agentia.png" width="300">
+<img src="./img/agentia.png" width="300">
 </p>
 
 ### DACA with A2A: Implementing Agentia World
@@ -121,7 +121,7 @@ DACA, enhanced by A2A, is a comprehensive blueprint for realizing Agentia World.
 ## The Technology Architecture for Agentia World
 
 <p align="center">
-<img src="./a2a.webp" width="700">
+<img src="./img/a2a.webp" width="700">
 </p>
 
 
@@ -233,7 +233,7 @@ The DACA architecture is a layered, event-driven, stateless system that integrat
 
 ### Architecture Diagram Breakdown
 <p align="center">
-<img src="./architecture1.png" width="700">
+<img src="./img/architecture1.png" width="700">
 </p>
 
 The provided architecture diagram illustrates the DACA framework:
@@ -293,7 +293,7 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Purpose**: Minimizes resource use while enabling scalable, collaborative workflows.
 
 <p align="center">
-<img src="./mcp.jpeg" width="300">
+<img src="./img/mcp.jpeg" width="300">
 </p>
 
 3. **REST APIs**:
@@ -310,7 +310,7 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
    - **Purpose**: Decouples components and agents for resilience and event-driven workflows.
 
 <p align="center">
-<img src="./agent_to_agent.webp" height="200">
+<img src="./img/agent_to_agent.webp" height="200">
 </p>
 
 6. **Scheduled Container Invocation**:
@@ -340,7 +340,7 @@ DACA’s minimalist stack balances simplicity and power, enabling any agentic wo
 
 
 <p align="center">
-<img src="./dapr.png" width="600">
+<img src="./img/dapr.png" width="600">
 </p>
 
 ---
@@ -353,7 +353,7 @@ A2A, launched by Google with over 50 partners, is integral to DACA. It uses HTTP
 - **Security**: Enterprise-grade authentication ensures trust in cross-domain dialogues.
 
 <p align="center">
-<img src="./a2a.png" width="400">
+<img src="./img/a2a.png" width="400">
 </p>
 
 A2A enables interaction between a "client" agent and a "remote" agent. The client agent creates and sends tasks, while the remote agent executes them to deliver accurate information or perform the appropriate action. This process relies on several essential features:
@@ -369,12 +369,12 @@ A2A enables interaction between a "client" agent and a "remote" agent. The clien
 
 DACA’s “ascent” refers to its progressive deployment pipeline, scaling from local development to planetary-scale production while optimizing cost and complexity.
 
-![](./ascent.png)
+![](./img/ascent.png)
 
 ### 1. Local Development: Open-Source Stack
 
 <p align="center">
-<img src="./local_dev.webp" width="400">
+<img src="./img/local_dev.webp" width="400">
 </p>
 
 - **Goal**: Rapid iteration with production-like features.
@@ -394,7 +394,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 ### 2. Prototyping: Free Deployment
 
 <p align="center">
-<img src="./huggingface.png" width="400">
+<img src="./img/huggingface.png" width="400">
 </p>
 
 - **Goal**: Test and validate with minimal cost.
@@ -413,7 +413,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 
 #### Classification of the Spectrum of Managed Services
 
-![](./spectrum-cloud-service.png)
+![](./img/spectrum-cloud-service.png)
 
 
 
@@ -433,7 +433,7 @@ Choosing the right Kubernetes-powered platform depends on your needs for managem
 #### Azure Container Apps (ACA)
 
 <p align="center">
-<img src="./aca.png" width="400">
+<img src="./img/aca.png" width="400">
 </p>
 
 - **Goal**: Scale to thousands of users with cost efficiency.
@@ -468,10 +468,10 @@ Choosing the right Kubernetes-powered platform depends on your needs for managem
 ### 4. Planet-Scale: Kubernetes with Self-Hosted LLMs
 
 <p align="center">
-<img src="./kubernetes.png" width="400">
+<img src="./img/kubernetes.png" width="400">
 </p>
 <p align="center">
-<img src="./karch.webp" width="400">
+<img src="./img/karch.webp" width="400">
 </p>
 
 - **Goal**: Achieve planetary scale with no API limits.
