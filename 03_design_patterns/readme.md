@@ -1,6 +1,4 @@
-# Agentic Design Patterns and Cloud Native Design Patterns
-
-## Agentic Design Patterns
+# Agentic AI Design Patterns
 
 Agentic design patterns, as introduced by Anthropic, are architectural and behavioral templates for building effective AI systems powered by large language models (LLMs). The focus is on simplicity, transparency, and practical composability over complex frameworks.
 
