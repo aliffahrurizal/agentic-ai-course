@@ -22,6 +22,8 @@ This detailed analysis of [Anthropic’s guide](https://www.anthropic.com/resear
 
 They are a set of architectural and design principles and practices optimized for building and running applications in modern, distributed cloud environments. They aim to leverage the characteristics of the cloud, such as scalability, resilience, agility, and cost-effectiveness.
 
+[Cloud-Native Design Patterns Details](https://github.com/panaversity/learn-agentic-ai/tree/main/04_daca_cloud_first_local/00_cloud_design_patterns)
+
 **In Essence**:
 
 Cloud-native design patterns provide the **"how"** for building and deploying agentic systems in a scalable, resilient, and manageable way. They offer the technical building blocks and best practices for running complex software in the cloud.   
