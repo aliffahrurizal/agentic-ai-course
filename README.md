@@ -9,7 +9,7 @@ This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](h
 **Agentic AI Top Trend of 2025**
 
 <p align="center">
-<img src="./img/toptrend.webp" width="200">
+<img src="./img/toptrend.webp" width="600">
 </p>
 
 **Complex Agentic AI Systems will be deployed on Cloud Native Technologies.**
