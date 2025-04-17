@@ -58,9 +58,9 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
   - [Example 4: IoT Smart Home Automation](#example-4-iot-smart-home-automation)
 - [Why These Examples Work with DACA](#why-these-examples-work-with-daca)
 - [Conclusion](#conclusion)
-- [Appendix I: Handling 10 Million Concurrent Users?]()
-- [Appendix II: Cost Estimates for a Basic Kubernetes Cluster](#appendix-i-cost-estimates-for-a-basic-kubernetes-cluster)
-- [Appendix III: DACA — Design Pattern or Framework?](#appendix-ii-daca--design-pattern-or-framework)
+- [Appendix I: Handling 10 Million Concurrent Users?](#appendix-i-handling-10-million-concurrent-users)
+- [Appendix II: Cost Estimates for a Basic Kubernetes Cluster](#appendix-ii-cost-estimates-for-a-basic-kubernetes-cluster)
+- [Appendix III: DACA — Design Pattern or Framework?](#appendix-iii-daca--design-pattern-or-framework)
   - [DACA as a Design Pattern](#daca-as-a-design-pattern)
   - [Why DACA Might Feel Like a Framework](#why-daca-might-feel-like-a-framework)
   - [Key Differences: Design Pattern vs. Framework](#key-differences-design-pattern-vs-framework)
@@ -68,7 +68,7 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
   - [Why DACA Feels Framework‑Like in Practice](#why-daca-feels-framework-like-in-practice)
   - [Final Classification](#final-classification)
   - [Why It Matters](#why-it-matters)
-- [Appendix IV: A2A vs MCP](#appendix-iii-a2a-vs-mcp)
+- [Appendix IV: A2A vs MCP](#appendix-iv-a2a-vs-mcp)
 
 
 ## Introduction
