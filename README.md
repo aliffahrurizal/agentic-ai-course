@@ -2,7 +2,11 @@
 
 This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201, AI-202 and AI-301 courses.
 
+<p align="center">
+<img src="./img/cover.png" width="300">
+</p>
 
+**Agentic AI Top Trend of 2025**
 
 <p align="center">
 <img src="./img/toptrend.webp" width="200">
