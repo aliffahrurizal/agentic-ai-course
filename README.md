@@ -2,21 +2,38 @@
 
 This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201, AI-202 and AI-301 courses.
 
-![Agentic AI Top Trend](./img/toptrend.webp)
+
+
+<p align="center">
+<img src="./img/toptrend.webp" width="200">
+</p>
 
 **Complex Agentic AI Systems will be deployed on Cloud Native Technologies.**
 
-![Cloud Native](./img/cloud-native-platforms-market-size.webp)
+<p align="center">
+<img src="./img/cloud-native-platforms-market-size.webp" width="300">
+</p>
 
 ## Our Dapr Agentic Cloud Ascent (DACA) Design Pattern
 
-Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems:
+Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems.
+
+### Executive Summary: Dapr Agentic Cloud Ascent (DACA)
+
+The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern for building and deploying sophisticated, scalable, and resilient agentic AI systems. Addressing the complexities of modern AI development, DACA integrates the OpenAI Agents SDK for core agent logic with the Model Context Protocol (MCP) for standardized tool use and the Agent2Agent (A2A) protocol for seamless inter-agent communication, all underpinned by the distributed capabilities of Dapr. Grounded in AI-first and cloud-first principles, DACA promotes the use of stateless, containerized applications deployed on platforms like Azure Container Apps or Kubernetes, enabling efficient scaling from local development to planetary-scale production, potentially leveraging free-tier cloud services and self-hosted LLMs for cost optimization. The pattern emphasizes modularity, context-awareness, and standardized communication, envisioning an "Agentia World" where diverse AI agents collaborate intelligently. Ultimately, DACA offers a robust, flexible, and cost-effective framework for developers and architects aiming to create complex, cloud-native agentic AI applications that are built for scalability and resilience from the ground up.
+
 
 **[Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)**
 
-![DACA](./img/architecture1.png)
+<p align="center">
+<img src="./img/ascent.png" width="300">
+</p>
 
-![](./img/ascent.png)
+<p align="center">
+<img src="./img/architecture1.png" width="300">
+</p>
+
+
 
 
 ### Target User
