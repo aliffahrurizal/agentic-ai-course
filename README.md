@@ -2,6 +2,8 @@
 
 This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201, AI-202 and AI-301 courses.
 
+**This repo addresses the critical challenge: “How do we design AI agents that can handle 10 million users without failing?”**
+
 <p align="center">
 <img src="./img/cover.png" width="600">
 </p>
