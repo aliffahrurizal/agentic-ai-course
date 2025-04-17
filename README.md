@@ -26,11 +26,11 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
 **[Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)**
 
 <p align="center">
-<img src="./img/ascent.png" width="300">
+<img src="./img/ascent.png" width="500">
 </p>
 
 <p align="center">
-<img src="./img/architecture1.png" width="300">
+<img src="./img/architecture1.png" width="400">
 </p>
 
 
