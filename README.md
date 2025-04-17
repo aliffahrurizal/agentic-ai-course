@@ -4,7 +4,7 @@ This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](h
 
 ## This Panaversity Initiative Tackles the Critical Challenge: 
 
-**“How do we design AI agents that can handle 10 million concurrent users without failing?”**
+**“How do we design AI Agents that can handle 10 million concurrent users without failing?”**
 
 Note: The challenge is intensified as we must guide our students to solve this issue with minimal financial resources available during training.
 
@@ -92,13 +92,8 @@ However, this scale is at the bleeding edge of current technology, requiring mil
 <img src="./img/toptrend.webp" width="200">
 </p>
 
-**Complex Agentic AI Systems will be deployed on Cloud Native Technologies.**
 
-<p align="center">
-<img src="./img/cloud-native-platforms-market-size.webp" width="300">
-</p>
-
-## Our Dapr Agentic Cloud Ascent (DACA) Design Pattern
+## The Dapr Agentic Cloud Ascent (DACA) Design Pattern Addresses 10 Million Concurrent Users Challenge 
 
 Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems.
 
