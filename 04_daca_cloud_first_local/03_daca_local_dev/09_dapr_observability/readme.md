@@ -139,7 +139,7 @@ scrape_configs:
 Run Prometheus:
 
 ```bash
-docker run -d -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+nerdctl run -d -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
 ```
 
 - Verify: `http://localhost:9090`.
@@ -447,11 +447,13 @@ If you see nothing change your port
 
 4. Stop and start the container
 5. Test time
+
 - http://localhost:9090/targets?search=
 - Visit `http://localhost:9090`.
 - Query:
   - `dapr_http_server_request_count{app_id="chat-service"}`: Request count.
   - `dapr_actor_active_actors{app_id="chat-service", actor_type="UserSessionActor"}`: Active actors.
+
 ---
 
 ## Step 8: Why Observability for DACA?

@@ -616,7 +616,7 @@ Since we updated `main.py` files, rebuild the images.
 
 ```bash
 cd chat_service
-docker build -t chat-service:latest .
+nerdctl build -t chat-service:latest .
 cd ..
 ```
 
@@ -624,14 +624,14 @@ cd ..
 
 ```bash
 cd agent_memory_service
-docker build -t agent-memory-service:latest .
+nerdctl build -t agent-memory-service:latest .
 cd ..
 ```
 
 ### Step 4.3: Verify Images
 
 ```bash
-docker images
+nerdctl images
 ```
 
 **Expected Output**:
@@ -658,7 +658,7 @@ docker network create dapr-network
 ### Step 5.2: Start Redis
 
 ```bash
-docker run -d --name redis --network dapr-network -p 6379:6379 redis:latest
+nerdctl run -d --name redis --network dapr-network -p 6379:6379 redis:latest
 ```
 
 ### Step 5.3: Run Agent Memory Service
@@ -668,7 +668,7 @@ From `fastapi-daca-tutorial/`:
 1. **App Container**:
 
    ```bash
-   docker run -d --name agent-memory-service-app \
+   nerdctl run -d --name agent-memory-service-app \
      --network dapr-network \
      -p 8001:8001 \
      agent-memory-service:latest
@@ -676,20 +676,20 @@ From `fastapi-daca-tutorial/`:
 
 2. **Dapr Sidecar**:
    ```bash
-docker run -d \
-  --name agent-memory-service-dapr \
-  --network dapr-network \
-  -p 3501:3501 \
-  -v $(pwd)/components:/components \
-  daprio/dapr:1.15.1 \
-  ./daprd \
-  --app-id agent-memory-service \
-  --app-port 8001 \
-  --dapr-http-port 3501 \
-  --log-level debug \
-  --components-path /components \
-  --app-protocol http \
-  --app-channel-address agent-memory-service-app
+   nerdctl run -d \
+   --name agent-memory-service-dapr \
+   --network dapr-network \
+   -p 3501:3501 \
+   -v $(pwd)/components:/components \
+   daprio/dapr:1.15.1 \
+   ./daprd \
+   --app-id agent-memory-service \
+   --app-port 8001 \
+   --dapr-http-port 3501 \
+   --log-level debug \
+   --components-path /components \
+   --app-protocol http \
+   --app-channel-address agent-memory-service-app
    ```
 
 ### Step 5.4: Run Chat Service
@@ -699,7 +699,7 @@ From `fastapi-daca-tutorial/`:
 1. **App Container**:
 
    ```bash
-   docker run -d --name chat-service-app \
+   nerdctl run -d --name chat-service-app \
      --network dapr-network \
      -p 8080:8080 \
      chat-service:latest
@@ -707,32 +707,32 @@ From `fastapi-daca-tutorial/`:
 
 2. **Dapr Sidecar**:
    ```bash
-docker run -d \
-  --name chat-service-dapr \
-  --network dapr-network \
-  -p 3500:3500 \
-  -v $(pwd)/components:/components \
-  daprio/dapr:1.15.1 \
-  ./daprd \
-  --app-id chat-service \
-  --app-port 8080 \
-  --dapr-http-port 3500 \
-  --log-level debug \
-  --components-path /components \
-  --app-protocol http \
-  --app-channel-address chat-service-app
+   nerdctl run -d \
+   --name chat-service-dapr \
+   --network dapr-network \
+   -p 3500:3500 \
+   -v $(pwd)/components:/components \
+   daprio/dapr:1.15.1 \
+   ./daprd \
+   --app-id chat-service \
+   --app-port 8080 \
+   --dapr-http-port 3500 \
+   --log-level debug \
+   --components-path /components \
+   --app-protocol http \
+   --app-channel-address chat-service-app
    ```
 
 ### Step 5.5: Verify Containers
 
 ```bash
-docker ps
+nerdctl ps
 ```
 
 **Expected Output**:
 
 ```
-mjs@Muhammads-MacBook-Pro-3 agent_memory_service % docker ps
+mjs@Muhammads-MacBook-Pro-3 agent_memory_service % nerdctl ps
 
 CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                                            NAMES
 949b71c9604c   daprio/dapr:1.15.1            "./daprd --app-id ch…"   4 seconds ago    Up 4 seconds    0.0.0.0:3500->3500/tcp                           chat-service-dapr
@@ -773,7 +773,7 @@ curl -X POST http://localhost:8080/chat/ \
 **Expected Response**:
 
 ```json
-{"user_id":"junaid","reply":"Hey Junaid!  Sounds good. What time works best for you?  I can help you figure that out.\n","metadata":{"timestamp":"2025-04-12T04:01:04.035603+00:00","session_id":"98289651-62fb-45eb-804a-21c7ee59384c"}}% 
+{"user_id":"junaid","reply":"Hey Junaid!  Sounds good. What time works best for you?  I can help you figure that out.\n","metadata":{"timestamp":"2025-04-12T04:01:04.035603+00:00","session_id":"98289651-62fb-45eb-804a-21c7ee59384c"}}%
 ```
 
 Second request (same session):
@@ -787,7 +787,14 @@ curl -X POST http://localhost:8080/chat/ \
 **Expected Response**:
 
 ```json
-{"user_id":"junaid","reply":"Your last message was: \"I need to schedule a coding session.\"\n","metadata":{"timestamp":"2025-04-12T04:02:03.001332+00:00","session_id":"98289651-62fb-45eb-804a-21c7ee59384c"}}
+{
+  "user_id": "junaid",
+  "reply": "Your last message was: \"I need to schedule a coding session.\"\n",
+  "metadata": {
+    "timestamp": "2025-04-12T04:02:03.001332+00:00",
+    "session_id": "98289651-62fb-45eb-804a-21c7ee59384c"
+  }
+}
 ```
 
 ### Step 6.3: Verify Metadata Update
@@ -799,7 +806,7 @@ curl http://localhost:8001/memories/junaid
 **Expected Output**:
 
 ```json
-{"name":"Junaid","preferred_style":"casual","user_summary":"Junaid needs to schedule a coding session.\n"}%                          
+{"name":"Junaid","preferred_style":"casual","user_summary":"Junaid needs to schedule a coding session.\n"}%
 ```
 
 ### Step 6.4: Test Background Memories
@@ -836,11 +843,11 @@ curl -X POST http://localhost:8080/chat/ \
 - Chat Service:
 
   ```bash
-  docker logs chat-service-app
+  nerdctl logs chat-service-app
   ```
 
-  **Expected**: 
-  
+  **Expected**:
+
   ```bash
   200 OK"
   INFO:main:Successfully fetched metadata for junaid
@@ -852,15 +859,15 @@ curl -X POST http://localhost:8080/chat/ \
   INFO:httpx:HTTP Request: POST http://chat-service-dapr:3500/v1.0/publish/pubsub/conversations "HTTP/1.1 204 No Content"
   INFO:main:Published ConversationUpdated event for junaid, session 5cdf5f65-3853-43ff-a1db-e4cb7d901b11
   INFO:     192.168.65.1:26287 - "POST /chat/ HTTP/1.1" 200 OK
-  mjs@Muhammads-MacBook-Pro-3 fastapi-daca-tutorial % 
+  mjs@Muhammads-MacBook-Pro-3 fastapi-daca-tutorial %
   ```
 
 - Agent Memory Service:
   ```bash
-  docker logs agent-memory-service-app
+  nerdctl logs agent-memory-service-app
   ```
-  **Expected**: 
-  
+  **Expected**:
+
 ```
 INFO:     172.19.0.6:39566 - "POST /conversations HTTP/1.1" 200 OK
 INFO:     192.168.65.1:42786 - "GET /docs HTTP/1.1" 200 OK
@@ -916,7 +923,7 @@ Received event: {'data': {'assistant_reply': "Hey Junaid!  Looks like you're hea
 INFO:     172.19.0.6:41924 - "POST /conversations HTTP/1.1" 200 OK
 INFO:httpx:HTTP Request: GET http://agent-memory-service-dapr:3501/v1.0/state/statestore/user:junaid "HTTP/1.1 200 OK"
 INFO:     192.168.65.1:59600 - "GET /memories/junaid HTTP/1.1" 200 OK
-mjs@Muhammads-MacBook-Pro-3 fastapi-daca-tutorial % 
+mjs@Muhammads-MacBook-Pro-3 fastapi-daca-tutorial %
 ```
 
 ---
