@@ -79,7 +79,7 @@ Runtime version: 1.13.1
 Check that the Dapr Redis container is running:
 
 ```bash
-docker ps
+nerdctl ps
 ```
 
 You should see a container named `dapr_redis` running on port `6379`.

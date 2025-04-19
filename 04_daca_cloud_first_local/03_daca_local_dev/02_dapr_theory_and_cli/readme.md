@@ -207,7 +207,7 @@ Runtime version: 1.13.1
 Check that the Dapr Redis container is running:
 
 ```bash
-docker ps
+nerdctl ps
 ```
 
 You should see a container named `dapr_redis` running on port `6379`.
@@ -635,7 +635,7 @@ The Scheduler service is automatically started as part of `dapr init` (or `dapr 
 Since the Scheduler runs as a Docker container in self-hosted mode, use Docker to verify:
 
 ```bash
-docker ps
+nerdctl ps
 ```
 
 Output (look for the Scheduler container):
@@ -676,7 +676,7 @@ To debug or monitor the Scheduler, you can view its logs via Docker.
 #### Find the Scheduler Container ID
 
 ```bash
-docker ps
+nerdctl ps
 ```
 
 Note the `CONTAINER ID` for `dapr_scheduler` (e.g., `5bb3c4f34c38`).
@@ -684,7 +684,7 @@ Note the `CONTAINER ID` for `dapr_scheduler` (e.g., `5bb3c4f34c38`).
 #### View Logs
 
 ```bash
-docker logs 5bb3c4f34c38
+nerdctl logs 5bb3c4f34c38
 ```
 
 Output (example):
@@ -951,8 +951,8 @@ dapr list
 Output:
 
 ```
-  APP ID             HTTP PORT  GRPC PORT  APP PORT  COMMAND               AGE  CREATED              DAPRD PID  CLI PID  APP PID  RUN TEMPLATE PATH  APP LOG PATH  DAPRD LOG PATH  RUNTEMPLATENAME  
-  scheduler-test-py  3500       55330      8000      uvicorn main:app ...  18m  2025-04-07 17:02.37  64438      64435    64439 
+  APP ID             HTTP PORT  GRPC PORT  APP PORT  COMMAND               AGE  CREATED              DAPRD PID  CLI PID  APP PID  RUN TEMPLATE PATH  APP LOG PATH  DAPRD LOG PATH  RUNTEMPLATENAME
+  scheduler-test-py  3500       55330      8000      uvicorn main:app ...  18m  2025-04-07 17:02.37  64438      64435    64439
 ```
 
 ##### Observe Logs
@@ -1010,7 +1010,7 @@ The Dapr Scheduler enhances DACA’s architecture by:
 2. Use `dapr invoke` to test a POST endpoint on the test app (hint: add a POST endpoint to `main.py`).
 3. Explore Dapr’s tracing by enabling Zipkin and viewing traces in the Dapr dashboard.
 4. Modify the Go app to schedule a recurring job (e.g., every 10 seconds) and observe the Scheduler’s behavior.
-5. Use `docker logs` to investigate the Scheduler’s behavior when a job fails (e.g., stop the app before the job triggers).
+5. Use `nerdctl logs` to investigate the Scheduler’s behavior when a job fails (e.g., stop the app before the job triggers).
 6. Explore the Dapr dashboard’s **Control Plane** section to view Scheduler metrics and logs in more detail.
 
 ---
