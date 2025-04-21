@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-app
+  namespace: daca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-app
+  template:
+    metadata:
+      labels:
+        app: agent-app
+    spec:
+      containers:
+      - name: agent-app
+        image: k8s.io/daca-agent:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+        env:
+        - name: GREETING
+          valueFrom:
+            configMapKeyRef:
+              name: agent-config
+              key: greeting

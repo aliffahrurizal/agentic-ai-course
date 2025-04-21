@@ -11,6 +11,7 @@ Welcome to the twelfth tutorial in our **Dapr Agentic Cloud Ascent (DACA)** seri
 - How Rancher Desktop manages containers with `containerd` and provides a local Kubernetes cluster.
 - Practical examples of building, running, and deploying a DACA agent app in containers and Kubernetes.
 - Key commands for `nerdctl` (containerd CLI) and Kubernetes (`kubectl`).
+- Download [Rancher Desktop](https://rancherdesktop.io/) and [Lens an IDE for Kubernetes](https://k8slens.dev/download)
 
 ## Prerequisites
 
@@ -132,7 +133,7 @@ CMD ["python", "app.py"]
 
 ---
 
-## Step 5: [Install Rancher Desktop](https://docs.rancherdesktop.io/getting-started/installation/)
+## Step 5: [Install Rancher Desktop](https://rancherdesktop.io/)
 
 Let’s install Rancher Desktop to manage containers and Kubernetes, selecting `containerd` as the container engine.
 
@@ -493,6 +494,128 @@ spec:
   type: ClusterIP
 ```
 
+Here's a breakdown of the `agent-deployment.yaml` Kubernetes manifest:
+
+---
+
+#### 🔧 **Purpose**:
+This YAML file defines resources for deploying a **Kubernetes application** in a custom namespace called `daca`. It includes:
+1. A **Namespace**
+2. A **Deployment** (to run the app container)
+3. A **Service** (to expose the container internally in the cluster)
+
+---
+
+#### ✅ Step-by-Step Explanation:
+
+---
+
+##### 1. **Namespace**
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: daca
+```
+
+- **Purpose**: Creates a separate environment called `daca` to logically isolate your app's resources.
+- Namespaces help in organizing workloads in large clusters.
+
+---
+
+##### 2. **Deployment**
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-app
+  namespace: daca
+spec:
+  replicas: 1
+```
+
+- **Deployment**: Manages the creation and lifecycle of pods.
+- **replicas: 1**: Runs a single instance (pod) of your app.
+
+```yaml
+  selector:
+    matchLabels:
+      app: agent-app
+```
+
+- Links this deployment to pods with the label `app: agent-app`.
+
+```yaml
+  template:
+    metadata:
+      labels:
+        app: agent-app
+```
+
+- **Pod template** metadata. Labels here must match the selector.
+
+```yaml
+    spec:
+      containers:
+      - name: agent-app
+        image: default/daca-agent:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+```
+
+- **Containers**: Specifies the container to run.
+  - `image`: The Docker image to use (`default/daca-agent:latest`).
+  - `imagePullPolicy: Never`: Tells Kubernetes **not** to pull from a remote registry. It's used when the image is **built locally** on the node.
+  - `containerPort: 8000`: Exposes port 8000 from inside the container (your app listens here).
+
+---
+
+##### 3. **Service**
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-app
+  namespace: daca
+```
+
+- **Service**: Provides a stable way to access the pod(s) managed by the deployment.
+
+```yaml
+spec:
+  selector:
+    app: agent-app
+```
+
+- Matches the pods using the label `app: agent-app`.
+
+```yaml
+  ports:
+  - port: 8000
+    targetPort: 8000
+```
+
+- **port**: Port exposed by the service internally.
+- **targetPort**: Port on the container the traffic will be forwarded to (same here: `8000`).
+
+```yaml
+  type: ClusterIP
+```
+
+- **ClusterIP**: Default service type, exposes the service **internally within the cluster** (not accessible from outside unless exposed via Ingress or NodePort).
+
+---
+
+#### 🧠 Summary:
+You're:
+- Creating a namespace `daca`.
+- Deploying an app (`default/daca-agent:latest`) as a pod in that namespace.
+- Exposing it via an internal service on port `8000`.
+
 - **Note**: `image: default/daca-agent:latest` reflects `containerd`’s namespacing. `imagePullPolicy: Never` ensures k3s uses the local image.
 
 ### Step 8.2: Build and Load Image
@@ -594,7 +717,8 @@ Next, in **13_dapr_containerization**, we’ll add a Dapr sidecar to this agent 
 
 ## Step 12: Next Steps
 
-You’ve learned containers and Kubernetes with Rancher Desktop! In **13_dapr_containerization**, we’ll containerize the Chat Service with Dapr in Kubernetes, building on this foundation.
+You’ve learned containers and Kubernetes with Rancher Desktop! Now install Lense - we will use it later
+- [Download Lens - IDE for Kubernetes](https://k8slens.dev/download)
 
 ### Optional Exercises
 

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: agent-pod
+spec:
+  containers:
+  - name: agent-app
+    image: k8s.io/daca-agent:latest
+    imagePullPolicy: Never
+    ports:
+    - containerPort: 8000
