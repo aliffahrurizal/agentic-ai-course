@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from chat import app
+from main import app
 
 # Create a test client
 client = TestClient(app)
