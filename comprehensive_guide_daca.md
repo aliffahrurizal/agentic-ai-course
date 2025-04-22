@@ -669,6 +669,13 @@ Each example leverages DACA’s core strengths:
 
 ---
 
+### Summary of the Dapr Agentic Cloud Ascent (DACA) architecture:
+
+The Dapr Agentic Cloud Ascent (DACA) architecture aims to build a planet-scale, multi-AI agent system foundationally leveraging Kubernetes for orchestration and Dapr for distributed application capabilities. Core AI agents, developed using OpenAI or Google SDKs, are encapsulated as stateful Dapr Actors ("Agentic Actors"), simplifying state management and concurrency for individual agents. Similarly, user sessions are managed as stateful entities by Dapr Actors, interacting with the User Interface via FastAPI-based REST APIs, while internal communication between agents relies on Dapr's publish/subscribe mechanism for loose coupling and scalability.
+
+For interactions beyond the organizational boundary, designated agents implement a specified A2A (Agent-to-Agent) protocol, enabling standardized external communication. Tool usage across agents is standardized via a defined MCP protocol. To address the challenge of long-running tasks that could block the single-threaded actors, the architecture incorporates Dapr Workflows; actors delegate these lengthy processes to the workflow engine, ensuring the actors remain responsive while the workflows manage the complex, potentially multi-step tasks durably and asynchronously.
+___
+
 ## Conclusion
 DACA, built on AI-first and cloud-first principles, is a transformative design pattern for Agentia World. By centering AI agents with OpenAI’s SDK, enabling dialogues via A2A, integrating tools with MCP, and scaling through cloud-native Dapr and Kubernetes, DACA creates a global, intelligent network of digital and physical agents, redefining how we live and work.
 
