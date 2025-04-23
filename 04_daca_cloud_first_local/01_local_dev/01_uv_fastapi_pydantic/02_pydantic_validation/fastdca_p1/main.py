@@ -19,7 +19,7 @@ class Metadata(BaseModel):
 class Message(BaseModel):
     user_id: str
     text: str
-    metadata: Metadata | None = None
+    metadata: Metadata
     tags: list[str] | None = None  # Optional list of tags
 
 
