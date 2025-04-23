@@ -960,7 +960,19 @@ Classifying DACA as a design pattern highlights its flexibility and reusability:
 
 ---
 
-## Appendix IV: A2A vs MCP?
+## Appendix IV: DACA with OpenAI Agents SDK vs. LangGraph
+
+Original Blog:
+
+https://blog.langchain.dev/how-to-think-about-agent-frameworks/
+
+Discussion with AI:
+
+https://grok.com/share/bGVnYWN5_a2a48f5e-c255-4503-8f62-325ea819f353
+
+---
+
+## Appendix V: A2A vs MCP?
 
 https://www.linkedin.com/posts/avi-chawla_agent2agent-protocol-by-google-explained-activity-7316034375899402241-5A3o/
 
