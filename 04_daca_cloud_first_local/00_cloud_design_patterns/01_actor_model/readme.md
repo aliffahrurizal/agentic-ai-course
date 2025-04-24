@@ -68,7 +68,7 @@ Key features of Dapr Actors in DACA include:
 
 In DACA, Dapr Actors are used alongside other Dapr building blocks (state management, pub/sub, workflows) to orchestrate AI agents, making the Actor Model a natural fit for its event-driven, microservices-based architecture.
 
-###Why the Actor Model Is Fundamental to DACA?
+### Why the Actor Model Is Fundamental to DACA?
 DACA’s vision of Agentia World envisions a global ecosystem where every entity—digital or physical—is an AI agent collaborating via intelligent dialogues. The Actor Model, as implemented by Dapr, aligns perfectly with DACA’s requirements for autonomous, scalable, and resilient multi-agent systems. 
 
 By treating AI agents as actors, DACA achieves:
@@ -108,67 +108,63 @@ DACA integrates the Actor Model into its three-tier microservices architecture, 
 
 1. **Agent Abstraction as Dapr Actors**
 
-Each AI agent is a Dapr Actor, encapsulating:
-State: Agent context (e.g., user session, task history) stored in Dapr’s state store (Redis, CockroachDB).
-Behavior: Logic defined by the OpenAI Agents SDK, including reasoning, MCP tool calls, and A2A interactions.
-Mailbox: A Dapr-managed queue for receiving events (e.g., user inputs, A2A tasks).
+Each AI agent is a Dapr Actor, encapsulating:  
+**State:** Agent context (e.g., user session, task history) stored in Dapr’s state store (Redis, CockroachDB).   
+**Behavior:** Logic defined by the OpenAI Agents SDK, including reasoning, MCP tool calls, and A2A interactions.   
+**Mailbox:** A Dapr-managed queue for receiving events (e.g., user inputs, A2A tasks).   
 
 
 Example: A healthcare diagnosis agent actor receives a “SymptomsReported” event, queries a medical knowledge graph via MCP, and sends a diagnosis to a doctor actor for HITL review.
 
 2. **Message-Driven Interactions**
 
-Agents communicate via:
-Dapr Pub/Sub: Asynchronous events (e.g., “TaskCompleted”) published to RabbitMQ or Kafka.
-A2A Protocol: Structured JSON messages (e.g., Agent Cards, task artifacts) sent via HTTP/SSE.
+Agents communicate via:   
+**Dapr Pub/Sub:** Asynchronous events (e.g., “TaskCompleted”) published to RabbitMQ or Kafka.   
+**A2A Protocol:** Structured JSON messages (e.g., Agent Cards, task artifacts) sent via HTTP/SSE.   
 
 
-Dapr Actors process these messages sequentially, ensuring predictable state updates.
-Example: An e-commerce recommendation agent actor receives a “ProductViewed” event, updates its state (user preferences), and sends a recommendation to a UI actor.
+Dapr Actors process these messages sequentially, ensuring predictable state updates.   
+**Example:** An e-commerce recommendation agent actor receives a “ProductViewed” event, updates its state (user preferences), and sends a recommendation to a UI actor.
 
 3. **Concurrency and Task Delegation**
 
 DACA’s stateless computing model uses Dapr Actors to run concurrent agent workloads. Each actor handles one task at a time, but multiple actors run in parallel across containers.
-Parent actors delegate subtasks to child actors, leveraging Dapr’s actor creation API.
-Example: An IoT automation agent spawns child actors to control lights, thermostat, and locks based on a “MotionDetected” event, coordinating via A2A.
+Parent actors delegate subtasks to child actors, leveraging Dapr’s actor creation API.   
+**Example:** An IoT automation agent spawns child actors to control lights, thermostat, and locks based on a “MotionDetected” event, coordinating via A2A.
 
 4. **Event-Driven Execution**
 
-DACA’s EDA integrates with Dapr Actors through event triggers:
-Events from Kafka, RabbitMQ, or A2A endpoints activate actor methods.
-Actors emit new events to drive workflows (e.g., “HumanApprovalRequired” for HITL).
+DACA’s EDA integrates with Dapr Actors through event triggers:   
+Events from Kafka, RabbitMQ, or A2A endpoints activate actor methods.   
+Actors emit new events to drive workflows (e.g., “HumanApprovalRequired” for HITL).   
 
-
-Example: A content moderation agent actor flags a post, emits a “PostFlagged” event, and triggers a HITL review actor.
+**Example:** A content moderation agent actor flags a post, emits a “PostFlagged” event, and triggers a HITL review actor.
 
 5. **Fault Tolerance and Supervisor Strategies**
 
-Dapr Actors handle errors via:
-Retries: Dapr automatically retries failed actor operations (e.g., LLM API timeouts).
-Supervision: Parent actors monitor child actors, restarting or escalating failures.
-HITL Integration: Low-confidence decisions trigger HITL events, routed to a human dashboard (Next.js, Streamlit).
+Dapr Actors handle errors via:   
+**Retries:** Dapr automatically retries failed actor operations (e.g., LLM API timeouts).   
+**Supervision:** Parent actors monitor child actors, restarting or escalating failures.   
+**HITL Integration:** Low-confidence decisions trigger HITL events, routed to a human dashboard (Next.js, Streamlit).  
 
-
-Example: A diagnosis agent actor fails to process a complex case, escalates to a supervisor actor, and triggers a HITL review.
+**Example:** A diagnosis agent actor fails to process a complex case, escalates to a supervisor actor, and triggers a HITL review.
 
 6. **Integration with DACA’s Architecture**
 
-Presentation Layer: Actors interact with UIs (Next.js, Streamlit) via REST APIs (FastAPI) or A2A, delivering results to users.
-Business Logic Layer: Actors run in stateless containers, using Dapr sidecars for state, messaging, and workflows. MCP servers and A2A endpoints are also actor-managed.
-Infrastructure Layer: Actors scale on Kubernetes or ACA, with Dapr managing state (CockroachDB, Redis) and messaging (Kafka, RabbitMQ).
+**Presentation Layer:** Actors interact with UIs (Next.js, Streamlit) via REST APIs (FastAPI) or A2A, delivering results to users.   
+**Business Logic Layer:** Actors run in stateless containers, using Dapr sidecars for state, messaging, and workflows. MCP servers and A2A endpoints are also actor-managed.   
+**Infrastructure Layer:** Actors scale on Kubernetes or ACA, with Dapr managing state (CockroachDB, Redis) and messaging (Kafka, RabbitMQ).
 
-DACA Deployment Stages with the Actor Model
+### DACA Deployment Stages with the Actor Model
 DACA’s progressive deployment pipeline leverages Dapr Actors across all stages, ensuring consistency and scalability:
 
 1. Local Development
 
-Setup: Dapr Actors run in a local Kubernetes cluster (e.g., Rancher Desktop with k3s), replacing Docker Compose for consistency with production. Lens visualizes actor interactions.
-Actors: Agent actors (OpenAI Agents SDK), MCP server actors, and A2A endpoint actors process events locally, using Redis and RabbitMQ containers.
-Example: A local content moderation actor flags test posts, storing state in Redis and emitting events to a mock HITL actor.
-Scalability: Limited to single machine (1-10 req/s).
-Cost: Free, using open-source tools.
-
-
+**Setup:** Dapr Actors run in a local Kubernetes cluster (e.g., Rancher Desktop with k3s), replacing Docker Compose for consistency with production. Lens visualizes actor interactions.    
+**Actors:** Agent actors (OpenAI Agents SDK), MCP server actors, and A2A endpoint actors process events locally, using Redis and RabbitMQ containers.    
+**Example:** A local content moderation actor flags test posts, storing state in Redis and emitting events to a mock HITL actor.   
+**Scalability:** Limited to single machine (1-10 req/s).   
+**Cost:** Free, using open-source tools.   
 
 # Actor Model: A Fundamental Design Pattern in DACA
 
