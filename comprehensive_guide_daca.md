@@ -103,6 +103,11 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic blueprint
 - Leverage tools like Helm for packaging and GitOps tools (Argo CD) for deployment automation.
 - The goal is deployment portability and avoiding cloud vendor lock-in.
 
+3. **Open Core and Managed Edges**:
+- Use open-source technologies like Kubernetes, Dapr, and other cloud-native libraries as the system’s core to ensure flexibility, avoid vendor lock-in, and leverage community-driven innovation.
+- Integrate proprietary managed services (e.g., CockroachDB Serverless, Upstash Redis, OpenAI APIs) at the system’s edges to offload operational complexity, enhance scalability, and access advanced capabilities like AI inference or distributed databases.
+- The goal is to balance cost, control, and performance by combining the robustness of open-source infrastructure with the efficiency of managed services.
+
 
 
 ### Core Principles
@@ -110,6 +115,7 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic blueprint
 2. **Scalability**: Ascends from single machines to planetary scale using stateless containers, Kubernetes, and MCP and A2A’s interoperability.
 3. **Cost Efficiency**: Use free tiers (Hugging Face, Azure Container Apps, managed DBs) to delay spending.
 4. **Resilience**: Dapr ensures fault tolerance, retries, and state persistence across stages.
+5. **Open Core and Managed Edges**: Build the system’s core with open-source, cloud-native technologies like Kubernetes and Dapr for maximum control, portability, and community-driven innovation, while leveraging proprietary managed services (e.g., managed databases, AI APIs, serverless platforms) at the edges for operational efficiency, scalability, and access to advanced features.
 
 ---
 
@@ -301,6 +307,11 @@ The provided architecture diagram illustrates the DACA framework:
   - **Implementation**: Actors manage agent state and communication; workflows define task sequences or parallel executions, leveraging Dapr’s state management and retry policies.
   - **Why It Fits**: Actors enable scalable agent interactions, while workflows ensure reliable coordination, critical for multi-agent systems.
 
+  7. **Open Core and Managed Edges**:
+  - **Purpose**: Combines the flexibility of open-source technologies with the efficiency of managed services to create a robust, scalable architecture.
+  - **Implementation**: The core of the system—container orchestration (Kubernetes), distributed runtime (Dapr), and agent logic (OpenAI Agents SDK)—is built on open-source technologies, ensuring portability and community-driven enhancements. At the edges, managed services like CockroachDB Serverless (distributed SQL), Upstash Redis (in-memory store), and OpenAI APIs (AI inference) handle specialized tasks, reducing operational overhead and leveraging provider-optimized performance.
+  - **Why It Fits**: This approach maximizes control over the system’s core while outsourcing complex, resource-intensive tasks to managed services, enabling rapid scaling and cost efficiency in agentic AI systems.
+
 ---
 
 ## DACA Framework Constructs
@@ -411,6 +422,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
   - **Database**: Local Postgres container, SQLModel ORM.
   - **In-Memory Store**: Local Redis container, redis-py or Redis OM Python.
   - **Dev Tools**: VS Code Dev Containers for containerized development.
+  - **Open Core and Managed Edges**: Uses open-source Kubernetes (Rancher Desktop) and Dapr for the core, with local open-source services (Postgres, Redis) to simulate production. Managed services like OpenAI APIs are used at the edges for prototyping LLM inference.
 - **Scalability**: Single machine (1-10 req/s with OpenAI).
 - **Cost**: Free, using open-source tools.
 
@@ -428,7 +440,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
   - **Scheduling**: cron-job.org (free online scheduler).
   - **Database**: CockroachDB Serverless (free tier: 10 GiB, 50M RU/month).
   - **In-Memory Store**: Upstash Redis (free tier: 10,000 commands/day, 256 MB).
-  - **Dapr**: Sidecar container alongside the app.
+  - **Dapr**: Sidecar container alongside the app or use [managed Dapr Service](https://www.diagrid.io/conductor).
 - **Scalability**: Limited by free tiers (10s-100s of users, 5-20 req/s).
 - **Cost**: Fully free, but watch free tier limits (e.g., Upstash’s 7 req/min cap).
 
