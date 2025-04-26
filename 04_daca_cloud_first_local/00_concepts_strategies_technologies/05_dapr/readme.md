@@ -58,7 +58,16 @@ In essence, Helm provides the packaging and deployment mechanism for both the Da
 
 ## Dapr Actors
 
-Now, let's explain how Kubernetes handles Dapr actors:
+![](./actor.png)
+
+The image reflects the Dapr Actor architecture:
+
+- **Pods (dotted cluster box)** – each shows **two containers**:  
+  **App ** &rarr; **Dapr side-car ** with its hosted **Actor instances (A1, A2, …)** inside.
+- **Placement Service** directs traffic and stores actor maps in the **State Store**.
+- The **Service (SVC)** still fronts the pods, while the **HPA arrow** reminds you those pods can scale and Dapr will rebalance actors automatically.
+
+Now, let's explain and discuss the image in more detail and how Kubernetes handles Dapr actors:
 
 Dapr (Distributed Application Runtime) actors are a programming model for building scalable, stateful microservices. In Kubernetes, Dapr integrates seamlessly to manage actors, leveraging Kubernetes' orchestration capabilities. Here's how it works:
 
@@ -79,7 +88,7 @@ Dapr (Distributed Application Runtime) actors are a programming model for buildi
 In summary, Kubernetes provides the infrastructure (pods, services, scaling) to run Dapr, while Dapr manages the actor model, ensuring actors are distributed, stateful, and resilient within the Kubernetes environment.
 
 
-You're correct that Kubernetes typically allows multiple copies (replicas) of a container within pods for stateless applications, enabling scalability and load balancing. However, Dapr actors, being stateful, have a different behavior due to their design, but the limitation isn't exactly that they can "only have one copy of an instance at a time" in the way you might think. Let’s break this down:
+Kubernetes typically allows multiple copies (replicas) of a container within pods for stateless applications, enabling scalability and load balancing. However, Dapr actors, being stateful, have a different behavior due to their design, but the limitation isn't exactly that they can "only have one copy of an instance at a time" in the way you might think. Let’s break this down:
 
 1. **Dapr Actors and Stateful Nature**: Dapr actors are stateful entities, meaning each actor instance (identified by a unique actor ID) maintains its own state (e.g., data or variables). The Dapr actor model ensures that for a given actor type and actor ID, only one instance of that actor is active at a time across the entire cluster. This is to guarantee consistency—since the actor’s state is tied to its ID, having multiple active instances of the same actor ID would lead to state conflicts.
 
@@ -190,4 +199,4 @@ Increasing the number of replica pods is a key strategy to distribute the load o
 5. **Relating to Your Image**:
    - Your diagram shows pods behind a service (`back-end`). If these pods are hosting Dapr actors, increasing the number of pods (e.g., from 5 to 10) would allow Dapr to spread the 5 million actors across more pods, reducing the memory pressure on each one.
 
-In summary, yes, increasing the number of replica pods allows more pods to host the actors, reducing the number of actors per pod and mitigating memory issues. Dapr’s placement service handles the redistribution, and Kubernetes’ scaling mechanisms (manual or via HPA) make this process seamless.
+In summary, increasing the number of replica pods allows more pods to host the actors, reducing the number of actors per pod and mitigating memory issues. Dapr’s placement service handles the redistribution, and Kubernetes’ scaling mechanisms (manual or via HPA) make this process seamless.
