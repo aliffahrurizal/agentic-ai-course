@@ -6,6 +6,8 @@
 
 [Docs](https://docs.litellm.ai/docs/#litellm-python-sdk)
 
+[colab](https://colab.research.google.com/github/BerriAI/litellm/blob/main/cookbook/liteLLM_Getting_Started.ipynb#scrollTo=speIkoX_8db4)
+
 CrewAI has transitioned to using LiteLLM for integrating with various Large Language Models (LLMs). LiteLLM serves as an intermediary, allowing CrewAI to connect seamlessly with multiple LLM providers. This approach offers flexibility in choosing the appropriate model for specific use cases.  
 
 Despite this shift, CrewAI maintains compatibility with LangChain tools. You can continue to integrate LangChain’s comprehensive set of tools into your CrewAI agents to enhance their capabilities.  
