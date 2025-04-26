@@ -77,6 +77,10 @@ Instead, you typically manage Pods using higher-level **controllers**. The most 
     * **Rolling Updates & Rollbacks:** Deployments manage updates gracefully. When you update the application version, the Deployment replaces old Pods with new ones incrementally, ensuring zero downtime. It also keeps a history, allowing you to easily roll back to a previous version if something goes wrong.
 * **How it Works (Briefly):** Deployments actually use another controller called a **ReplicaSet** behind the scenes to manage the exact number of Pod replicas. The Deployment manages the ReplicaSet(s) to handle updates and rollbacks. You interact with the Deployment, and it orchestrates the ReplicaSets and Pods for you.
 
+![](./k8s.png)
+
+The image shows a Kubernetes setup with a service (SVC) named "back-end" at IP 172.16.1.43 and port 4434, managing multiple pods, some of which are deployed ("dply"). Pods are the smallest deployable units in Kubernetes, often containing one or more containers.
+
 ### 8. The Declarative Model: Telling Kubernetes "What," Not "How"
 
 A fundamental concept in Kubernetes is its **declarative model**. Instead of giving Kubernetes a step-by-step list of commands to execute (the imperative model), you simply *declare* the desired state you want to achieve.
