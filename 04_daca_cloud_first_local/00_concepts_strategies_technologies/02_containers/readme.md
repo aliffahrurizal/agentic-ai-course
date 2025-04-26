@@ -1,5 +1,7 @@
 # Beginner's Guide to Docker and Containers with Rancher Desktop
 
+[Our Textbook: Docker Deep Dive: Zero to Docker in a single book by Nigel Poulton](https://www.amazon.com/Docker-Deep-Dive-Nigel-Poulton-ebook/dp/B01LXWQUFF/ref=sr_1_1)
+
 This guide introduces the core concepts of Docker, containers, and related technologies in a simple, beginner-friendly way. It focuses on the big-picture ideas without diving into commands or code. We’ll assume you’re using **Rancher Desktop**, a free, open-source tool for working with containers on your computer. This guide is perfect for anyone new to cloud-native technologies who wants to understand how containers work and why they’re important.
 
 ---

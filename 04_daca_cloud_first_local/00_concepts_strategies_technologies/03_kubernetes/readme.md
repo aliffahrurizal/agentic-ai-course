@@ -1,5 +1,7 @@
 # Kubernetes Tutorial for Beginners: Understanding Orchestration
 
+[Our Textbook: The Kubernetes Book by Nigel Poulton](https://www.amazon.com/Kubernetes-Book-Version-November-2018-ebook/dp/B072TS9ZQZ/ref=sr_1_1)
+
 Welcome! This tutorial will guide you through the essential concepts of Kubernetes, often called the "operating system of the cloud". We'll explore what orchestration is and how Kubernetes helps manage modern applications, all without diving into code just yet.
 
 ### 1. What Problem Does Kubernetes Solve? The Need for Orchestration
