@@ -1,4 +1,4 @@
-# Building cloud-native AI agents: concepts, strategies, and technologies
+# Building Cloud-Native AI agents: Concepts, Strategies, and Technologies
 
 As we venture further into the era of sophisticated artificial intelligence, the focus is increasingly shifting towards building **agentic AI systems** – collections of intelligent, semi-autonomous components that can perceive, reason, act, and interact within complex environments. Developing and scaling these systems reliably in a distributed, cloud-based world presents unique challenges.
 
