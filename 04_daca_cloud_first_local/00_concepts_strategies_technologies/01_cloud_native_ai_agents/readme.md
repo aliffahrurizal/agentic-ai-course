@@ -2,6 +2,8 @@
 
 This tutorial is designed for newcomers to understand the relationship between **cloud native technologies**, **agentic AI**, **cloud-first development**, and the **actor model**. We’ll explore how these concepts connect, focusing on theory and their practical implications for building AI agents. No coding experience is required, and we’ll keep explanations simple and relatable.
 
+At the end it also contains a detailed report on Cloud Native Agentic AI.
+
 ---
 
 ## Section 1: What is Cloud Native?
@@ -252,18 +254,80 @@ Imagine a logistics company using agentic AI:
 
 ---
 
-## Section 9: Next Steps for Beginners
-
-- **Learn Cloud-Native Basics**: Explore microservices, containers, and Kubernetes through online courses or tutorials.
-- **Understand AI Concepts**: Study agentic AI and machine learning fundamentals to grasp how agents work.
-- **Explore the Actor Model**: Read about frameworks like Akka or Erlang, which implement the actor model.
-- **Experiment with Cloud Providers**: Sign up for free tiers on AWS, Google Cloud, or Azure to test cloud-first development.
-- **Start Small**: Build a simple AI agent (e.g., a chatbot) using cloud-native tools and the actor model as a guiding framework.
-
----
-
 ## Conclusion
 
 Cloud-native technologies provide the scalable, resilient infrastructure needed to develop agentic AI, while the actor model offers a perfect abstraction for modeling autonomous, concurrent, and fault-tolerant AI agents. Cloud-first development ensures these systems are built with the cloud’s strengths in mind, leveraging managed services and dynamic resources. Together, these concepts enable the creation of powerful, adaptive AI systems that can handle complex tasks in real-world applications, from customer support to logistics.
 
 By understanding these ideas—cloud native, agentic AI, cloud-first development, and the actor model—you’re equipped to explore the future of intelligent, distributed systems. As you dive deeper, you’ll see how they power the innovative technologies shaping our world.
+
+# Detailed Report: Cloud Native Agentic AI
+
+## Introduction
+Cloud Native Agentic AI represents a significant advancement in the intersection of artificial intelligence (AI) and cloud-native computing. It combines the autonomy and advanced reasoning capabilities of agentic AI with the scalability, flexibility, and orchestration of cloud-native technologies, particularly Kubernetes. This report provides a comprehensive overview of Cloud Native Agentic AI, exploring its definition, characteristics, tools, applications, challenges, and future directions.
+
+## Definition
+Cloud Native Agentic AI refers to the deployment of agentic AI systems within cloud-native environments to address operational challenges. Agentic AI systems are autonomous AI agents capable of perceiving their environment, reasoning, making decisions, and taking actions to solve complex, non-deterministic, multi-step problems. Unlike traditional AI, which often focuses on specific tasks like pattern recognition, agentic AI can plan iteratively and execute actions independently, turning insights into tangible outcomes.
+
+In cloud-native contexts, these AI agents are integrated with technologies like Kubernetes, containers, and microservices to manage tasks such as:
+- Configuration management
+- Troubleshooting and diagnostics
+- Complex deployment scenarios
+- Observability pipelines and dashboards
+- Network security, including mutual TLS (mTLS) and authentication/authorization changes
+
+This integration leverages the scalability and reliability of cloud-native platforms to enhance the efficiency and effectiveness of AI-driven operations.
+
+## Key Characteristics
+Cloud Native Agentic AI is defined by several key characteristics:
+- **Autonomy**: AI agents can operate independently, making decisions and taking actions without constant human intervention.
+- **Cloud-Native Integration**: These systems are designed to run seamlessly within cloud-native infrastructures, utilizing tools like Kubernetes for orchestration, containers for deployment, and microservices for modularity.
+- **Advanced Problem-Solving**: Agentic AI excels at handling non-deterministic, multi-step problems through iterative reasoning and planning, making it suitable for complex cloud operations.
+- **Operational Efficiency**: By automating routine and complex tasks, Cloud Native Agentic AI enhances productivity, allowing human engineers to focus on strategic initiatives.
+
+## Tools and Frameworks
+Several tools and frameworks facilitate the implementation of Cloud Native Agentic AI, with [Kagent](https://github.com/kagent-dev/kagent) being a prominent example:
+- **Kagent**: Kagent is an open-source programming framework designed for DevOps and platform engineers to build, deploy, and manage AI agents in Kubernetes clusters. Built on Microsoft’s [AutoGen](https://www.microsoft.com/en-us/research/project/autogen/) framework, Kagent simplifies the development of AI agents by defining them as Kubernetes custom resources. These resources include:
+  - **Agents**: Comprising a system prompt, a set of tools, and a model configuration.
+  - **Tools**: External tools defined as Kubernetes custom resources, reusable by multiple agents.
+  Kagent’s Kubernetes-native design ensures ease of use, flexibility, and powerful management capabilities, making it a cornerstone for Cloud Native Agentic AI.
+- **Other Platforms**: Companies like NVIDIA offer cloud-native tools through platforms like [NVIDIA AI Enterprise](https://www.nvidia.com/en-us/data-center/products/ai-enterprise/), which support AI agent development with containerized microservices and orchestration integration. While not explicitly focused on agentic AI, these tools provide a foundation for scalable AI deployments.
+
+## Applications and Impact
+Cloud Native Agentic AI has transformative potential across various industries, particularly in cloud-based operations. Key applications include:
+- **Operational Efficiency**: AI agents can automate complex tasks, such as diagnosing and resolving connectivity issues in cloud applications, optimizing resource allocation, and managing security configurations. For example, Kagent enables engineers to deploy agents that troubleshoot unreachable applications or automate network security updates.
+- **Real-Time Insights**: By analyzing data from observability pipelines and dashboards, AI agents provide actionable insights and automate responses to performance issues, reducing downtime and improving system reliability.
+- **Scalability**: As cloud-native applications grow in complexity, AI agents help manage the increasing number of microservices, containers, and orchestration challenges, ensuring seamless scalability.
+- **Innovation Enablement**: By freeing human engineers from routine tasks, Cloud Native Agentic AI allows them to focus on higher-level strategic initiatives, fostering innovation and business growth.
+
+A practical example is documented in an [InfoWorld article](https://www.infoworld.com/article/3959533/i-built-an-agentic-ai-system-across-multiple-public-cloud-providers.html), which describes a multicloud experiment where agentic AI systems dynamically allocated workloads across public cloud providers based on real-time factors like cost, performance, and availability. This demonstrates the potential for decentralized, autonomous cloud management.
+
+## Challenges
+Despite its potential, Cloud Native Agentic AI faces several challenges:
+- **Human-Centric Cloud Infrastructures**: Current cloud platforms, such as those offered by AWS, Azure, and GCP, are designed for human operators, developers, and end-users. This human-centric legacy creates inefficiencies and limitations when supporting autonomous AI agents, which require environments optimized for perception, reasoning, decision-making, and action.
+- **Integration Complexity**: Deploying agentic AI in cloud-native environments requires seamless integration with existing tools and workflows, which can be complex and resource-intensive.
+- **Scalability and Management**: As the number of AI agents increases, managing their interactions, resources, and performance within cloud-native systems becomes a significant challenge.
+
+## Opportunities and the Rise of Agent-Native Clouds
+To address these challenges, the concept of an "agent-native cloud" has emerged, as highlighted by [Agentuity](https://agentuity.com/blog/agent-native). An agent-native cloud is a cloud infrastructure reimagined and rebuilt from the ground up with AI agents as the primary users, rather than humans. Key features of an agent-native cloud include:
+- **Agent-First Design**: Prioritizing the needs of AI agents, such as built-in observability and automated management.
+- **Control Plane for Agents**: Enabling agents to act as the primary control mechanism for cloud operations.
+- **Environment for Action and Learning**: Providing a platform where agents can perceive, reason, decide, and act efficiently.
+
+Agentuity is pioneering the development of the world’s first agent-native cloud, launched around April 2025. This paradigm shift is seen as essential for unlocking the full potential of Cloud Native Agentic AI, as it addresses the inherent bottlenecks of human-centric cloud platforms.
+
+## Broader Context
+Cloud Native Agentic AI is part of a broader trend where AI and cloud-native technologies are converging to create more intelligent and autonomous systems. The [CNCF Whitepaper on Cloud Native Artificial Intelligence](https://www.cncf.io/reports/cloud-native-artificial-intelligence-whitepaper/) notes that AI and machine learning are becoming dominant cloud workloads, but challenges remain in fully accommodating these workloads within cloud-native environments. Cloud Native Agentic AI addresses some of these challenges by leveraging agentic AI to enhance operational capabilities.
+
+Community initiatives, such as the Kagent project, foster collaboration through resources like the [CNCF Slack #kagent channel](https://communityinviter.com/apps/cloud-native/cncf), the [Kagent website](https://kagent.io/), and its [GitHub repository](https://github.com/kagent-dev/kagent/). These platforms encourage engineers to experiment with AI agents, contribute to the framework, and share tools and best practices.
+
+## Future Directions
+The future of Cloud Native Agentic AI is promising, with several key directions:
+- **Advancement of Agent-Native Clouds**: As AI agents become more sophisticated, the demand for cloud infrastructures optimized for their needs will grow. Agent-native clouds, like those being developed by Agentuity, will likely become the standard for deploying agentic AI.
+- **Wider Adoption of Frameworks like Kagent**: Open-source frameworks will drive adoption by making it easier for organizations to integrate agentic AI into their cloud-native workflows.
+- **Multicloud and Decentralized Architectures**: Experiments like those described in InfoWorld suggest a future where agentic AI systems operate across multiple cloud providers, dynamically optimizing workloads for cost, performance, and reliability.
+- **Industry Transformation**: As Cloud Native Agentic AI matures, it will transform industries by enabling more efficient, scalable, and autonomous cloud operations, from healthcare to finance to technology.
+
+## Conclusion
+Cloud Native Agentic AI represents a powerful convergence of autonomous AI and cloud-native technologies, offering a solution to the growing complexity of cloud operations. By deploying AI agents within Kubernetes and other cloud-native platforms, organizations can automate tasks, enhance efficiency, and drive innovation. However, realizing the full potential of this technology requires overcoming the limitations of human-centric cloud infrastructures through the development of agent-native clouds. Frameworks like Kagent and initiatives like Agentuity’s agent-native cloud are paving the way for a future where AI agents are the primary drivers of cloud operations, transforming how we build and manage digital systems.
+
+

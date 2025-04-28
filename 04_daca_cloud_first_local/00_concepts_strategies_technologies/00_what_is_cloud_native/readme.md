@@ -1,5 +1,11 @@
 # Cloud Native: A Beginner-Friendly Theoretical Overview
 
+[Cloud-native computing](https://en.wikipedia.org/wiki/Cloud-native_computing)
+
+[What is Cloud Native and CNCF ?](https://www.youtube.com/watch?v=Ywg7JW4AviQ)
+
+[Building a Cloud Native Curriculum for Real-World Readiness - Marko Mudrinić](https://www.youtube.com/watch?v=zCq0u4adKkA)
+
 ## What is Cloud Native?
 
 Cloud native is an approach to building and running applications that leverages the power of cloud computing. Unlike traditional applications that rely on fixed servers or physical hardware, cloud-native applications are designed to be flexible, scalable, and resilient by using cloud infrastructure and modern development practices. The goal is to create apps that can handle varying user demands, recover from failures, and be updated seamlessly—all while taking advantage of the cloud’s distributed and dynamic nature.
