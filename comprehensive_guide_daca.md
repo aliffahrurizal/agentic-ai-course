@@ -190,7 +190,7 @@ DACA’s power lies in its dual commitment to AI-first and cloud-first developme
 **AI-First Development**:
 - **Why It Matters**: AI agents are the system’s brain, driving autonomy, decision-making, and adaptability. By prioritizing AI from the start, DACA ensures systems are inherently intelligent, capable of natural language dialogues, tool integration, and dynamic collaboration.
 - **How It’s Implemented**: Uses the OpenAI Agents SDK for agent logic, A2A for agent-to-agent communication, and MCP for tool access, enabling agents to handle complex tasks (e.g., coordinating logistics or automating homes).
--**Agentia Alignment**: Supports a world where every entity is an AI agent, interacting via intelligent dialogues rather than rigid APIs.
+- **Agentia Alignment**: Supports a world where every entity is an AI agent, interacting via intelligent dialogues rather than rigid APIs.
 
 **Agent-Native Cloud First Development**:
 - **Why It Matters**: Infrastructure optimized for agents provides scalability and programmatic interfaces, unlike human-centric clouds.
