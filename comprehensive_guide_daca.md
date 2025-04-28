@@ -58,7 +58,7 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
   - [Example 4: IoT Smart Home Automation](#example-4-iot-smart-home-automation)
 - [Why These Examples Work with DACA](#why-these-examples-work-with-daca)
 - [Conclusion](#conclusion)
-- [Appendix I: Handling 10 Million Concurrent Users?](#appendix-i-handling-10-million-concurrent-users)
+- [Appendix I: Handling 10 Million Concurrent Agents?](##appendix-i-handling-10-million-concurrent-agents)
 - [Appendix II: Cost Estimates for a Basic Kubernetes Cluster](#appendix-ii-cost-estimates-for-a-basic-kubernetes-cluster)
 - [Appendix III: DACA — Design Pattern or Framework?](#appendix-iii-daca-a-design-patter-or-framework)
 - [Appendix IV: DACA with OpenAI Agents SDK vs. LangGraph](appendix-iv-daca-with-openai-agents-sdk-vs-langgraph)
