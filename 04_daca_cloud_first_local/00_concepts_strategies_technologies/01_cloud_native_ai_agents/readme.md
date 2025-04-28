@@ -2,7 +2,7 @@
 
 This tutorial is designed for newcomers to understand the relationship between **cloud native technologies**, **agentic AI**, **cloud-first development**, and the **actor model**. We’ll explore how these concepts connect, focusing on theory and their practical implications for building AI agents. No coding experience is required, and we’ll keep explanations simple and relatable.
 
-At the end it also contains a detailed report on Cloud Native Agentic AI.
+**At the end we have detailed reports on Cloud Native Agentic AI and Agent-Native Clouds.**
 
 ---
 
@@ -329,5 +329,87 @@ The future of Cloud Native Agentic AI is promising, with several key directions:
 
 ## Conclusion
 Cloud Native Agentic AI represents a powerful convergence of autonomous AI and cloud-native technologies, offering a solution to the growing complexity of cloud operations. By deploying AI agents within Kubernetes and other cloud-native platforms, organizations can automate tasks, enhance efficiency, and drive innovation. However, realizing the full potential of this technology requires overcoming the limitations of human-centric cloud infrastructures through the development of agent-native clouds. Frameworks like Kagent and initiatives like Agentuity’s agent-native cloud are paving the way for a future where AI agents are the primary drivers of cloud operations, transforming how we build and manage digital systems.
+
+# Detailed Report: Agent-Native Clouds
+
+## Introduction
+Agent-Native Clouds mark a transformative shift in cloud computing, prioritizing autonomous AI agents over human operators. As AI agents increasingly handle complex tasks like configuration management, troubleshooting, and security, traditional cloud infrastructures—designed for human interaction—reveal limitations. Agent-Native Clouds address these inefficiencies by providing environments optimized for AI agents’ unique needs, such as perception, reasoning, decision-making, and action. This report explores the definition, features, key players, benefits, use cases, challenges, and future outlook of Agent-Native Clouds, drawing on recent developments as of April 2025.
+
+## Definition and Concept
+An Agent-Native Cloud is a cloud infrastructure designed and built from the ground up with AI agents as the primary users. Unlike conventional cloud platforms, which cater to human operators, developers, and end-users, Agent-Native Clouds are tailored to support the autonomous capabilities of AI agents. These agents excel at solving non-deterministic, multi-step problems through iterative reasoning and planning, requiring environments that facilitate seamless perception, decision-making, and action. The concept, introduced by Agentuity, addresses the inefficiencies of human-centric clouds, with the first Agent-Native Cloud launched in April 2025 ([Agentuity Blog](https://agentuity.com/blog/agent-native)).
+
+## Key Features
+Agent-Native Clouds are distinguished by features that align with the operational needs of AI agents:
+
+| **Feature** | **Description** |
+|-------------|------------------------------------------------------------------------------------------------|
+| **Agent-First Design** | All components are engineered with AI agents as the primary consumers, ensuring seamless integration with their workflows. |
+| **Built-in Agent Observability** | Tracks agent behavior, reasoning, model performance, data interactions, security, and costs, enabling other agents to analyze and act on this data. |
+| **Agents as Control Plane** | Provides robust communication layers for agent interaction, configuration, and autonomous management of the cloud environment. |
+| **Automated Management & Governance** | Facilitates agent self-management and enforces policies on resources, security, and operations, reducing human oversight. |
+| **Environment for Action & Learning** | Offers signals, feedback loops, prompt evolution, self-healing, structured data, and tools for agents to perceive, decide, act, and adapt. |
+
+These features ensure that AI agents can operate efficiently, autonomously, and at scale, overcoming the limitations of human-centric cloud designs.
+
+## Companies and Projects Involved
+Several organizations are driving the development of Agent-Native Clouds or related technologies:
+
+- **Agentuity**: The pioneer of Agent-Native Clouds, Agentuity launched the world’s first agent-native cloud in April 2025. Their vision is to create a cloud infrastructure that eliminates the bottlenecks of human-centric platforms, enabling AI agents to operate as the primary users ([Agentuity Blog](https://agentuity.com/blog/agent-native)).
+- **Google**: At Google Cloud Next 2025, Google announced advancements in agent-centric technologies, including:
+  - Updates to Agentspace, a platform for discovering, creating, and adopting AI agents.
+  - The AI Agent Marketplace, fostering agent development and deployment.
+  - The Agent Development Kit (ADK), an open-source framework for building and managing AI agents.
+  - Agent2Agent (A2A), an open protocol for agent collaboration across frameworks and vendors ([Google Cloud Next](https://blog.google/products/google-cloud/next-2025/); [Forbes Article](https://www.forbes.com/sites/janakirammsv/2025/04/14/google-unveils-the-most-comprehensive-agent-strategy-at-cloud-next-2025/)).
+- **Cloud Native Computing Foundation (CNCF)**: CNCF supports projects like Kagent and Dapr, which are relevant to agentic AI in cloud-native environments. Kagent is an open-source framework for deploying AI agents in Kubernetes, addressing operational challenges like troubleshooting and configuration ([CNCF Kagent Blog](https://www.cncf.io/blog/2025/04/15/kagent-bringing-agentic-ai-to-cloud-native/)). Dapr has introduced Dapr Agents and the LLM Conversation API, positioning it as a framework for AI-driven applications ([CNCF Dapr Report](https://www.cncf.io/announcements/2025/04/01/cloud-native-computing-foundation-releases-2025-state-of-dapr-report-highlighting-adoption-trends-and-ai-innovations/)).
+
+## Benefits
+Agent-Native Clouds offer significant advantages, particularly in environments where AI agents are central to operations:
+
+- **Enhanced Operational Efficiency**: By automating tasks like configuration management, troubleshooting, and security updates, AI agents reduce the need for human intervention, saving time and minimizing errors.
+- **Scalability and Flexibility**: Agent-Native Clouds support the growing complexity of cloud operations, such as managing microservices, containers, and orchestration, enabling seamless scaling.
+- **Real-Time Insights and Actions**: Agents can analyze observability data and respond to performance issues instantly, improving system reliability and reducing downtime.
+- **Innovation Enablement**: Automating routine tasks frees human engineers to focus on strategic initiatives, fostering innovation and competitive advantage.
+- **Optimized Resource Utilization**: AI agents can dynamically allocate resources based on real-time demand, optimizing costs and performance.
+
+## Use Cases
+Agent-Native Clouds are well-suited for scenarios where AI agents manage or operate within cloud environments. Key use cases include:
+
+| **Use Case** | **Description** |
+|--------------|------------------------------------------------------------------------------------------------|
+| **Autonomous Cloud Management** | AI agents handle resource allocation, scaling, and optimization, ensuring efficient cloud operations. |
+| **Security Monitoring and Response** | Agents detect and respond to security threats in real-time, such as implementing network security updates. |
+| **DevOps Automation** | Agents automate deployment, configuration, and troubleshooting of cloud-native applications, streamlining development pipelines. |
+| **Data Management** | Agents manage data ingestion, processing, and analysis for AI-driven workflows, supporting advanced analytics and decision-making. |
+| **Customer Service** | AI agents interact with customers or manage customer data in cloud-based systems, enhancing service delivery. |
+
+For example, an AI agent in an Agent-Native Cloud could diagnose an unreachable application by analyzing connection hops and automatically resolve the issue, as highlighted in Kagent’s use cases ([CNCF Kagent Blog](https://www.cncf.io/blog/2025/04/15/kagent-bringing-agentic-ai-to-cloud-native/)).
+
+## Challenges and Limitations
+Despite their potential, Agent-Native Clouds face several challenges:
+
+- **Human-Centric Legacy**: Current cloud infrastructures are designed for human operators, making the transition to agent-native environments complex and requiring significant reengineering.
+- **Integration Complexity**: Deploying AI agents in cloud-native environments demands seamless integration with existing tools and workflows, which can be resource-intensive.
+- **Security and Governance**: Ensuring that AI agents operate securely and are governed effectively is critical, as autonomous agents could introduce new vulnerabilities if not properly managed.
+- **Interoperability**: Enabling different AI agents to collaborate and integrate with existing systems remains a technical challenge, though initiatives like Google’s A2A protocol aim to address this.
+- **Cost and Resource Investment**: Building and maintaining Agent-Native Clouds requires substantial investment, particularly in the early stages of development and adoption.
+
+## Future Outlook
+The future of Agent-Native Clouds is promising, driven by the increasing adoption of AI agents and the need for optimized cloud infrastructures. Key trends include:
+
+- **Growing Adoption**: As AI agents become more sophisticated, demand for Agent-Native Clouds will rise. Agentuity’s pioneering work and Google’s agent-centric advancements suggest a shift toward agent-native paradigms ([Agentuity Blog](https://agentuity.com/blog/agent-native); [Google Cloud Next](https://blog.google/products/google-cloud/next-2025/)).
+- **Multicloud and Hybrid Support**: Agent-Native Clouds are likely to support decentralized architectures, enabling AI agents to operate across multiple cloud providers for cost and performance optimization.
+- **Industry Transformation**: By enabling efficient, scalable, and autonomous cloud operations, Agent-Native Clouds will transform industries like technology, healthcare, and finance, reducing operational burdens and driving innovation.
+- **Standardization and Collaboration**: Open protocols like Google’s A2A and frameworks like Kagent and Dapr will foster interoperability and collaboration among AI agents, accelerating adoption ([Forbes Article](https://www.forbes.com/sites/janakirammsv/2025/04/14/google-unveils-the-most-comprehensive-agent-strategy-at-cloud-next-2025/); [CNCF Dapr Report](https://www.cncf.io/announcements/2025/04/01/cloud-native-computing-foundation-releases-2025-state-of-dapr-report-highlighting-adoption-trends-and-ai-innovations/)).
+- **Ecosystem Development**: The growth of AI Agent Marketplaces and community-driven projects like Kagent will create robust ecosystems for agent development and deployment, further solidifying the role of Agent-Native Clouds.
+
+## Conclusion
+Agent-Native Clouds represent a groundbreaking evolution in cloud computing, designed to harness the full potential of autonomous AI agents. By prioritizing agents as the primary users, these clouds address the inefficiencies of human-centric platforms, enabling efficient, scalable, and innovative cloud operations. While challenges like integration complexity and security remain, the pioneering efforts of Agentuity, combined with advancements from Google and CNCF, signal a future where Agent-Native Clouds will redefine cloud management. As AI agents continue to advance, Agent-Native Clouds will become essential for organizations seeking to leverage AI-driven automation and innovation.
+
+## Key Citations
+- [Agentuity Blog: An Agent-native cloud does not mean a faster horse](https://agentuity.com/blog/agent-native)
+- [Google Cloud Next 2025: News and Updates](https://blog.google/products/google-cloud/next-2025/)
+- [Forbes: Google Unveils Comprehensive Agent Strategy at Cloud Next 2025](https://www.forbes.com/sites/janakirammsv/2025/04/14/google-unveils-the-most-comprehensive-agent-strategy-at-cloud-next-2025/)
+- [CNCF: Kagent Bringing Agentic AI to Cloud Native](https://www.cncf.io/blog/2025/04/15/kagent-bringing-agentic-ai-to-cloud-native/)
+- [CNCF: 2025 State of Dapr Report on Adoption and AI Innovations](https://www.cncf.io/announcements/2025/04/01/cloud-native-computing-foundation-releases-2025-state-of-dapr-report-highlighting-adoption-trends-and-ai-innovations/)
 
 
