@@ -262,6 +262,8 @@ By understanding these ideas—cloud native, agentic AI, cloud-first development
 
 # Detailed Report: Cloud Native Agentic AI
 
+[A Detailed Report by Gemini](https://g.co/gemini/share/e69721c4fc49)
+
 ## Introduction
 Cloud Native Agentic AI represents a significant advancement in the intersection of artificial intelligence (AI) and cloud-native computing. It combines the autonomy and advanced reasoning capabilities of agentic AI with the scalability, flexibility, and orchestration of cloud-native technologies, particularly Kubernetes. This report provides a comprehensive overview of Cloud Native Agentic AI, exploring its definition, characteristics, tools, applications, challenges, and future directions.
 
@@ -334,7 +336,10 @@ Cloud Native Agentic AI represents a powerful convergence of autonomous AI and c
 
 [First Read: An Agent-native cloud does not mean a faster horse](https://agentuity.com/blog/agent-native)
 
-[A Detailed Report Version 2 by Gemini](https://g.co/gemini/share/e69721c4fc49)
+
+[Agent-Native Clouds: The Convergence of Intelligent Agents and Cloud Native Computing
+](https://g.co/gemini/share/d8bb765ccc30)
+
 
 ## Introduction
 Agent-Native Clouds mark a transformative shift in cloud computing, prioritizing autonomous AI agents over human operators. As AI agents increasingly handle complex tasks like configuration management, troubleshooting, and security, traditional cloud infrastructures—designed for human interaction—reveal limitations. Agent-Native Clouds address these inefficiencies by providing environments optimized for AI agents’ unique needs, such as perception, reasoning, decision-making, and action. This report explores the definition, features, key players, benefits, use cases, challenges, and future outlook of Agent-Native Clouds, drawing on recent developments as of April 2025.
