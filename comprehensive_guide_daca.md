@@ -1,4 +1,4 @@
-# Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern ((Addresses 10 Million Concurrent Agents Challenge)) 
+# Comprehensive Guide to Dapr Agentic Cloud Ascent (DACA) Design Pattern - Addresses 10 Million Concurrent Agents Challenge 
 
 <p align="center">
 <img src="./img/daca_report.png" width="300">
@@ -60,15 +60,10 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
 - [Conclusion](#conclusion)
 - [Appendix I: Handling 10 Million Concurrent Users?](#appendix-i-handling-10-million-concurrent-users)
 - [Appendix II: Cost Estimates for a Basic Kubernetes Cluster](#appendix-ii-cost-estimates-for-a-basic-kubernetes-cluster)
-- [Appendix III: DACA — Design Pattern or Framework?](#appendix-iii-daca--design-pattern-or-framework)
-  - [DACA as a Design Pattern](#daca-as-a-design-pattern)
-  - [Why DACA Might Feel Like a Framework](#why-daca-might-feel-like-a-framework)
-  - [Key Differences: Design Pattern vs. Framework](#key-differences-design-pattern-vs-framework)
-  - [Comparison to Other Patterns/Frameworks](#comparison-to-other-patternsframeworks)
-  - [Why DACA Feels Framework‑Like in Practice](#why-daca-feels-framework-like-in-practice)
-  - [Final Classification](#final-classification)
-  - [Why It Matters](#why-it-matters)
-- [Appendix IV: A2A vs MCP](#appendix-iv-a2a-vs-mcp)
+- [Appendix III: DACA — Design Pattern or Framework?](#appendix-iii-daca-a-design-patter-or-framework)
+- [Appendix IV: DACA with OpenAI Agents SDK vs. LangGraph](appendix-iv-daca-with-openai-agents-sdk-vs-langgraph)
+- [Appendix V: A2A vs MCP](#appendix-v-a2a-vs-mcp)
+- [Appendix VI: How DACA Supports an Agent-Native Cloud](#appendix-vi-how-daca-supports-an-agent-native-cloud)
 
 
 ## Introduction
