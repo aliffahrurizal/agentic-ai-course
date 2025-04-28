@@ -970,6 +970,8 @@ The article critiques "bolt-on" AI solutions from major cloud providers (AWS, Az
 
 ### How DACA Supports an Agent-Native Cloud
 
+As discussed, the article underscores the need for infrastructure designed specifically for AI agents as the primary actors, rather than humans or user-centric applications. This perspective is consistent with DACA’s vision of “Agentia World,” where agents are the core entities driving interactions, and it strengthens the pattern’s relevance in an agent-driven future.
+
 The Dapr Agentic Cloud Ascent (DACA) design pattern is uniquely positioned to realize the agent-native cloud vision articulated by Agentuity. By integrating AI-first principles, agent-centric technologies, and a progressive deployment pipeline, DACA addresses the architectural mismatches of human-centric clouds and provides a blueprint for building scalable, resilient, and autonomous agent networks. Below are the key ways DACA aligns with and supports the creation of an agent-native cloud:
 
 1. **Agent-First Design**:
