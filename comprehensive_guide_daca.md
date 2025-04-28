@@ -183,7 +183,7 @@ Think of it this way: You might be able to design a brilliant engine (the AI age
 
 ---
 
-### AI-First and Agent-Native Cloud: Foundational Tenets of DACA
+### AI-First and Agent-Native Cloud First: Foundational Tenets of DACA
 
 DACA’s power lies in its dual commitment to AI-first and cloud-first development:
 
@@ -192,7 +192,7 @@ DACA’s power lies in its dual commitment to AI-first and cloud-first developme
 - **How It’s Implemented**: Uses the OpenAI Agents SDK for agent logic, A2A for agent-to-agent communication, and MCP for tool access, enabling agents to handle complex tasks (e.g., coordinating logistics or automating homes).
 -**Agentia Alignment**: Supports a world where every entity is an AI agent, interacting via intelligent dialogues rather than rigid APIs.
 
-**Agent-Native Cloud Development**:
+**Agent-Native Cloud First Development**:
 - **Why It Matters**: Infrastructure optimized for agents provides scalability and programmatic interfaces, unlike human-centric clouds.
 - **How It’s Implemented**: Leverages containers (Docker), orchestration (Kubernetes), serverless platforms (Azure Container Apps), and managed services (CockroachDB, Upstash Redis) to deploy and scale agents efficiently.
 - **Agentia Alignment**: Enables Agentia’s global reach, ensuring agents can scale from prototypes to millions of agents using cloud resources.
