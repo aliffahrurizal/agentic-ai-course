@@ -1,6 +1,6 @@
-# 01_kubernetes_basics: A Hands-On Introduction to Kubernetes
+# Hands-On Introduction to Kubernetes (Basics)
 
-Welcome to the first tutorial in our **Dapr Agentic Cloud Ascent (DACA)** Kubernetes series! In this guide, we’ll dive into Kubernetes fundamentals, building on the containerization concepts from the previous tutorial ("Introduction to Containers and Kubernetes with Rancher Desktop"). Here, we’ll explore Kubernetes architecture, core objects (pods, deployments, services, namespaces, configmaps, secrets), and basic networking, using Rancher Desktop’s local cluster. Through practical examples with the `daca-agent` app, you’ll learn to deploy, manage, and troubleshoot Kubernetes resources, setting the stage for Dapr integration in future tutorials. Let’s begin!
+In this guide, we’ll dive into Kubernetes fundamentals, building on the containerization concepts from the previous steps ("Introduction to Containers and Rancher Desktop"). Here, we’ll explore Kubernetes architecture, core objects (pods, deployments, services, namespaces, configmaps, secrets), and basic networking, using Rancher Desktop’s local cluster. Through practical examples with the `daca-agent` app, you’ll learn to deploy, manage, and troubleshoot Kubernetes resources, setting the stage for Dapr integration in future tutorials. Let’s begin!
 
 ---
 
@@ -20,9 +20,7 @@ Welcome to the first tutorial in our **Dapr Agentic Cloud Ascent (DACA)** Kubern
 - Basic command-line knowledge and familiarity with containers (images, Dockerfiles).
 - Recommended: 8 GB RAM, 4 CPUs.
 
-
-
-## Step 3: Understanding Kubernetes
+## Understanding Kubernetes
 
 **Kubernetes** is an open-source platform for orchestrating containers, automating deployment, scaling, and management. In DACA, Kubernetes scales our agent microservices and aligns with options like Azure Container Apps (ACA) for serverless deployment.
 
@@ -59,7 +57,7 @@ NAME                   STATUS   ROLES                  AGE   VERSION
 lima-rancher-desktop   Ready    control-plane,master   1h    v1.32.3+k3s1
 ```
 
-If not set up, refer to the previous tutorial’s Step 5: Install Rancher Desktop for instructions.
+If not set up, refer to the previous tutorial’s Install Rancher Desktop for instructions.
 
 ---
 
@@ -77,7 +75,12 @@ We containerized a `daca-agent` FastAPI app and deployed it to Kubernetes briefl
 
 ### What is Kubernetes?
 
-Kubernetes (K8s) is an open-source platform for orchestrating containers. It automates deployment, scaling, and management of containerized applications across clusters of nodes.
+Kubernetes (K8s) is an open-source platform for orchestrating containers. It automates deployment, scaling, and management of containerized applications across clusters of nodes. It, often shortened to K8s, does the heavy lifting of managing your containerized applications. At its core, Kubernetes is:
+
+1.  **A Cluster:** It groups multiple machines (servers) together, pooling their resources like CPU and memory[cite: 156]. These machines are called **nodes**.
+2.  **An Orchestrator:** It intelligently deploys and manages your applications across the cluster's nodes. It handles scaling, self-healing, updates, and more, often automatically once configured.
+
+Think of Kubernetes like the conductor of an orchestra. Each musician (container/application piece) knows its part, but the conductor (Kubernetes) ensures they all play together harmoniously, start and stop at the right times, and adjust volume (scale) as needed.
 
 #### Why Use Kubernetes?
 
@@ -128,6 +131,38 @@ While we use Rancher Desktop, other tools like `minikube` or `kind` can also run
 
 A pod is the smallest deployable unit in Kubernetes, typically running one container (e.g., `daca-agent`). Pods can contain multiple containers, but we’ll start simple.
 
+Every app on Kubernetes runs inside a Pod.
+
+- When you deploy an app, you deploy it in a Pod
+- When you terminate an app, you terminate its Pod
+- When you scale an app up, you add more Pods
+- When you scale an app down, you remove Pods
+- When you update an app, you deploy new Pods
+
+Pods abstract the workload details. This means you can run containers, VMs, serverless functions, and Wasm apps inside Pods and Kubernetes doesn’t know the diﬀerence.
+
+The following command shows a complete list of Pod attributes and returns over 1,000 lines. Press the spacebar to page through the output and press q to return to your prompt.
+
+```bash
+kubectl explain pods --recursive | more
+```
+
+Pods are lightweight and add very little overhead. The following example drills into the Pod restartPolicy attribute.
+
+```bash
+kubectl explain pod.spec.restartPolicy
+```
+
+Pods run one or more containers, and all containers in the same Pod share the Pod’s execution environment. This includes:
+
+- Shared filesystem and volumes ( mnt namespace)
+- Shared network stack ( net namespace)
+- Shared memory ( IPC namespace)
+- Shared process tree ( pid namespace)
+- Shared hostname ( uts namespace)
+
+Before going any further , remember that nodes are host servers that can be physical servers, virtual machines, or cloud instances. Pods wrap containers and execute on nodes.
+
 ### Hands-On: Create a Pod
 
 Create `pod.yaml`:
@@ -139,11 +174,10 @@ metadata:
   name: agent-pod
 spec:
   containers:
-  - name: agent-app
-    image: k8s.io/daca-agent:latest
-    imagePullPolicy: Never
-    ports:
-    - containerPort: 8000
+    - name: agent-app
+      image: nginx
+      ports:
+        - containerPort: 80
 ```
 
 Apply it:
@@ -160,9 +194,15 @@ kubectl get pods
 
 Output:
 
-```
+```bash
+mjs@Muhammads-MacBook-Pro-3 03_kubernetes_basics % kubectl get pods
+
+NAME        READY   STATUS              RESTARTS   AGE
+agent-pod   0/1     ContainerCreating   0          25s
+mjs@Muhammads-MacBook-Pro-3 03_kubernetes_basics % kubectl get pods
+
 NAME        READY   STATUS    RESTARTS   AGE
-agent-pod   1/1     Running   0          10s
+agent-pod   1/1     Running   0          96s
 ```
 
 View logs:
@@ -174,7 +214,7 @@ kubectl logs agent-pod
 Port Forward and open in browser
 
 ```bash
-kubectl port-forward pod/agent-pod 8000:8000
+kubectl port-forward pod/agent-pod 8000:80
 ```
 
 Delete it:
@@ -182,8 +222,6 @@ Delete it:
 ```bash
 kubectl delete pod agent-pod
 ```
-
-**Note**: `imagePullPolicy: Never` uses the local image built with `nerdctl`.
 
 ---
 
@@ -215,11 +253,10 @@ spec:
         app: agent-app
     spec:
       containers:
-      - name: agent-app
-        image: k8s.io/daca-agent:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8000
+        - name: agent-app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
 ```
 
 Apply it:
@@ -238,8 +275,8 @@ Output:
 
 ```
 NAME                         READY   STATUS    RESTARTS   AGE
-agent-app-7d9f8c6b5f-abc12   1/1     Running   0          15s
-agent-app-7d9f8c6b5f-xyz89   1/1     Running   0          15s
+agent-app-5cccf7cd67-fqfh6   1/1     Running   0          19s
+agent-app-5cccf7cd67-jj7hm   1/1     Running   0          19s
 ```
 
 #### Scale the Deployment
@@ -256,6 +293,15 @@ Verify:
 kubectl get pods
 ```
 
+```bash
+mjs@Muhammads-MacBook-Pro-3 03_kubernetes_basics % kubectl get pods
+
+NAME                         READY   STATUS              RESTARTS   AGE
+agent-app-5cccf7cd67-d7c9s   0/1     ContainerCreating   0          2s
+agent-app-5cccf7cd67-fqfh6   1/1     Running             0          35s
+agent-app-5cccf7cd67-jj7hm   1/1     Running             0          35s
+```
+
 #### Update the Deployment
 
 Edit `deployment.yaml`, change `replicas` to `1`, and reapply:
@@ -264,46 +310,12 @@ Edit `deployment.yaml`, change `replicas` to `1`, and reapply:
 kubectl apply -f deployment.yaml
 ```
 
-#### Roll Back
-
-Check history:
+Cleanup
 
 ```bash
-kubectl rollout history deployment agent-app
+mjs@Muhammads-MacBook-Pro-3 03_kubernetes_basics % kubectl delete -f deployment.yaml
+deployment.apps "agent-app" deleted
 ```
-
-To demonstrate updates and rollbacks, let’s modify the pod template to create a new revision. Edit deployment.yaml to add an annotation to the pod template and change replicas to 1:
-
-```yaml
-  template:
-    metadata:
-      labels:
-        app: agent-app
-      annotations:
-        version: "v2"  # Added to trigger a new revision
-```
-
-Apply the update:
-
-```bash
-kubectl apply -f deployment.yaml
-```
-
-Check history Again:
-
-```bash
-kubectl rollout history deployment agent-app
-```
-
-Roll back:
-
-```bash
-kubectl rollout undo deployment agent-app
-```
-
----
-
-Important Note: The kubectl rollout undo command requires multiple revisions to work. Kubernetes creates a new revision only when the pod template (spec.template) changes, such as updating the container image, labels, or annotations. Scaling (replicas) does not create a new revision because it doesn’t affect the pod template. In our example, adding the version: v2 annotation triggered a new revision, enabling the rollback. If you only change replicas and reapply, you may see an error like no rollout history found because no new revision was created.
 
 ## 4.1 Deploy: Practical Example 3 – Deploying last step container to Kubernetes
 
@@ -335,11 +347,10 @@ spec:
         app: agent-app
     spec:
       containers:
-      - name: agent-app
-        image: default/daca-agent:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8000
+        - name: agent-app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -350,8 +361,8 @@ spec:
   selector:
     app: agent-app
   ports:
-  - port: 8000
-    targetPort: 8000
+    - port: 80
+      targetPort: 80
   type: ClusterIP
 ```
 
@@ -360,7 +371,9 @@ Here's a breakdown of the `agent-deployment.yaml` Kubernetes manifest:
 ---
 
 #### 🔧 **Purpose**:
+
 This YAML file defines resources for deploying a **Kubernetes application** in a custom namespace called `daca`. It includes:
+
 1. A **Namespace**
 2. A **Deployment** (to run the app container)
 3. A **Service** (to expose the container internally in the cluster)
@@ -401,36 +414,34 @@ spec:
 - **replicas: 1**: Runs a single instance (pod) of your app.
 
 ```yaml
-  selector:
-    matchLabels:
-      app: agent-app
+selector:
+  matchLabels:
+    app: agent-app
 ```
 
 - Links this deployment to pods with the label `app: agent-app`.
 
 ```yaml
-  template:
-    metadata:
-      labels:
-        app: agent-app
+template:
+  metadata:
+    labels:
+      app: agent-app
 ```
 
 - **Pod template** metadata. Labels here must match the selector.
 
 ```yaml
-    spec:
-      containers:
-      - name: agent-app
-        image: default/daca-agent:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8000
+spec:
+  containers:
+    - name: agent-app
+      image: nginx:latest
+      ports:
+        - containerPort: 80
 ```
 
 - **Containers**: Specifies the container to run.
-  - `image`: The Docker image to use (`default/daca-agent:latest`).
-  - `imagePullPolicy: Never`: Tells Kubernetes **not** to pull from a remote registry. It's used when the image is **built locally** on the node.
-  - `containerPort: 8000`: Exposes port 8000 from inside the container (your app listens here).
+  - `image`: The Docker image to use.
+  - `containerPort: 80`: Exposes port 80 from inside the container (your app listens here).
 
 ---
 
@@ -455,16 +466,16 @@ spec:
 - Matches the pods using the label `app: agent-app`.
 
 ```yaml
-  ports:
-  - port: 8000
-    targetPort: 8000
+ports:
+  - port: 80
+    targetPort: 80
 ```
 
 - **port**: Port exposed by the service internally.
-- **targetPort**: Port on the container the traffic will be forwarded to (same here: `8000`).
+- **targetPort**: Port on the container the traffic will be forwarded to (same here: `80`).
 
 ```yaml
-  type: ClusterIP
+type: ClusterIP
 ```
 
 - **ClusterIP**: Default service type, exposes the service **internally within the cluster** (not accessible from outside unless exposed via Ingress or NodePort).
@@ -472,43 +483,27 @@ spec:
 ---
 
 #### 🧠 Summary:
+
 You're:
+
 - Creating a namespace `daca`.
-- Deploying an app (`default/daca-agent:latest`) as a pod in that namespace.
-- Exposing it via an internal service on port `8000`.
+- Deploying an app as a pod in that namespace.
+- Exposing it via an internal service on port `80`.
 
-- **Note**: `image: default/daca-agent:latest` reflects `containerd`’s namespacing. `imagePullPolicy: Never` ensures k3s uses the local image.
-
-### Step 4.2: Build and Load Image
-
-Build (if not done):
-
-```bash
-nerdctl build -t daca-agent .
-```
-
-Tag image to use default name space
-
-
-```bash
-nerdctl tag daca-agent:latest k8s.io/daca-agent:latest
-```
-
-```bash
-nerdctl save k8s.io/daca-agent:latest | nerdctl --namespace k8s.io load
-```
-
-```bash
-nerdctl images --namespace k8s.io
-```
-
-
-### Step 4.3: Deploy
+### Step 4.2: Deploy
 
 Apply:
 
 ```bash
 kubectl apply -f agent-deployment.yaml
+```
+
+Output:
+
+```bash
+namespace/daca created
+deployment.apps/agent-app created
+service/agent-app created
 ```
 
 Verify:
@@ -527,242 +522,20 @@ agent-app-6cd8d64b48-5n4cz   1/1     Running   0          12s
 Access:
 
 ```bash
-kubectl port-forward svc/agent-app 8000:8000 -n daca
+kubectl port-forward svc/agent-app 8000:80 -n daca
 ```
 
 Open `http://localhost:8000` to see the agent app.
 
-### Step 4.4: Clean Up
-
-```bash
-kubectl delete -f agent-deployment.yaml
-```
+Stop Port Forwarding.
 
 ---
 
+## Next Steps
 
-### Step 4.5: Using Rancher Desktop GUI
-
-1. Open Rancher Desktop.
-2. **Images**: See `default/daca-agent`, `nginx:alpine`.
-3. **Containers**: Run `default/daca-agent` via GUI, map port 8000.
-4. **Kubernetes**: View `daca` namespace, `agent-app` pod, and Service.
-5. Stop/delete resources via GUI.
-
----
-
-## 5. Exposing Applications with Services
-
-### What is a Service?
-
-A Service provides a stable endpoint to access a set of pods, using labels to select them. It enables load balancing and network access, unlike port-forwarding, which is temporary. We’ll create a Service for agent-app to avoid errors like services "agent-app" not found.
-
-### Hands-On: Create a Service
-
-Create `service.yaml`:
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: agent-app
-spec:
-  selector:
-    app: agent-app
-  ports:
-  - port: 8000
-    targetPort: 8000
-  type: ClusterIP
-```
-
-Apply it:
-
-```bash
-kubectl apply -f service.yaml
-```
-
-Access it:
-
-```bash
-kubectl port-forward svc/agent-app 8000:8000
-```
-
-Open `http://localhost:8000` in a browser to see `"Hello from DACA Agent!"`.
-
-**Service Types**:
-
-- `ClusterIP`: Default, internal access.
-- `NodePort`: Exposes on a node port (e.g., 30000-32767).
-- `LoadBalancer`: Cloud-specific, external access.
-
----
-
-## 6. Organizing Resources with Namespaces
-
-### What is a Namespace?
-
-Namespaces isolate resources (e.g., pods, services) within a cluster.
-
-### Hands-On: Use a Namespace
-
-Create `daca` namespace:
-
-```bash
-kubectl create namespace daca
-```
-
-Redeploy with namespace:
-
-```bash
-kubectl apply -f deployment.yaml -n daca
-kubectl apply -f service.yaml -n daca
-```
-
-List pods:
-
-```bash
-kubectl get pods -n daca
-```
-
-Switch context (optional):
-
-```bash
-kubectl config set-context --current --namespace=daca
-```
-
----
-
-## 7. Configuration Management with ConfigMaps and Secrets
-
-### What are ConfigMaps and Secrets?
-
-- **ConfigMaps**: Store non-sensitive configuration (e.g., app settings).
-- **Secrets**: Store sensitive data (e.g., API keys), base64-encoded.
-
-### Hands-On: Create a ConfigMap
-
-Create `configmap.yaml`:
-
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: agent-config
-  namespace: daca
-data:
-  greeting: "Hello from ConfigMap!"
-```
-
-Apply it:
-
-```bash
-kubectl apply -f configmap.yaml -n daca
-```
-
-Update `deployment.yaml` to use it:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: agent-app
-  namespace: daca
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: agent-app
-  template:
-    metadata:
-      labels:
-        app: agent-app
-    spec:
-      containers:
-      - name: agent-app
-        image: k8s.io/daca-agent:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8000
-        env:
-        - name: GREETING
-          valueFrom:
-            configMapKeyRef:
-              name: agent-config
-              key: greeting
-```
-
-Apply and test.
-
-### Hands-On: Create a Secret
-
-Create `secret.yaml`:
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: agent-secret
-  namespace: daca
-type: Opaque
-data:
-  api-key: YXBpLWtleS1leGFtcGxl  # base64 for "api-key-example"
-```
-
-Apply it:
-
-```bash
-kubectl apply -f secret.yaml -n daca
-```
-
-Update `deployment.yaml` to use the secret similarly.
-
----
-
-## 8. Basic Networking in Kubernetes
-
-- **Services**: Route traffic to pods via labels (e.g., `app: agent-app`).
-- **Ingress**: Manages external access (covered in later tutorials).
-
-**Example**: Our `ClusterIP` service routes traffic to `daca-agent` pods.
-
----
-
-## 9. Troubleshooting and Debugging
-
-### Common Commands
-
-- Inspect resources:
-
-```bash
-kubectl describe pod agent-app-xxx -n daca
-```
-
-- View logs:
-
-```bash
-kubectl logs agent-app-xxx -n daca
-```
-
-### Try It Yourself
-
-Simulate an error (e.g., wrong image name), then fix it using `describe` and `logs`.
-
----
-
-## 10. Conclusion
-
-You’ve mastered Kubernetes basics:
+You’ve covered Kubernetes basics:
 
 - Architecture and core objects.
-- Deploying and managing the `daca-agent` app.
-- Troubleshooting with `kubectl`.
+- Deploying and managing a container app.
 
-In the DACA series, Kubernetes will orchestrate microservices with Dapr for scalability and resilience. Next, in `02_dapr_theory_and_cli`, we’ll explore Dapr’s theory and CLI tools.
-
-### Optional Exercises
-
-1. Deploy a pod in a custom namespace.
-2. Scale a deployment to 5 replicas and expose it with a NodePort service.
-3. Explore `kubectl get events` for cluster insights.
-
-Happy learning!
+In the DACA series, Kubernetes will orchestrate agents with Dapr for scalability and resilience. 

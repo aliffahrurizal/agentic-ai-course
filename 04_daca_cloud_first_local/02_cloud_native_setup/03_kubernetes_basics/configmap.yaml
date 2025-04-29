@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: agent-config
-  namespace: daca
-data:
-  greeting: "Hello from ConfigMap!"

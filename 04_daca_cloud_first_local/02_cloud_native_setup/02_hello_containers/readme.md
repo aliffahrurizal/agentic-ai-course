@@ -1,8 +1,8 @@
-## Step 1: Understanding Containers
+# Understanding Containers
 
 **Containers** are lightweight, portable units that package an application and its dependencies (code, libraries, runtime) to run consistently across environments. In DACA, containers ensure our agentic AI microservices (e.g., Chat Service with OpenAI Agents SDK) behave the same in development and production.
 
-### Why Containers?
+## Why Containers?
 
 - **Consistency**: Packages dependencies (e.g., Python, OpenAI SDK), avoiding “it works on my machine” issues.
 - **Portability**: Runs on any compatible system, from laptops to cloud clusters.
@@ -10,7 +10,7 @@
 - **Efficiency**: Shares the host OS kernel, using less RAM than virtual machines (VMs).
 - **Scalability**: Easily scaled with orchestration tools like Kubernetes.
 
-### Containers vs. Virtual Machines
+## Containers vs. Virtual Machines
 
 - **VMs**: Run a full OS (e.g., Ubuntu) on a hypervisor, heavy (GBs), slow to start.
 - **Containers**: Share host OS, include only app dependencies, lightweight (MBs), instant start.
@@ -19,7 +19,7 @@
 
 ---
 
-## Step 2: Core Container Concepts
+## Step 1: Core Container Concepts
 
 Containerization packages apps into containers. Key terms:
 
@@ -31,7 +31,7 @@ Containerization packages apps into containers. Key terms:
 
 Let's understand the **Core Concepts of App Containerization**. Containerization is the process of packaging an application and its dependencies into a container. Let’s break down the key concepts:
 
-### 2.1 Containers
+## 1.1 Containers
 A **container** is a running instance of a container image. It’s an isolated environment that contains:
 - The application code.
 - The runtime (e.g., Python, Node.js).
@@ -40,14 +40,14 @@ A **container** is a running instance of a container image. It’s an isolated e
 
 Containers are ephemeral—they can be created, started, stopped, and deleted as needed. If a container crashes, you can restart it or create a new one from the same image.
 
-### 2.2 Container Images
+### 1.2 Container Images
 A **container image** is a lightweight, immutable snapshot of an application and its dependencies. It’s the blueprint for creating containers. Images are built in layers, where each layer represents a set of changes (e.g., installing a dependency, copying code).
 
 - Images are stored in a **registry**, such as **Docker Hub** (a public registry) or a private registry (e.g., AWS ECR, Google Artifact Registry).
 - Example: The `python:3.9-slim` image on Docker Hub contains a minimal Python 3.9 environment.
 
 
-### 2.3 Dockerfile
+### 1.3 Dockerfile
 A **Dockerfile** is a script that defines how to build a container image. It contains instructions like:
 - Specifying a base image (e.g., `FROM python:3.9-slim`).
 - Copying application code into the image.
@@ -75,11 +75,11 @@ CMD ["python", "app.py"]
 ---
 
 
-## Step 6: Practical Example 1 – Running a Simple Container
+## Step 2: Practical Example 1 – Running a Simple Container
 
 Let’s run a container to learn container basics, using Rancher Desktop’s `containerd` engine and `nerdctl` CLI.
 
-### Step 6.1: Run an Nginx Container
+### Step 2.1: Run an Nginx Container
 
 1. **Pull Nginx Image**:
 
@@ -127,17 +127,17 @@ Let’s run a container to learn container basics, using Rancher Desktop’s `co
 
 ---
 
-## Step 7: Practical Example 2 – Building a DACA Agent Container
+## Step 3: Practical Example 2 – Building a DACA Agent Container
 
 Let’s build a container for a DACA agent app (FastAPI with OpenAI Agents SDK), mimicking the Chat Service.
 
-### Step 7.1: Create the App
+### Step 3.1: Create the App
 
 #### Create a project:
 
 ```bash
-uv init daca-agent
-cd daca-agent
+uv init daca_agent
+cd daca_agent
 ```
 
 #### Setup Virtual Environment and install dependencies
@@ -173,7 +173,7 @@ async def root():
 ```
 
 
-### Step 7.2: Create Dockerfile
+### Step 3.2: Create Dockerfile
 
 Create `Dockerfile`:
 
@@ -207,7 +207,7 @@ Create `.dockerignore` file:
 __pycache__
 ```
 
-### Step 7.3: Build and Run
+### Step 3.3: Build and Run
 
 Build:
 
@@ -222,10 +222,11 @@ nerdctl images
 
 OUTPUT:
 ```bash
-(daca-agent) (chat-service) mjs@Muhammads-MacBook-Pro-3 daca-agent % nerdctl images
+(daca_agent) mjs@Muhammads-MacBook-Pro-3 daca_agent % nerdctl images
+
 REPOSITORY    TAG       IMAGE ID        CREATED           PLATFORM       SIZE       BLOB SIZE
-daca-agent    latest    3ec4183b0331    21 seconds ago    linux/arm64    366.6MB    118MB
-nginx         alpine    4ff102c5d78d    13 minutes ago    linux/arm64    53.72MB    21.67MB
+daca-agent    latest    35345b4bd82f    11 seconds ago    linux/arm64    338.5MB    111.1MB
+nginx         alpine    65645c7bb6a0    3 minutes ago     linux/arm64    54.07MB    21.82MB
 ```
 
 Run:
@@ -264,7 +265,7 @@ nerdctl rm daca-agent
 ---
 
 
-## Step 10: Key Commands
+## Step 4: Key Commands
 
 - **Container (nerdctl)**:
   - `nerdctl build -t <name> .`: Build image.
@@ -279,18 +280,18 @@ nerdctl rm daca-agent
 
 ---
 
-## Step 11: Why Containers and Kubernetes for DACA?
+## Step 5: Why Containers and Kubernetes for DACA?
 
 - **Consistency**: Containers ensure agent apps (e.g., Chat Service) run identically everywhere.
 - **Scalability**: Kubernetes scales pods for DACA’s event-driven architecture.
 - **Deployment**: Prepares for ACA/Kubernetes, avoiding Compose’s rework.
 - **Resilience**: Kubernetes restarts failed pods, supporting CockroachDB state management.
 
-Next, in **13_dapr_containerization**, we’ll add a Dapr sidecar to this agent app in Kubernetes, enabling state and pub/sub.
+Next, in we will cover kubernetes and helm basics to prepare for adding a Dapr sidecar to this agent app in Kubernetes, enabling state and pub/sub.
 
 ---
 
-## Step 12: Next Steps
+## Step 6: Next Steps
 
 You’ve learned containers and Kubernetes with Rancher Desktop! Now install Lense - we will use it later
 - [Download Lens - IDE for Kubernetes](https://k8slens.dev/download)

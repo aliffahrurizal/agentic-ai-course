@@ -1,6 +1,8 @@
-# Hands-on Helm Guide
+# Hands-on Helm (Basics)
 
-This guide provides a practical introduction to Helm, the package manager for Kubernetes. It covers the theory, verification of Helm installation, understanding Helm charts, and basic Helm commands for managing charts. We'll use an analogy to explain Helm charts and demonstrate installing an NGINX chart. This guide focuses on basics, so we won't cover chart creation or advanced templating.
+This guide provides a practical introduction to Helm, the package manager for Kubernetes. It covers the theory, verification of Helm installation, understanding Helm charts, and basic Helm commands for managing charts. We'll use an analogy to explain Helm charts and demonstrate installing an NGINX chart. 
+
+- Note: This guide focuses on basics to get you ready for dapr, so we won't cover chart creation or advanced templating.
 
 ## 1. What is Helm?
 

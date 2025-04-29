@@ -124,7 +124,7 @@ Output:
 
 ```
 Client Version: v1.32.3
-Kustomize Version: v5.5.0
+Kustomize Version: v5.6.0
 ```
 
 Check cluster:

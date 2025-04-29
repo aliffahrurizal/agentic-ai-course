@@ -2,7 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: agent-app
-  namespace: daca
+  labels:
+    app: agent-app
+  annotations:
+    version: "v2" # Added to trigger a new revision
 spec:
   replicas: 1
   selector:
@@ -14,14 +17,7 @@ spec:
         app: agent-app
     spec:
       containers:
-      - name: agent-app
-        image: k8s.io/daca-agent:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8000
-        env:
-        - name: GREETING
-          valueFrom:
-            configMapKeyRef:
-              name: agent-config
-              key: greeting
+        - name: agent-app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
