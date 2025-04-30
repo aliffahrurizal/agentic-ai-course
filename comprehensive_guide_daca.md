@@ -27,6 +27,7 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
 - [The Technology Architecture for Agentia World](#the-technology-architecture-for-agentia-world)
   - [Updated Workflow Summary](#updated-workflow-summary)
 - [The Indispensable Role of Cloud‑Native Technologies in Agentic AI Development](#the-indispensable-role-of-cloud-native-technologies-in-agentic-ai-development)
+  - [Current Cloud Services Limitations for AI Agent Development](#current-cloud-services-limitations-for-ai-agent-development)
   - [AI‑First and Cloud‑First: Foundational Tenets of DACA](#ai-first-and-cloud-first-foundational-tenets-of-daca)
 - [Why We Recommend the OpenAI Agents SDK](#why-we-recommend-the-openai-agents-sdk)
   - [Analysis of OpenAI Agents SDK’s Suitability](#analysis-of-openai-agents-sdks-suitability)
@@ -51,6 +52,7 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
   - [Advantages](#advantages)
   - [Potential Downsides](#potential-downsides)
   - [When to Use DACA](#when-to-use-daca)
+- [How DACA Addresses Current Cloud Services Limitations for AI Agent Development](#how-daca-addresses-current-cloud-services-limitations-for-ai-agent-development)
 - [DACA Real‑World Examples](#daca-real-world-examples)
   - [Example 1: Content Moderation Agent](#example-1-content-moderation-agent)
   - [Example 2: Healthcare Diagnosis Assistant](#example-2-healthcare-diagnosis-assistant)
@@ -618,13 +620,13 @@ In short — DACA closes most of the *technical* gaps that plague today’s “h
 | Limitation from your list | How DACA addresses it |
 | --- | --- |
 | **Agent-centric logging & observability** | Dapr sidecars emit OpenTelemetry/Prometheus metrics and traces that track actor calls, A2A round-trips, tool invocations, and reasoning paths — all machine-parsable by other agents  |
-| **Integrated architecture** | A three-tier, event-driven micro-services stack (presentation / agent logic / data) plus Dapr workflows gives a single, opinionated blueprint instead of scattered bolt-ons  ([learn-agentic-ai/comprehensive_guide_daca.md at main · panaversity/learn-agentic-ai · GitHub](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)) |
-| **Real-time, low-latency processing** | Stateless containers talk over Kafka/RabbitMQ with back-pressure and retries; Dapr pub/sub keeps message hops inside the node when possible  ([learn-agentic-ai/comprehensive_guide_daca.md at main · panaversity/learn-agentic-ai · GitHub](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)) |
+| **Integrated architecture** | A three-tier, event-driven micro-services stack (presentation / agent logic / data) plus Dapr workflows gives a single, opinionated blueprint instead of scattered bolt-ons   |
+| **Real-time, low-latency processing** | Stateless containers talk over Kafka/RabbitMQ with back-pressure and retries; Dapr pub/sub keeps message hops inside the node when possible   |
 | **Scalability & cost efficiency** | Horizontal scaling on Kubernetes or Azure Container Apps; pay-as-you-go state stores like CockroachDB Serverless keep idle costs near zero  |
 | **Standardised APIs** | A2A exposes capability cards and task endpoints; MCP normalises tool/function calling, so every agent and tool speaks the same dialect  |
-| **Persistent memory & state management** | Dapr Actors wrap each agent in a lightweight stateful object with automatic reminders, timers, and pluggable state stores (Redis, Cockroach, etc.)  ([learn-agentic-ai/comprehensive_guide_daca.md at main · panaversity/learn-agentic-ai · GitHub](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)) |
-| **Seamless agent collaboration & orchestration** | A2A for cross-domain chatter + Dapr Workflows for long-running, fan-out/fan-in orchestrations  ([learn-agentic-ai/comprehensive_guide_daca.md at main · panaversity/learn-agentic-ai · GitHub](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)) |
-| **Vendor lock-in mitigation** | “Open-core / managed-edges” mantra: Kubernetes + Dapr at the core, swap-in managed DBs or LLM APIs at the rim  ([learn-agentic-ai/comprehensive_guide_daca.md at main · panaversity/learn-agentic-ai · GitHub](https://github.com/panaversity/learn-agentic-ai/blob/main/comprehensive_guide_daca.md)) |
+| **Persistent memory & state management** | Dapr Actors wrap each agent in a lightweight stateful object with automatic reminders, timers, and pluggable state stores (Redis, Cockroach, etc.)   |
+| **Seamless agent collaboration & orchestration** | A2A for cross-domain chatter + Dapr Workflows for long-running, fan-out/fan-in orchestrations   |
+| **Vendor lock-in mitigation** | “Open-core / managed-edges” mantra: Kubernetes + Dapr at the core, swap-in managed DBs or LLM APIs at the rim   |
 
 ---
 
