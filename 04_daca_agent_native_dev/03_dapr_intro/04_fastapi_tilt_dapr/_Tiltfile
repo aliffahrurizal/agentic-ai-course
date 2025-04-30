@@ -1,0 +1,75 @@
+# Tiltfile for Dapr FastAPI Hot-reloading Development
+
+# Load extensions for nerdctl and Helm
+load('ext://nerdctl', 'nerdctl_build')
+load('ext://helm_remote', 'helm_remote')
+
+# Increase apply timeout
+update_settings(max_parallel_updates=10, timeout="120s")
+
+# 1. Deploy Dapr via Helm (disable mTLS, set health probe port, optimize)
+helm_remote(
+    'dapr',
+    release_name='dapr',
+    repo_name='dapr',
+    repo_url='https://dapr.github.io/helm-charts/',
+    namespace='dapr-system',
+    set=[
+        'dapr_scheduler.cluster.storageSize=16Gi',
+        'global.mtls.enabled=false',
+        'global.healthz.port=3500'
+    ]
+)
+
+# Explicitly manage Dapr resources for visibility
+k8s_resource('dapr-dashboard', port_forwards=[port_forward(8080, 8080, name='dapr dashboard')], labels=['dapr'])
+k8s_resource('dapr-operator', labels=['dapr'])
+k8s_resource('dapr-sentry', labels=['dapr'])
+k8s_resource('dapr-placement-server', labels=['dapr'])
+k8s_resource('dapr-sidecar-injector', labels=['dapr'])
+
+# 2. Deploy Redis via Helm
+helm_remote(
+    'redis',
+    release_name='redis',
+    repo_name='bitnami',
+    repo_url='https://charts.bitnami.com/bitnami',
+    namespace='default',
+    set=['auth.enabled=false']
+)
+
+# 3. Apply Dapr components with explicit resources
+k8s_yaml('./components/redis-state.yaml')
+k8s_resource('statestore', resource_deps=['dapr'], labels=['dapr'])
+
+k8s_yaml('./components/redis-pubsub.yaml')
+k8s_resource('pubsub', resource_deps=['dapr'], labels=['dapr'])
+
+k8s_yaml('./components/subscriptions.yaml')
+k8s_resource('message-subscription', resource_deps=['dapr'], labels=['dapr'])
+
+# 4. Build the FastAPI image using nerdctl
+nerdctl_build(
+    ref='dapr-fastapi-hello',
+    context='.',
+    dockerfile='Dockerfile',
+    live_update=[
+        sync('.', '/code'),
+        # run('pkill -f uvicorn', trigger=['./main.py'])
+    ]
+)
+
+# 5. Deploy FastAPI application
+k8s_yaml([
+    './kubernetes/deployment.yaml',
+    './kubernetes/service.yaml'
+])
+
+# 6. Define the Kubernetes resource for Tilt
+k8s_resource(
+    'dapr-fastapi-hello',
+    port_forwards='8000:8000',
+    extra_pod_selectors={'app': 'dapr-fastapi-hello'},
+    resource_deps=['dapr', 'redis', 'statestore', 'pubsub', 'message-subscription'],
+    labels=['application']
+)
