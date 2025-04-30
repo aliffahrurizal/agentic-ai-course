@@ -10,8 +10,6 @@ async def root():
 async def root_user():
     return {"user": "admin!"}
 
-
-# cloud native agents
-# problems in cloud
-# wWhy daca is good for agent native cloud?
-# 
+@app.get("/name/{name}")
+async def root_user(name: str):
+    return {"user": name}
