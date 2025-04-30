@@ -1,6 +1,18 @@
 # Dapr FastAPI Hands On with Helm, Dapr State, Dapr Pub/Sub
 
-This is in continuity from our last step. First go through it and ensure you have dapr setup and running.
+Now let's get hand's on with dapr.
+
+## Overview
+This tutorial sets up Dapr from scratch using Helm on Rancher Desktop, following a beginner-friendly flow:
+
+1. Install the Dapr CLI.
+2. Deploy Dapr’s control plane and Dashboard with Helm.
+3. Verify Dapr and explore the CLI.
+4. Deploy Redis and configure state/pub-sub components.
+5. Test Dapr APIs with `curl` via a test app.
+6. Verify state data in Redis.
+7. Explore the Dapr Dashboard.
+8. Build a FastAPI app with hot reloading, using Dapr’s state and pub/sub.
 
 ## 1, Deploy Dapr Control Plane with Helm
 

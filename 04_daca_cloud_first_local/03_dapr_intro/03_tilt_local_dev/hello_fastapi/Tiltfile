@@ -1,0 +1,29 @@
+# Tiltfile for FastAPI Hot-reloading Development
+
+# Load the nerdctl extension for Rancher Desktop
+load('ext://nerdctl', 'nerdctl_build')
+
+# Build the image using nerdctl, optimized for containerd and Kubernetes
+nerdctl_build(
+    ref='dapr-fastapi-hello',
+    context='.',
+    dockerfile='Dockerfile',
+    live_update=[
+        # Sync local directory '.' to '/code' in the container
+        sync('.', '/code'),
+        # Optional: Restart Uvicorn if reload fails
+        # run('pkill -f uvicorn', trigger=['./main.py'])
+    ]
+)
+
+# Deploy Kubernetes manifests (deployment and service).
+# Assumes Dapr components (Redis, statestore, pubsub) are already deployed.
+k8s_yaml(['kubernetes/deployment.yaml', 'kubernetes/service.yaml'])
+
+# Define the Kubernetes resource for Tilt to manage.
+# Includes port-forwarding to access the app at http://localhost:8000.
+k8s_resource(
+    'dapr-fastapi-hello',
+    port_forwards='8000:8000',
+    extra_pod_selectors={'app': 'dapr-fastapi-hello'}
+)

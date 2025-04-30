@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dapr-fastapi-hello
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dapr-fastapi-hello
+  template:
+    metadata:
+      labels:
+        app: dapr-fastapi-hello
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "dapr-fastapi-hello"
+        dapr.io/app-port: "8000"
+        dapr.io/enable-api-logging: "true"
+        dapr.io/log-level: "debug"  # For troubleshooting
+    spec:
+      containers:
+      - name: app
+        image: dapr-fastapi-hello  # Tilt updates the tag
+        ports:
+        - containerPort: 8000

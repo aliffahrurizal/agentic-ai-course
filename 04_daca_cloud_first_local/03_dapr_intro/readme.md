@@ -44,20 +44,6 @@ Dapr provides **building blocks** to solve distributed system challenges, each w
 8. **Configuration**: Manage feature flags.
 9. **Observability**: Trace and monitor with tools like Zipkin.
 
-This tutorial focuses on getting hands on Dapr along with **State Management** and **Pub/Sub** using Redis.
-
-## Step 1: Overview
-This tutorial sets up Dapr from scratch using Helm on Rancher Desktop, following a beginner-friendly flow:
-
-1. Install the Dapr CLI.
-2. Deploy Dapr’s control plane and Dashboard with Helm.
-3. Verify Dapr and explore the CLI.
-4. Deploy Redis and configure state/pub-sub components.
-5. Test Dapr APIs with `curl` via a test app.
-6. Verify state data in Redis.
-7. Explore the Dapr Dashboard.
-8. Build a FastAPI app with hot reloading, using Dapr’s state and pub/sub.
-
 ## Learning Objectives
 1. Install and configure Dapr using Helm.
 2. Understand Dapr’s control plane, sidecar, and CLI.
@@ -76,11 +62,11 @@ This tutorial sets up Dapr from scratch using Helm on Rancher Desktop, following
 - **uv**: For Python dependency management (`pip install uv`).
 - **curl**: For API testing.
 
-## Step 2:
 Complete the steps 
 - 1. Dapr Helm Hands On
 - 2. Setup Dapr with FastAPI
 - 3. Add hot reloading in FastAPI for *Cloud Native Local Development Environment*.
+- 4 Finally Setup Dapr Sidecar and Complete  *Cloud Native Local Development Environment*. Setup.
 
 ## DACA Context
 This setup supports DACA:

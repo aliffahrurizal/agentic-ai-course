@@ -1,5 +1,7 @@
 # Build the FastAPI Hello World App with Dapr SideCar
 
+This is in continuity from our last step. First go through it and ensure you have dapr setup and running.
+
 ### What’s Happening?
 
 We’ll build a FastAPI app that uses Dapr’s state and pub/sub APIs, with hot reloading for development.
