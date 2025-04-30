@@ -108,7 +108,7 @@ The **Dapr Agentic Cloud Ascent (DACA)** design pattern is a strategic blueprint
 ### Core Principles
 1. **Simplicity**: Minimize predefined constructs, empowering developers to craft custom workflows with A2A’s flexible communication.
 2. **Scalability**: Ascends from single machines to planetary scale using stateless containers, Kubernetes, and MCP and A2A’s interoperability.
-3. **Cost Efficiency**: Use free tiers (Hugging Face, Azure Container Apps, managed DBs) to delay spending.
+3. **Cost Efficiency**: Use free tiers (Hugging Face, Managed Dapr Service Diagrid Catalyst, Azure Container Apps, managed DBs) to delay spending.
 4. **Resilience**: Dapr ensures fault tolerance, retries, and state persistence across stages.
 5. **Open Core and Managed Edges**: Build the system’s core with open-source, cloud-native technologies like Kubernetes and Dapr for maximum control, portability, and community-driven innovation, while leveraging proprietary managed services (e.g., managed databases, AI APIs, serverless platforms) at the edges for operational efficiency, scalability, and access to advanced features.
 
@@ -460,6 +460,9 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
 <p align="center">
 <img src="./img/huggingface.png" width="400">
 </p>
+<p align="center">
+<img src="./img/diagrid.jpeg" width="400">
+</p>
 
 - **Goal**: Test and validate with minimal cost.
 - **Setup**:
@@ -469,7 +472,7 @@ DACA’s “ascent” refers to its progressive deployment pipeline, scaling fro
   - **Scheduling**: cron-job.org (free online scheduler).
   - **Database**: CockroachDB Serverless (free tier: 10 GiB, 50M RU/month).
   - **In-Memory Store**: Upstash Redis (free tier: 10,000 commands/day, 256 MB).
-  - **Dapr**: Sidecar container alongside the app or use [managed Dapr Service](https://www.diagrid.io/conductor).
+  - **Dapr**: Use [Managed Dapr Service Catalyst by Diagrid](https://www.diagrid.io/catalyst) free-tier.
 - **Scalability**: Limited by free tiers (10s-100s of users, 5-20 req/s).
 - **Cost**: Fully free, but watch free tier limits (e.g., Upstash’s 7 req/min cap).
 
@@ -641,7 +644,7 @@ In short — DACA closes most of the *technical* gaps that plague today’s “h
 
 ## Take-aways for your architecture
 
-1. **Use DACA for the plumbing you used to write by hand.** You get distributed state, pub/sub, standardised function calls, and cross-agent chat out-of-the-box, which eliminates most of the “custom glue” you flagged.  
+1. **Use DACA for the plumbing you used to write by hand.** You get distributed state, pub/sub, standardised function calls, and cross-agent chat out-of-the-box, which eliminates most of the “custom glue”.  
 2. **Budget time for compliance & security.** Map your regulatory obligations early and embed policy engines and audit sinks alongside Dapr sidecars.  
 3. **Plan an edge tier if latency is existential.** DACA scales to many nodes, but you may still need micro-clusters or WebAssembly-based inferencing in the device.  
 4. **Adopt FinOps tooling.** Free tiers are great for class projects; enterprise roll-outs need continuous cost observability.  
@@ -666,6 +669,7 @@ DACA’s flexibility makes it applicable to a wide range of agentic AI systems, 
   - Deploy to Hugging Face Docker Spaces (free tier) for public testing.
   - Use CloudAMQP (RabbitMQ free tier) for event-driven flagging (e.g., "PostFlagged" events) and Upstash Redis for caching moderation rules.
   - Schedule nightly rule updates with cron-job.org to fetch new keywords from a mock external source.
+  - Use Dapr Managed Services from Diagrid (Free tier) 
 - **Medium Scale (ACA)**:
   - Move to Azure Container Apps (ACA) to handle thousands of posts/hour.
   - Store moderation logs in CockroachDB Serverless, scaling to paid tier if needed.
@@ -688,6 +692,7 @@ DACA’s flexibility makes it applicable to a wide range of agentic AI systems, 
   - Deploy to Hugging Face Docker Spaces for free testing with a small user base (e.g., 100 patients/day).
   - Use CockroachDB Serverless (free tier) for patient data persistence and Upstash Redis for caching.
   - Emit "DiagnosisGenerated" events via CloudAMQP RabbitMQ, triggering notifications to doctors for review.
+  - Managed Dapr Service Diagrid Catalyst (Free-Tier)
 - **Medium Scale (ACA)**:
   - Scale to ACA to handle thousands of patients/day, auto-scaling on HTTP traffic.
   - Use HITL: Diagnoses with <90% confidence trigger "HumanReviewRequired" events, sent to a Streamlit dashboard where doctors confirm or adjust the diagnosis.
@@ -710,6 +715,7 @@ DACA’s flexibility makes it applicable to a wide range of agentic AI systems, 
   - Deploy to Hugging Face Docker Spaces for free testing with early users.
   - Use CockroachDB Serverless to store user data and Upstash Redis to cache recommendations for low-latency access.
   - Emit "UserAction" events (e.g., "ProductViewed") via CloudAMQP RabbitMQ, triggering the agent to update recommendations in real-time.
+  - Managed Dapr Service Diagrid Catalyst (Free-Tier)
 - **Medium Scale (ACA)**:
   - Scale to ACA to handle thousands of users/hour, auto-scaling on user traffic.
   - Use Pinecone (Vector DB) to store product embeddings for faster similarity searches in recommendations.
@@ -732,6 +738,7 @@ DACA’s flexibility makes it applicable to a wide range of agentic AI systems, 
   - Deploy to Hugging Face Docker Spaces for free testing with a small number of homes.
   - Use CockroachDB Serverless to store device states and Upstash Redis to cache sensor readings.
   - Emit "SensorTriggered" events (e.g., "MotionDetected") via CloudAMQP RabbitMQ, prompting the agent to act (e.g., "turn on lights").
+  - Managed Dapr Service Diagrid Catalyst (Free-Tier)
 - **Medium Scale (ACA)**:
   - Scale to ACA to manage thousands of homes, auto-scaling on sensor event volume.
   - Use HITL: High-impact actions (e.g., "unlock door") trigger "HumanApprovalRequired" events, sent to a Next.js dashboard for homeowner approval.
@@ -949,7 +956,7 @@ A **framework** is a more concrete, reusable set of libraries, tools, or runtime
    - But DACA isn’t Dapr—it uses Dapr as a component within its broader design pattern. DACA’s scope extends beyond Dapr to include the entire architecture (EDA, three-tier, statelessness, deployment stages).
 
 3. **Unified Stack Across Stages**:
-   - DACA’s consistent stack (same tools from local to production, differing only in deployment) feels framework-like, as it provides a cohesive development experience. For example, the use of Rancher Desktop locally, Hugging Face Spaces for prototyping, and ACA/Kubernetes for production follows a structured pipeline.
+   - DACA’s consistent stack (same tools from local to production, differing only in deployment) feels framework-like, as it provides a cohesive development experience. For example, the use of Rancher Desktop locally, Hugging Face Spaces/Diagrid Catalyst, and ACA/Kubernetes for production follows a structured pipeline.
    - However, this is a *strategy* for deployment, not a framework’s runtime enforcement. You could deploy DACA on entirely different platforms (e.g., GCP Cloud Run) and still adhere to the pattern.
 
 ---
