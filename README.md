@@ -2,9 +2,29 @@
 
 This repo is part of the [Panaversity Certified Agentic & Robotic AI Engineer](https://docs.google.com/document/d/15usu1hkrrRLRjcq_3nCTT-0ljEcgiC44iSdvdqrCprk/edit?usp=sharing) program. It covers AI-201, AI-202 and AI-301 courses.
 
+We have Two Hunches, the future of Pakistan depends on it, let's make sure that we are not wrong:
+
+It is very important for Pakistan that we bet on the right horses for the upcoming age of Agentic AI. We will be training millions of Agentic AI Developers all over Pakistan and online around the world and building startups, we cant afford to be wrong.
+
+Hunch #1: Dapr
+We feel Dapr, Dapr Actors, Dapr Workflows, and Dapr Agents will be the core technology in building the next generation multi ai agentic systems, is my hunch correct?
+
+Hunch #2: OpenAI Agents SDK
+We also have a hunch that OpenAI Agents SDK will be the go to framework for beginners to start learning Agentic AI?
+
+Let us see what the best AI has to say about our hunches:
+
+https://chatgpt.com/share/6811b893-82cc-8001-9037-e45bcd91cc64
+
+https://g.co/gemini/share/1f31c876520b
+
+https://grok.com/share/bGVnYWN5_4343d342-c7df-4b06-9174-487a64f59d53
+
+
+
 ## This Panaversity Initiative Tackles the Critical Challenge: 
 
-**“How do we design AI Agents that can handle 10 million concurrent users without failing?”**
+**“How do we design AI Agents that can handle 10 million concurrent AI Agents without failing?”**
 
 Note: The challenge is intensified as we must guide our students to solve this issue with minimal financial resources available during training.
 
@@ -12,7 +32,7 @@ Note: The challenge is intensified as we must guide our students to solve this i
 <img src="./img/cover.png" width="600">
 </p>
 
-Kubernetes with Dapr can theoretically handle 10 million concurrent users in an agentic AI system without failing, but achieving this requires extensive optimization, significant infrastructure, and careful engineering. While direct evidence at this scale is limited, logical extrapolation from existing benchmarks, Kubernetes’ scalability, and Dapr’s actor model supports feasibility, especially with rigorous tuning and resource allocation.
+Kubernetes with Dapr can theoretically handle 10 million concurrent agents in an agentic AI system without failing, but achieving this requires extensive optimization, significant infrastructure, and careful engineering. While direct evidence at this scale is limited, logical extrapolation from existing benchmarks, Kubernetes’ scalability, and Dapr’s actor model supports feasibility, especially with rigorous tuning and resource allocation.
 
 **Condensed Argument with Proof and Logic**:
 
