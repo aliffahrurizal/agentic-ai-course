@@ -12,3 +12,5 @@ Steps:
 - 1. Tilt FastAPI Hands On
 - 2. Tilt Dapr Hands On
 - 3. Tilt with a Microservice with Sidecar Hands On
+
+Install this [Tilt Extension](https://marketplace.cursorapi.com/items?itemName=tilt-dev.Tiltfile) and in IDE and start with the first step

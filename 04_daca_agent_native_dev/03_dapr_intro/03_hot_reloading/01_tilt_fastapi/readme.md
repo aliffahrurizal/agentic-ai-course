@@ -55,7 +55,13 @@ Verify installation:
 tilt version
 ```
 
-### 2. Modify Dockerfile for Development
+### 2. Basic Setup
+
+### 2.1 Install Tilt Extension
+
+[Install Tilt Extension in your IDE](https://marketplace.cursorapi.com/items?itemName=tilt-dev.Tiltfile)
+
+#### 2.2 Modify Dockerfile for Development
 
 For hot-reloading to work inside the container using Uvicorn, the `CMD` instruction must include the `--reload` flag.
 
