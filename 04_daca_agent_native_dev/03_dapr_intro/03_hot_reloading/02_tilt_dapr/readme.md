@@ -1,4 +1,6 @@
-# Configure Tilt with Dapr and Test in Dapr Dashboard
+# 2. Tilt Dapr Hands On
+
+## Configure Tilt with Dapr and Test in Dapr Dashboard
 
 ### What’s Happening?
 

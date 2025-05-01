@@ -1,24 +1,9 @@
-# Add Hot Reloading for Cloud-Native [Local Development (using Tilt)](https://docs.tilt.dev/index.html)
+# 1. Tilt FastAPI Hands On
 
-### What’s Happening?
+Live updates enable hot reloading by syncing local code changes directly to containers, ideal for fast feedback loops in agentic systems where developers iterate on autonomous logic.
 
-We have deployed the Dapr infrastructure (Control Plane, Dashboard, Redis, Components) in our Kubernetes cluster (Rancher Desktop) using Helm and `kubectl apply` (from Document 01). We have also set up our FastAPI project with the application code, Dockerfile, and Kubernetes manifests (from Document 02).
+Here we will use Tilt to sync our container running in pod with local changes in real time.
 
-Now, we need an efficient way to develop our FastAPI application with rapid iteration and hot-reloading, while keeping the application running within Kubernetes alongside its Dapr sidecar and components. 
-
-The standard cloud-native approach for this kind of rapid development loop in Kubernetes is to use a tool that watches your local filesystem and syncs code changes into the running container. We will use **Tilt** to achieve this. Tilt will automate building the development image, deploying your application to Kubernetes, and crucially, syncing your local code changes into the running pod to trigger FastAPI's hot-reloading (via Uvicorn's `--reload` flag) and tilt to sync local changes within kubernetes pod.
-
-## Overview
-
-Rapid Iteration: Live updates enable hot reloading by syncing local code changes directly to containers, ideal for fast feedback loops in agentic systems where developers iterate on autonomous logic.
-
-- User-Friendly UI: The Tilt dashboard (http://localhost:10350) offers real-time logs, resource status, and debugging, which supports managing complex agentic workflows.
-- Extensibility: Tilt’s Tiltfile (written in Starlark, a Python-like language) allows custom workflows, such as triggering database seeding or integrating with Dapr sidecars, aligning with agentic automation needs.
-- Local and Remote Support: Works with local clusters (e.g., Rancher Desktop) and remote - - - Kubernetes clusters, fitting cloud-native development.
-
-Weaknesses:
-- May require more setup for complex pipelines compared to Skaffold’s structured approach.
-- Less focus on CI/CD integration, which might be needed for later agentic deployment stages.
 
 ## Why Tilt is Better for Agentic Cloud Development
 
@@ -28,6 +13,13 @@ Tilt is the better choice for agentic cloud development, particularly in the dev
 - Enhanced Developer Experience: The Tilt UI provides real-time visibility into application and sidecar (e.g., Dapr) logs, resource health, and port-forwarding status, making it easier to debug complex agentic workflows involving multiple components.
 Dapr Compatibility: Tilt’s flexibility in managing Kubernetes resources and port-forwarding (e.g., FastAPI on 8000, Dapr on 3500) aligns seamlessly with the tutorial’s Dapr-based setup, as demonstrated in Part 2.
 - Custom Automation: The Tiltfile supports custom workflows (e.g., syncing code, restarting processes, or integrating with Dapr components), which mirrors the autonomous, goal-oriented nature of agentic systems.
+- User-Friendly UI: The Tilt dashboard (http://localhost:10350) offers real-time logs, resource status, and debugging, which supports managing complex agentic workflows.
+- Extensibility: Tilt’s Tiltfile (written in Starlark, a Python-like language) allows custom workflows, such as triggering database seeding or integrating with Dapr sidecars, aligning with agentic automation needs.
+- Local and Remote Support: Works with local clusters (e.g., Rancher Desktop) and remote - - - Kubernetes clusters, fitting cloud-native development.
+
+Weaknesses:
+- May require more setup for complex pipelines compared to Skaffold’s structured approach.
+- Less focus on CI/CD integration, which might be needed for later agentic deployment stages.
 
 This setup aligns with the DACA principle of developing within a production-like (containerized, Kubernetes-based) environment from Stage 1.
 

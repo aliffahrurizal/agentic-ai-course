@@ -1,4 +1,4 @@
-# Combine Tilt, FastAPI, and Dapr for Local Development Environment
+# 3. Tilt with a Microservice with Sidecar Hands On
 
 ### What’s Happening?
 
