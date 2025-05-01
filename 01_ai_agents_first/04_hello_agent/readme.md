@@ -94,10 +94,11 @@ print(result.final_output)
 ### GLOBAL
 
 ```python
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
-from agents import set_default_openai_client
+from agents import Agent, Runner, AsyncOpenAI, set_default_openai_client, set_tracing_disabled, set_default_openai_api
 
 gemini_api_key = ""
+set_tracing_disabled(True)
+set_default_openai_api("chat_completions")
 
 external_client = AsyncOpenAI(
     api_key=gemini_api_key,
@@ -105,14 +106,9 @@ external_client = AsyncOpenAI(
 )
 set_default_openai_client(external_client)
 
-model = OpenAIChatCompletionsModel(
-    model="gemini-2.0-flash",
-    openai_client=external_client
-)
+agent: Agent = Agent(name="Assistant", instructions="You are a helpful assistant", model="gemini-2.0-flash")
 
-agent: Agent = Agent(name="Assistant", instructions="You are a helpful assistant", model=model)
-
-result = Runner.run_sync(agent, "Hello, how are you.")
+result = Runner.run_sync(agent, "Hello")
 
 print(result.final_output)
 ```
