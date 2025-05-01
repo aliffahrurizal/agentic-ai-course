@@ -128,3 +128,7 @@ Test them and final clean up
 ```bash
 tilt down
 ```
+
+### Challenge
+
+Now install agents sdk and create an Agent with the Dapr SDK features we have used. 
