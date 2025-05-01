@@ -1,4 +1,5 @@
-## 🚀 **Introducing RecursiveAgenticOS (RAOS): Future Direction**  
+## 🚀 **Introducing RecursiveAgenticOS (RAOS): Future Direction** (Pronounced “RAY-oss”)
+
 *“Agents that create, deploy, monitor & improve other agents—powered by Dapr, Kubernetes, Helm, Prometheus and deep AI reasoning.”*
 
 In a future where AI agents will rapidly outnumber human developers, frameworks aren’t enough—we need an **operating system built **for** agents, **by** agents**. RAOS is that OS: a cloud-native foundation where agents are **self-managed, self-healing and self-aware**, turning code into an *agentic civilization* rather than a fragile collection of micro-services.
