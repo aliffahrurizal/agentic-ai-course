@@ -1,4 +1,4 @@
-#[ Dapr SDKs Hands On](https://docs.dapr.io/developing-applications/sdks/python/)
+# [Dapr SDKs Hands On](https://docs.dapr.io/developing-applications/sdks/python/)
 
 We have tried using APIs to interact with Dapr Sidecar from our container. In last module we did it for State Management and PubSub.
 
@@ -8,12 +8,13 @@ Dapr supports both HTTP and gRPC APIs for interacting with its building blocks a
 - Actor: The Dapr Actor SDK allows you to build virtual actors with methods, state, timers, and persistent reminders
 - Workflow: Dapr Workflow makes it easy for you to write long running business logic and integrations in a reliable way
 
+**Here we will get hands on Dapr SDK and you will complete a challenge project skills you have acquired from 01_agents_first and the first three modules of 04_daca_agent_native_dev**
 
 ## Shall we use [Dapr SDKs](https://docs.dapr.io/developing-applications/sdks/) vs [APIs](https://docs.dapr.io/getting-started/get-started-api/) directly?
 
 Using Dapr SDKs offers a more developer-friendly experience compared to directly interacting with the Dapr APIs. SDKs provide typed language APIs, simplifying the interaction with Dapr's building blocks and abstracting away the need to directly handle HTTP or gRPC calls. While direct API calls are possible, SDKs streamline the development process by providing language-specific libraries and helper functions. 
 
-### Dapr SDKs?
+### Dapr SDKs
 
 ### Benefits:
 - Abstraction: SDKs abstract away the low-level details of interacting with the Dapr sidecar (daprd). 
@@ -43,7 +44,7 @@ Direct API Calls Useful when:
 
 In essence, Dapr SDKs simplify the development process by providing language-specific APIs and abstractions, while direct API calls offer more control and flexibility. Choosing the right approach depends on the specific needs of the project and the preferences of the development team
 
-## Hands On Example
+## Hands On Dapr SDK
 
 ### Setup 
 Take the code from 03_module last step as starter code
@@ -131,4 +132,4 @@ tilt down
 
 ### Challenge
 
-Now install agents sdk and create an Agent with the Dapr SDK features we have used. 
+Now install agents sdk and create an Agent with the Dapr SDK features we have used. Use all concepts your have learned in 01_agents_first
