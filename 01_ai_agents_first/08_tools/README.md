@@ -6,8 +6,14 @@ The OpenAI Agents SDK provides a robust framework for integrating various tools 
 
 1. **Hosted Tools:** These are pre-built tools running on OpenAI's servers, accessible via the [`OpenAIResponsesModel`]. Examples include:
    - **WebSearchTool:** Enables agents to perform web searches.
+      - **Try it in Colab:** [File Search Tool Example](https://colab.research.google.com/drive/1oygnLgbo9d49ClrWViVwrfBd2NDlxC9s?usp=sharing#scrollTo=g4JFNl0q1Clw&uniqifier=1)
    - **FileSearchTool:** Allows retrieval of information from OpenAI Vector Stores.
+      - **Try it in Colab:** [Computer Tool Example](https://colab.research.google.com/drive/1oygnLgbo9d49ClrWViVwrfBd2NDlxC9s?usp=sharing#scrollTo=gXWTut66yXoa&uniqifier=1)
+     
    - **ComputerTool:** Facilitates automation of computer-based tasks.
+      - We will use `model=computer-use-preview-2025-03-11`
+      - Note: The model "computer-use-preview" is not available.
+
 
 2. **Function Calling:** This feature allows agents to utilize any Python function as a tool, enhancing their versatility.
 
