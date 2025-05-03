@@ -105,7 +105,7 @@ In the next tutorial (**02_openai_agents_with_fastapi**), we’ll integrate the 
 1. Add a new endpoint to retrieve all messages for a `user_id` (use a mock dictionary for now).
 2. Extend the `Message` model with a custom validator (e.g., ensure `text` is not longer than 500 characters).
 3. Add more unit tests for edge cases (e.g., invalid `timestamp` format in `metadata`).
-4. See [how to configure CORSMiddleware andwhy use it](https://fastapi.tiangolo.com/tutorial/cors/?h=cors#use-corsmiddleware)?
+4. See [how to configure CORSMiddleware and why use it](https://fastapi.tiangolo.com/tutorial/cors/?h=cors#use-corsmiddleware)?
 ---
 
 ## Conclusion
