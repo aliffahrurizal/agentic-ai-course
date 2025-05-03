@@ -27,10 +27,10 @@ uv venv
 
 ### Add Dependencies
 
-We’ll need FastAPI, Uvicorn (ASGI server), and additional packages for testing:
+We’ll need FastAPI, Uvicorn (ASGI server):
 
 ```bash
-uv add "fastapi[standard]" pytest pytest-asyncio
+uv add "fastapi[standard]"
 ```
 
 The [fastapi[standard]](https://fastapi.tiangolo.com/?h=installation#dependencies) install optional dependencies especially
@@ -39,7 +39,13 @@ The [fastapi[standard]](https://fastapi.tiangolo.com/?h=installation#dependencie
 - `uvicorn`: The ASGI server to run the app.
 - `httpx`: An HTTP client for testing FastAPI endpoints.
 
-And we have added `pytest` and `pytest-asyncio`for unit testing. More on them later in step 05.
+We will add `pytest` and `pytest-asyncio` for unit testing. More on them later in step 05.
+
+To add a development dependency, use the --dev flag
+
+```bash
+uv add --dev pytest pytest-asyncio
+```
 
 This updates `pyproject.toml`:
 
@@ -51,7 +57,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "fastapi[standard]>=0.115.12",
+    "fastapi[standard]>=0.115.12"
+]
+[dependency-groups]
+dev = [
     "pytest>=8.3.5",
     "pytest-asyncio>=0.26.0",
 ]
