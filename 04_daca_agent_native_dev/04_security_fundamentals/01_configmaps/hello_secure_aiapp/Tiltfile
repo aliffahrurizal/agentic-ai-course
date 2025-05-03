@@ -1,0 +1,62 @@
+load('ext://helm_remote', 'helm_remote') # helm extension -> Dapr Helm Chart
+load('ext://nerdctl', 'nerdctl_build') # nerdctl extension -> Docker Build
+
+update_settings(k8s_upsert_timeout_secs=300) # Increase apply timeout for Helm deployments
+
+helm_remote(
+    chart='dapr',
+    repo_url='https://dapr.github.io/helm-charts/',
+    repo_name='dapr',
+    version='1.15',
+    release_name='dapr',
+    namespace='dapr-system',
+    create_namespace=True,
+    set=['global.mtls.enabled=false']
+)
+
+helm_remote(
+    chart='dapr-dashboard',
+    repo_url='https://dapr.github.io/helm-charts/',
+    repo_name='dapr',
+    release_name='dapr-dashboard',
+    namespace='dapr-system',
+)
+
+
+k8s_resource(
+    'dapr-dashboard',
+    port_forwards=[port_forward(local_port=8080, container_port=8080, name='dapr-dashboard-ui')],
+    labels=['dapr-ui']
+)
+
+helm_remote(
+    chart='redis',
+    repo_url='https://charts.bitnami.com/bitnami',
+    repo_name='bitnami',
+    release_name='redis',
+    namespace='default',
+    set=['auth.enabled=false']
+)
+
+k8s_yaml(['./components/statestore.yaml', './components/pubsub.yaml'])
+
+k8s_yaml(['./components/subscriptions.yaml'])
+
+# Above Dapr setup is Completed
+
+# 1. Build the FastAPI image using nerdctl
+nerdctl_build(
+    ref='daca-ai-app',
+    context='.',
+    dockerfile='Dockerfile',
+    live_update=[
+        sync('.', '/code'),
+    ]
+)
+
+k8s_yaml(['kubernetes/configmap.yaml', 'kubernetes/deployment.yaml', 'kubernetes/service.yaml'])
+
+k8s_resource(
+    'daca-ai-app',
+    port_forwards='8000:8000',
+)

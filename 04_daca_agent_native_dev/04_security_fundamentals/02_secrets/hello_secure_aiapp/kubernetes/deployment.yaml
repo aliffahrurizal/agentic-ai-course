@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: daca-ai-app
+  namespace: default  # Explicit for clarity or Omit and specify via kubectl -n default
+spec:
+  replicas: 1 # Increase to 2-3 for production
+  selector:
+    matchLabels:
+      app: daca-ai-app
+  template:
+    metadata:
+      labels:
+        app: daca-ai-app
+      annotations: 
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "daca-ai-app"
+        dapr.io/app-port: "8000"
+        dapr.io/log-level: "info"
+    spec:
+      containers:
+      - name: app
+        image: daca-ai-app
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8000
+# RATHER THAN ENV MOUNTED VOLUMES
+        # env:
+        #   - name: LOG_LEVEL
+        #     valueFrom:
+        #       configMapKeyRef:
+        #         name: fastapi-config
+        #         key: log_level
+        #   - name: API_ENDPOINT
+        #     valueFrom:
+        #       configMapKeyRef:
+        #         name: fastapi-config
+        #         key: api_endpoint
+          # New environment variable from Secret
+          # - name: GEMINI_API_KEY # Name of the environment variable in the container
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: daca-sensitive-data # Name of the Secret object
+          #       key: gemini_api_key      # Key within the Secret data
+        volumeMounts:
+          - name: volmap
+            mountPath: /etc/name
+            readOnly: true
+          - name: secret-volume
+            mountPath: /etc/secrets # Choose a secure mount path inside the container
+            readOnly: true # Mounted as read-only by default for security
+
+      volumes:
+        - name: volmap
+          configMap:
+            name: fastapi-config
+        - name: secret-volume
+          secret:
+            secretName: daca-sensitive-data # Name of your Secret

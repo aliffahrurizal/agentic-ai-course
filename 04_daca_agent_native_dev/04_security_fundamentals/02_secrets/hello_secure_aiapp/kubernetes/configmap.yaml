@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fastapi-config
+  namespace: default
+data:
+  log_level: DEBUG
+  api_endpoint: /health
+  live_volume: it_worked

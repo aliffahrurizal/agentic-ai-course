@@ -1,0 +1,10 @@
+[project]
+name = "00-starter-code"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dapr>=1.15.0",
+    "fastapi[standard]>=0.115.12",
+]
