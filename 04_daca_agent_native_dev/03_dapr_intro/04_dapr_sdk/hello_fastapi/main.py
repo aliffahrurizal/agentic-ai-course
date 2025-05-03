@@ -43,7 +43,14 @@ async def get_message(user_id: str):
 
 @app.post("/subscribe")
 async def subscribe_message(data: dict):
-    event_data = data.get("data", {})
+    # The inner "data" field is a JSON string, parse it
+    try:
+        event_data_raw = data.get("data", "{}")
+        event_data = json.loads(event_data_raw)
+    except json.JSONDecodeError as e:
+        print("Failed to decode event data:", e)
+        return {"status": "Invalid event data format"}
+    
     user_id = event_data.get("user_id", "unknown")
     message = event_data.get("message", "no message")
     print(f"Received event: User {user_id} updated message to '{message}'")
