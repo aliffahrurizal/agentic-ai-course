@@ -1,6 +1,6 @@
-# DACA Cloud Native
+# DACA Agent-Native Cloud Local Development
 
-This module trains **Agentic AI Developers** to build planet-scale, multi-AI agent systems using the **Dapr Agentic Cloud Ascent (DACA)** architecture. DACA leverages Kubernetes for orchestration and Dapr for distributed capabilities, with AI agents as stateful Dapr Actors, FastAPI APIs for user interaction, and Pub/Sub for scalable agent communication. The core modules progress from coding to cloud native development, focusing on scalable agents while minimizing noise. 
+This module trains **Agentic AI Developers** to build planet-scale, multi-AI agent systems using the **Dapr Agentic Cloud Ascent (DACA)** architecture and Agent-Native Cloud Technologies. DACA leverages Kubernetes for orchestration and Dapr for distributed capabilities, with AI agents as stateful Dapr Actors, FastAPI APIs for user interaction, and Pub/Sub for scalable agent communication. The core modules progress from coding to cloud native development, focusing on scalable agents while minimizing noise. 
 
 ## Core Modules
 
