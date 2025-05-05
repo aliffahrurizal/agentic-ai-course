@@ -11,7 +11,7 @@ This tutorial lays the foundation for containerizing our agentic AI microservice
 - How Rancher Desktop manages containers with `containerd` and provides a local Kubernetes cluster.
 - Practical examples of building, running, and deploying a DACA agent app in containers and Kubernetes.
 - Key commands for `nerdctl` (containerd CLI) and Kubernetes (`kubectl`).
-- Download [Rancher Desktop](https://rancherdesktop.io/) and [Lens an IDE for Kubernetes](https://k8slens.dev/download)
+- Download [Rancher Desktop](https://rancherdesktop.io/) and [Lens, an IDE for Kubernetes](https://k8slens.dev/download)
 
 ## Prerequisites
 
