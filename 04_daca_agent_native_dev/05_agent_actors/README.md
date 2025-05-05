@@ -1,8 +1,17 @@
-# Agent Actors
+# AI Agents as Virtual Actors
 
-In this module we will learn to build Agent as Actors following DACA.
+In this module, we will learn to build AI agents as actors following the Dapr Agentic Cloud Ascent (DACA) design pattern, leveraging Dapr Virtual Actors to create scalable, stateful, and concurrent agent systems.
 
-**Dapr Actors** are lightweight, stateful entities based on the Actor Model (Hewitt, 1973), ideal for modeling AI agents in DACA. Each agent, implemented as a Dapr Actor, encapsulates its own state (e.g., task history, user context) and behavior, communicating asynchronously via A2A endpoints or Dapr pub/sub (e.g., RabbitMQ, Kafka). Actors enable concurrent task execution, dynamic agent creation (e.g., spawning child agents for subtasks), and fault isolation, storing state in Dapr-managed stores like Redis or CockroachDB. For example, in a content moderation system, a parent actor delegates post analysis to child actors, each processing a post concurrently and coordinating via A2A messages, ensuring scalability across DACA’s deployment pipeline.
+## Overview of Dapr Actors in DACA
+
+Dapr Actors are lightweight, stateful entities based on the Actor Model (Hewitt, 1973), ideal for modeling AI agents in DACA. Each agent, implemented as a Dapr Virtual Actor, encapsulates its own state (e.g., task history, user context, knowledge graph) and behavior, communicating asynchronously via Agent2Agent (A2A) endpoints or Dapr pub/sub (e.g., RabbitMQ, Kafka). Virtual Actors enable:
+
+- Concurrent Task Execution: Agents process tasks independently, scaling to handle millions of users.
+- Dynamic Agent Creation: Parent agents spawn child agents for subtasks (e.g., a content moderation agent delegating post analysis).
+- Fault Isolation: Failures are contained within individual actors, enhancing system resilience.
+- Sate Persistence: Actor state is stored in Dapr-managed stores like Redis or CockroachDB, ensuring durability.
+
+For example, in a content moderation system, a parent actor delegates post analysis to child actors, each processing a post concurrently and coordinating via A2A messages, ensuring scalability across DACA’s deployment pipeline (e.g., Kubernetes, Azure Container Apps).
 
 ## What Is the [Actor Model](https://www.geeksforgeeks.org/design-patterns-for-building-actor-based-systems/)?
 
@@ -32,7 +41,7 @@ Introduced by Carl Hewitt, Peter Bishop, and Richard Steiger in 1973, the **Acto
 
 ## [Dapr’s Implementation of the Actor Model](https://docs.dapr.io/developing-applications/building-blocks/actors/)
 
-**Dapr (Distributed Application Runtime)**, a core component of DACA, implements the Actor Model through its **Dapr Actors** framework, providing a robust abstraction for stateful, concurrent, and distributed agent interactions. Dapr Actors are **virtual actors**, meaning they are activated on-demand and can be garbage-collected when idle, optimizing resource usage. Key features of Dapr Actors in DACA include:
+Dapr (Distributed Application Runtime), a core component of DACA, implements the Actor Model through its Virtual Actors framework, providing a robust abstraction for stateful, concurrent, and distributed agent interactions. Unlike traditional actors, Dapr Virtual Actors are activated on-demand and deactivated when idle, optimizing resource usage in cloud-native environments.
 
 - **State Management**: Dapr persists actor state (e.g., agent context, task progress) in a configured store (e.g., Redis, CockroachDB), ensuring durability across activations.
 - **Message Passing**: Actors communicate via asynchronous method calls or events, integrated with Dapr’s pub/sub messaging (e.g., RabbitMQ, Kafka).
@@ -40,8 +49,19 @@ Introduced by Carl Hewitt, Peter Bishop, and Richard Steiger in 1973, the **Acto
 - **Scalability**: Actors are distributed across a cluster (e.g., Kubernetes), with Dapr handling placement and load balancing.
 - **Fault Tolerance**: Dapr retries failed actor operations and supports supervisor-like patterns for error handling.
 - **Turn-Based Concurrency**: Dapr Actors process one message at a time, ensuring predictable behavior in high-concurrency scenarios.
+- **Polyglot Support:** Actors can be implemented in any language (e.g., Python, Go) using Dapr’s HTTP/gRPC APIs, aligning with DACA’s FastAPI-based stack.
 
-In DACA, Dapr Actors are used alongside other Dapr building blocks (state management, pub/sub, workflows) to orchestrate AI agents, making the Actor Model a natural fit for its event-driven, microservices-based architecture.
+In DACA, Dapr Virtual Actors are used alongside other Dapr building blocks (state management, pub/sub, workflows) to orchestrate AI agents, making them a natural fit for its event-driven, microservices-based architecture.
+
+
+## What We will cover in this module?
+- **Fundamentals**: Actor creation, state persistence (Step 1).
+- **Practical Agent**: Chat agent with pub/sub (Step 2).
+- **Coordination**: Actor-to-actor communication (Step 3).
+- **Advanced Features**: Reminders, timers, reentrancy, fault tolerance (Step 4).
+- **Multi-Agent System**: Base class, chat, and memory agents with AI (Step 5).
+- **Interoperability**: A2A integration for cross-framework agent collaboration (Step 6).
+
 
 ### Reading and Learning Resources
 - [Dapr Actors](https://docs.dapr.io/developing-applications/building-blocks/actors/)
@@ -56,3 +76,7 @@ In DACA, Dapr Actors are used alongside other Dapr building blocks (state manage
 - [Actor Lifetime](https://docs.dapr.io/developing-applications/building-blocks/actors/actors-features-concepts/#actor-lifetime)
 - [Actors API Reference](https://docs.dapr.io/reference/api/actors_api/)
 - [Dapr Python SDK FastAPI Integration](https://docs.dapr.io/developing-applications/sdks/python/python-fastapi/)
+- [Orleans – Virtual Actors](https://www.microsoft.com/en-us/research/project/orleans-virtual-actors/)
+- [Actors and Virtual Actors](https://nittikkin.medium.com/actors-and-virtual-actors-a-comparison-across-akka-dapr-orleans-and-service-fabric-c6c67c618f27)
+- [Actor Model vs Virtual Actor Model](https://bogdan-dina03.medium.com/intro-to-virtual-actors-by-microsoft-orleans-6ae3264f138d)
+- [Talk by Carl Hewitt - Inventor of the concept](https://www.youtube.com/watch?v=7erJ1DV_Tlo)
