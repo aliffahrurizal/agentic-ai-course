@@ -1,25 +1,24 @@
-# Step 4.2: Timers
+# Step 4.2: [Timers](https://docs.dapr.io/developing-applications/building-blocks/actors/actors-timers-reminders/)
 
-This is the second sub-step of **Step 4: Timers and Reminders** in the **Dapr Agentic Cloud Ascent (DACA)** learning path. In this sub-step, you’ll enhance the `ChatAgent` actor from **Step 2** by adding a Dapr actor timer to log the number of messages in the conversation history every 5 seconds. This introduces temporary periodic tasks, demonstrating how actors can perform lightweight monitoring tasks, aligning with DACA’s goal of scalable, concurrent AI agents.
+This is the second sub-step of **Step 4: Advanced Actor Confif** in the **Dapr Agentic Cloud Ascent (DACA)** learning path. In this sub-step, you’ll enhance the `ChatAgent` actor from **Step 2** by adding a Dapr actor timer to log the number of messages in the conversation history every 5 seconds for 10 invocations (50 seconds). This introduces temporary periodic tasks, demonstrating how actors can perform lightweight monitoring tasks, aligning with DACA’s goal of scalable, concurrent AI agents.
 
 ## Overview
 
 The **timers** sub-step modifies the `ChatAgent` to:
-- Register a timer named `log_message_count` during actor activation.
-- Implement a `log_message_count` method to log the current number of messages in the history.
+- Register a timer named `LogMessageCount` during actor activation.
+- Implement a `log_message_count` method to log the current number of messages in the Redis-backed conversation history.
 - Trigger the timer every 5 seconds, stopping after 10 invocations (50 seconds).
-- Preserve the existing `process_message` and `get_conversation_history` functionality from **Step 2**.
+- Preserve the `process_message`, `get_conversation_history`, and pub/sub functionality from **Step 2**.
 
 Timers are temporary, in-memory tasks that stop when the actor is deactivated, making them suitable for short-lived monitoring tasks like logging message counts.
 
 ### Learning Objectives
-- Configure and register a Dapr actor timer.
-- Implement a method to handle timer triggers.
-- Understand temporary periodic tasks and their lifecycle.
-- Validate periodic logging via console output.
+- Configure and register a Dapr actor timer using `register_timer`.
+- Implement a method to handle timer triggers and log state.
+- Understand the lifecycle of temporary periodic tasks (stop on actor deactivation).
 
 ### Ties to Step 4 Overview
-- **Timers**: This sub-step implements a timer to log message counts periodically, showcasing temporary task scheduling.
+- **Timers**: Implements a timer to log message counts periodically, showcasing temporary task scheduling.
 - **Dapr’s Implementation**: Leverages Dapr’s actor timer feature for lightweight monitoring.
 - **Turn-Based Concurrency**: Timers run concurrently with message processing, demonstrating actor concurrency.
 
@@ -27,42 +26,38 @@ Timers are temporary, in-memory tasks that stop when the actor is deactivated, m
 
 ### Dapr Actor Timers
 Dapr actor timers are temporary, periodic tasks associated with an actor instance. They:
-- Run in-memory and stop when the actor is deactivated.
+- Run in-memory and stop when the actor is deactivated (e.g., after 1 hour of inactivity, per `actorIdleTimeout`).
 - Trigger a specified method (e.g., `log_message_count`) at defined intervals.
 - Are configured with a `dueTime` (initial delay) and `period` (repeat interval).
 
-In this sub-step, the `ChatAgent` registers a `log_message_count` timer with a 5-second `dueTime` and `period`, logging the message count every 5 seconds for 10 invocations.
+In this sub-step, the `ChatAgent` registers a `LogMessageCount` timer with a 5-second `dueTime` and `period`, logging the message count every 5 seconds.
 
 ### Lightweight Configuration
 The timer is added with minimal changes to the **Step 2** code:
-- A new `log_message_count` method to log the history length.
+- A new `LogMessageCount` method in the actor interface.
+- A `log_message_count` method to log the history length.
 - Timer registration in `_on_activate` using `self._timer_manager`.
-- A counter to stop the timer after 10 invocations.
-- No additional dependencies, keeping the configuration lightweight.
 
 ### Interaction Patterns
 The `ChatAgent` supports:
 - **Request/Response**: FastAPI endpoints (`/chat/{actor_id}`, `/chat/{actor_id}/history`) for message processing and history retrieval.
-- **Event-Driven**: Pub/sub events via `/subscribe` for `ConversationUpdated`.
-- **Periodic Task**: The `log_message_count` timer logs message counts every 5 seconds, independent of user interactions.
+- **Event-Driven**: Pub/sub events via `/subscribe` for `ConversationUpdated` events.
+- **Periodic Task**: The `LogMessageCount` timer logs message counts every 5 seconds, independent of user interactions.
 
 ## Hands-On Dapr Virtual Actor
 
-### 0. Setup Code
-Use the [00_lab_starter_code](https://github.com/panaversity/learn-agentic-ai/tree/main/04_daca_agent_native_dev/05_agent_actors/00_lab_starter_code) from **Step 2**. Ensure **Step 2** is complete.
+### 1. Setup Code
+Use the [02_chat_actor](https://github.com/panaversity/learn-agentic-ai/tree/main/04_daca_agent_native_dev/05_agent_actors/02_chat_actor) from **Step 2**. Ensure **Step 2** is complete.
 
-Verify dependencies:
+Verify dependencies in your `pyproject.toml` or `requirements.txt`:
 ```bash
-uv add dapr dapr-ext-fastapi pydantic
+uv add dapr dapr-ext-fastapi fastapi
 ```
 
 Start the application:
 ```bash
 tilt up
 ```
-
-### 1. Configure Dapr Components
-The **Step 2** components (`statestore.yaml`, `daca-pubsub.yaml`, `message-subscription.yaml`) are sufficient. Verify their presence in `components/` (see **Step 4.1** README for details).
 
 ### 2. Implement the ChatAgent with Timers
 Update the **Step 2** `main.py` to add a timer to the `ChatAgent`. The timer logs the message count every 5 seconds for 10 invocations.
@@ -76,9 +71,18 @@ from pydantic import BaseModel
 from dapr.ext.fastapi import DaprActor
 from dapr.actor import Actor, ActorInterface, ActorProxy, ActorId, actormethod
 from dapr.clients import DaprClient
+from typing import Callable, Any
+from datetime import timedelta
+from collections.abc import Awaitable
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.StreamHandler()  # Ensure logs go to stdout
+    ]
+)
 
 app = FastAPI(title="ChatAgentService", description="DACA Step 4.2: Timers")
 
@@ -109,57 +113,60 @@ class ChatAgent(Actor, ChatAgentInterface):
         super().__init__(ctx, actor_id)
         self._history_key = f"history-{actor_id.id}"
         self._actor_id = actor_id
-        self._timer_count = 0  # Track timer invocations
+        self._timer_handlers: dict[Callable[[Any], Awaitable[None]]] = {
+            "LogMessageCount": self.log_message_count
+        }
 
     async def _on_activate(self) -> None:
         """Initialize state and register timer on actor activation."""
-        logging.info(f"Activating actor for {self._history_key}")
+        logging.debug(f"Activating actor for {self._history_key}")
         try:
-            history = await self._state_manager.get_state(self._history_key)
-            if history is None:
-                logging.info(f"State not found for {self._history_key}, initializing")
+            try:
+                await self._state_manager.get_state(self._history_key)
+            except KeyError as e:
+                logging.error(f"Error in _on_activate for {self._history_key}: {e}")
                 await self._state_manager.set_state(self._history_key, [])
-            else:
-                logging.info(f"State found for {self._history_key}: {history}")
-            
+                await self._state_manager.save_state()  # Ensure state is persisted
+                logging.debug(f"State initialized and saved for {self._history_key}")
+
             # Register timer to log message count every 5 seconds
-            await self._timer_manager.register_timer(
-                timer_name="log_message_count",
-                due_time="5s",
-                period="5s"
+            logging.debug(f"\n ->[TIMER] Registering LogMessageCount timer for {self._history_key}")
+            await self.register_timer(
+                name="LogMessageCount",
+                callback=self._timer_handlers["LogMessageCount"],
+                due_time=timedelta(seconds=5),
+                period=timedelta(seconds=5),
+                state=None
             )
-            logging.info(f"Registered log_message_count timer for {self._history_key}")
+            logging.info(f"Successfully registered LogMessageCount timer for {self._history_key}")
         except Exception as e:
-            logging.warning(f"Non-critical error in _on_activate: {e}")
-            await self._state_manager.set_state(self._history_key, [])
+            logging.error(f"Error in _on_activate for {self._history_key}: {e}")
+            raise
 
     async def process_message(self, user_input: dict) -> dict:
         """Process a user message and append to history."""
         try:
-            logging.info(f"Processing message for {self._history_key}: {user_input}")
-            # Load history
+            logging.debug(f"Processing message for {self._history_key}: {user_input}")
+            # Load history with fallback
             history = await self._state_manager.get_state(self._history_key)
             current_history = history if isinstance(history, list) else []
-            
             # Append user message
             current_history.append(user_input)
-            
+
             # Generate response
             response_content = f"Got your message: {user_input['content']}"
             response = {"role": "assistant", "content": response_content}
-            
+
             # Append assistant response
             current_history.append(response)
-            if len(current_history) > 5:  # Limit to last 5 exchanges
-                current_history = current_history[-5:]
-            
+
             # Save updated history
             await self._state_manager.set_state(self._history_key, current_history)
             logging.info(f"Processed message for {self._history_key}: {user_input['content']}")
-            
+
             # Publish event
             await self._publish_conversation_event(user_input, response)
-            
+
             return response
         except Exception as e:
             logging.error(f"Error processing message for {self._history_key}: {e}")
@@ -167,7 +174,6 @@ class ChatAgent(Actor, ChatAgentInterface):
 
     async def _publish_conversation_event(self, user_input: dict, response: dict) -> None:
         """Publish a ConversationUpdated event to the user-chat topic."""
-        # Note: publish_event is synchronous; consider asyncio.to_thread in future steps
         event_data = {
             "actor_id": self._actor_id.id,
             "history_key": self._history_key,
@@ -196,18 +202,14 @@ class ChatAgent(Actor, ChatAgentInterface):
             logging.error(f"Error getting history for {self._history_key}: {e}")
             return []
 
-    async def log_message_count(self) -> None:
+    async def log_message_count(self, state: Any) -> None:
         """Log the number of messages in the history."""
         try:
-            self._timer_count += 1
+            logging.debug(f"Logging message count for {self._history_key}")
+            logging.debug(f"State: {state}")
             history = await self._state_manager.get_state(self._history_key)
             message_count = len(history) if isinstance(history, list) else 0
-            logging.info(f"Timer triggered for {self._history_key}: {message_count} messages in history")
-            
-            # Stop timer after 10 invocations (50 seconds)
-            if self._timer_count >= 10:
-                await self._timer_manager.unregister_timer("log_message_count")
-                logging.info(f"Unregistered log_message_count timer for {self._history_key}")
+            logging.info(f"\n ->[TIMER] Triggered for {self._history_key}: {message_count} messages in history")
         except Exception as e:
             logging.error(f"Error logging message count for {self._history_key}: {e}")
             raise
@@ -223,7 +225,7 @@ async def startup():
 async def process_message(actor_id: str, data: Message):
     """Process a user message for the actor."""
     if not data.content or not isinstance(data.content, str):
-        raise HTTPException(status_code=400, detail="Invalid or missing 'content' field')
+        raise HTTPException(status_code=400, detail="Invalid or missing 'content' field")
     message_dict = data.model_dump()
     proxy = ActorProxy.create("ChatAgent", ActorId(actor_id), ChatAgentInterface)
     response = await proxy.ProcessMessage(message_dict)
@@ -248,84 +250,74 @@ async def subscribe_message(data: dict):
         input_message = event_data.get("input", {}).get("content", "no message")
         output_message = event_data.get("output", {}).get("content", "no response")
         logging.info(f"Received event: User {user_id} sent '{input_message}', got '{output_message}'")
-        return {"status": "Event processed"}
+        return {"status": "SUCCESS"}  # Dapr expects SUCCESS, RETRY, or DROP
     except json.JSONDecodeError as e:
         logging.error(f"Failed to decode event data: {e}")
-        return {"status": "Invalid event data format"}
+        return {"status": "DROP"}
 ```
 
 ### 3. Test the App
-Open the API documentation at [http://localhost:8000/docs](http://localhost:8000/docs).
+Open the API documentation at [http://localhost:8000/docs](http://localhost:8000/docs) to test endpoints interactively.
 
 Test the **Actor** route group:
-- **GET /healthz**: Verifies Dapr actor configuration.
-- **GET /dapr/config**: Confirms `ChatAgent` is registered.
+- **GET /healthz**: Verifies Dapr actor configuration (`200 OK` indicates health).
+- **GET /dapr/config**: Confirms `ChatAgent` is registered and actor settings (e.g., `actorIdleTimeout: 1h`).
 
 Test the **default** route group:
-- **POST /chat/{actor_id}**: Sends a user message.
-- **GET /chat/{actor_id}/history**: Retrieves the history.
-- **POST /subscribe**: Handles `user-chat` events.
+- **POST /chat/{actor_id}**: Sends a user message and receives a response.
+- **GET /chat/{actor_id}/history**: Retrieves the conversation history.
 
-Use `curl` commands:
-```bash
-curl -X POST http://localhost:8000/chat/user1 -H "Content-Type: application/json" -d '{"role": "user", "content": "Hi there"}'
-curl http://localhost:8000/chat/user1/history
-curl -X POST http://localhost:8000/chat/user1 -H "Content-Type: application/json" -d '{"role": "user", "content": "Hello"}'
 # Monitor logs for 50 seconds
-```
-
 **Expected Output**:
-- POST: `{"response": {"role": "assistant", "content": "Got your message: Hi there"}}`
-- GET: `{"history": [{"role": "user", "content": "Hi there"}, {"role": "assistant", "content": "Got your message: Hi there"}, ...]}`
-- Logs (every 5 seconds): `Timer triggered for history-user1: 4 messages in history`
-- After 50 seconds: `Unregistered log_message_count timer for history-user1`
+```
+  daca-ai-app │ [app] 2025-05-05 21:42:12,009 - DEBUG - Logging message count for history-poi
+  daca-ai-app │ [app] 2025-05-05 21:42:12,010 - DEBUG - State: None
+  daca-ai-app │ [app] 2025-05-05 21:42:12,010 - INFO - 
+  daca-ai-app │ [app]  ->[TIMER] Triggered for history-poi: 12 messages in history
+  daca-ai-app │ [app] 2025-05-05 21:42:12,010 - DEBUG - called timer. actor: ChatAgent.poi, timer: LogMessageCount
+  daca-ai-app │ [app] INFO:     127.0.0.1:51000 - "PUT /actors/ChatAgent/poi/method/timer/LogMessageCount HTTP/1.1" 200 OK
+  daca-ai-app │ [app] 2025-05-05 21:42:12,014 - DEBUG - Logging message count for history-JULISA
+  daca-ai-app │ [app] 2025-05-05 21:42:12,014 - DEBUG - State: None
+  daca-ai-app │ [app] 2025-05-05 21:42:12,014 - INFO - 
+  daca-ai-app │ [app]  ->[TIMER] Triggered for history-JULISA: 11 messages in history
+  daca-ai-app │ [app] 2025-05-05 21:42:12,014 - DEBUG - called timer. actor: ChatAgent.JULISA, timer: LogMessageCount
+  daca-ai-app │ [app] INFO:     127.0.0.1:51000 - "PUT /actors/ChatAgent/JULISA/method/timer/LogMessageCount HTTP/1.1" 200 OK
+  daca-ai-app │ [app] 2025-05-05 21:42:13,004 - DEBUG - Logging message count for history-par
+  daca-ai-app │ [app] 2025-05-05 21:42:13,005 - DEBUG - State: 
+  daca-ai-app │ [app] 2025-05-05 21:42:13,006 - INFO -
+```
 
 ### 4. Understand the Code
 Review the changes in `main.py`:
-- **Actor Interface**: Added `LogMessageCount` method.
-- **Timer Registration**: In `_on_activate`, `register_timer` schedules `log_message_count` every 5 seconds.
-- **Log Message Count**: Counts history entries and logs them, stopping after 10 invocations.
-- **Existing Functionality**: Preserves `process_message`, `get_conversation_history`, and pub/sub.
+- **Actor Interface**: Added `LogMessageCount` method to `ChatAgentInterface`.
+- **Timer Registration**: In `_on_activate`, `register_timer` schedules `log_message_count` to fire every 5 seconds, starting after 5 seconds.
+- **Existing Functionality**: Preserves `process_message`, `get_conversation_history`, and pub/sub from **Step 2**.
+- **Error Handling**: Robust `try-except` blocks with re-raised exceptions ensure failures are logged and propagated.
+- **Dynamic Handlers**: Uses `_timer_handlers` for extensibility, mapping timer names to methods.
 
-The timer runs concurrently with message processing, logging the message count until stopped.
+The timer runs concurrently with message processing, logging the message count until the actor deactivates (after 1 hour of inactivity).
 
-### 5. Observe the Dapr Dashboard
-Run:
-```bash
-dapr dashboard
-```
-Check the **Actors** tab for `ChatAgent` instances. Monitor logs for `Timer triggered for history-user1`.
 
 ## Validation
 Verify the timer functionality:
-1. **Message Processing**: POST to `/chat/user1` adds messages.
+1. **Message Processing**: POST to `/chat/user1` adds messages to the history (2 messages per POST: user + assistant).
 2. **History Retrieval**: GET `/chat/user1/history` shows up to 5 entries.
-3. **Timer Logging**: Check `dapr logs -a chat-agent` for `Timer triggered` every 5 seconds, showing the correct message count (e.g., `4 messages` after two POSTs).
-4. **Timer Stop**: Confirm `Unregistered log_message_count timer` after 50 seconds.
-5. **State Consistency**: Verify history persists in Redis (`redis-cli GET history-user1`).
-
-## Troubleshooting
-- **Timer Not Triggering**:
-  - Check logs for `Registered log_message_count timer`.
-  - Verify `due_time="5s"` and `period="5s"`.
-  - Ensure actor is active (`dapr dashboard`).
-- **Incorrect Message Count**:
-  - Confirm `history` is loaded correctly in `log_message_count`.
-  - Check Redis with `redis-cli GET history-user1`.
-- **Timer Not Stopping**:
-  - Verify `_timer_count >= 10` condition in `log_message_count`.
-  - Check logs for `Unregistered log_message_count timer`.
+3. **Timer Logging**: Run `dapr logs -a chat-agent | grep -E "TIMER|Unregistered"` to confirm:
+   - `Successfully registered LogMessageCount timer` on activation.
+   - `->[TIMER] Triggered for history-user1: 4 messages in history` every 5 seconds after two POSTs (4 messages total).
+   - `Unregistered LogMessageCount timer` after 50 seconds (10 invocations).
 
 ## Key Takeaways
-- **Temporary Timers**: Timers enable lightweight, periodic tasks like monitoring, stopping when the actor deactivates.
+- **Temporary Timers**: Timers enable lightweight, periodic tasks like monitoring, stopping on actor deactivation (e.g., after 1 hour of inactivity).
 - **Lightweight Configuration**: Minimal changes (new method, timer registration) add monitoring functionality.
-- **Concurrency**: Timers run alongside message processing, supporting turn-based concurrency.
-- **DACA Alignment**: Enhances actor scalability with periodic tasks.
+- **Turn-Based Concurrency**: Timers run alongside message processing, leveraging Dapr’s actor concurrency model.
+- **DACA Alignment**: Enhances actor scalability with periodic, non-durable tasks for monitoring.
 
 ## Next Steps
-- Proceed to **Step 4.3: Reentrancy** to enable concurrent message handling.
+- Proceed to **Step 4.3: Reentrancy** to enable concurrent message handling in the `ChatAgent`.
 - Experiment with different timer intervals (e.g., `period="10s"`).
-- Add a condition to stop the timer based on message count (e.g., `message_count >= 10`).
+- Combine timers with reminders from **Step 4.1** to log and clear history in the same actor.
+- Explore Dapr’s actor reentrancy for handling concurrent timer and message calls.
 
 ## Resources
 - [Dapr Actor Timers](https://docs.dapr.io/developing-applications/building-blocks/actors/actors-overview/#timers)

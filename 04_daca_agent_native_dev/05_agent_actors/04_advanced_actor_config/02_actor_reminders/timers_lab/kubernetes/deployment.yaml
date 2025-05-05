@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: daca-ai-app
+  namespace: default  # Explicit for clarity or Omit and specify via kubectl -n default
+spec:
+  replicas: 1 # Increase to 2-3 for production
+  selector:
+    matchLabels:
+      app: daca-ai-app
+  template:
+    metadata:
+      labels:
+        app: daca-ai-app
+      annotations: 
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "daca-ai-app"
+        dapr.io/app-port: "8000"
+        dapr.io/log-level: "info"
+    spec:
+      containers:
+      - name: app
+        image: daca-ai-app
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8000

@@ -1,81 +1,3 @@
-# Step 4.1: [Reminders](https://docs.dapr.io/developing-applications/building-blocks/actors/actors-timers-reminders/)
-
-This is the first sub-step of **Step 4: Timers and Reminders** in the **Dapr Agentic Cloud Ascent (DACA)** learning path. In this sub-step, you’ll enhance the `ChatAgent` actor from **Step 2** by adding a Dapr actor reminder to clear the conversation history after a set period (10 minutes). This introduces durable scheduling for periodic tasks, ensuring the actor can perform maintenance tasks even after deactivation, aligning with DACA’s goal of reliable, stateful AI agents.
-
-## Overview
-
-The **reminders** sub-step modifies the `ChatAgent` to:
-- Register a reminder named `clear_history` during actor activation.
-- Implement a `clear_history` method to reset the conversation history in Redis.
-- Trigger the reminder after 10 minutes, clearing the history for the actor’s `ActorId`.
-- Maintain the existing `process_message` and `get_conversation_history` functionality from **Step 2**.
-
-Reminders are durable, meaning they persist across actor deactivations and reactivations, making them ideal for scheduled tasks like history cleanup in conversational AI agents.
-
-### Learning Objectives
-- Configure and register a Dapr actor reminder.
-- Implement a method to handle reminder triggers.
-- Understand durable scheduling for periodic tasks.
-- Validate state reset after a reminder fires.
-
-### Ties to Step 4 Overview
-- **Reminders**: This sub-step implements a durable reminder to clear conversation history, ensuring state management reliability.
-- **Dapr’s Implementation**: Leverages Dapr’s actor reminder feature for scheduling.
-- **Fault Tolerance**: Ensures the reminder persists even if the actor is deactivated.
-
-## Key Concepts
-
-### Dapr Actor Reminders
-Dapr actor reminders are durable, periodic tasks associated with an actor instance. They:
-- Persist in the state store (Redis) and survive actor deactivation.
-- Trigger a specified method (e.g., `clear_history`) at defined intervals.
-- Are configured with a `dueTime` (initial delay) and `period` (repeat interval).
-
-In this sub-step, the `ChatAgent` registers a `clear_history` reminder with a 10-second `dueTime` and no repeat (`period=0`), clearing the history once.
-
-### Lightweight Configuration
-The reminder is added with minimal changes to the **Step 2** code:
-- A new `clear_history` method to reset the history.
-- Reminder registration in `_on_activate` using `self._timer_manager`.
-- No additional dependencies or complex logic, keeping the configuration lightweight.
-
-### Interaction Patterns
-The `ChatAgent` continues to support:
-- **Request/Response**: FastAPI endpoints (`/chat/{actor_id}`, `/chat/{actor_id}/history`) for message processing and history retrieval.
-- **Event-Driven**: Pub/sub events via `/subscribe` for `ConversationUpdated`.
-- **Scheduled Task**: The `clear_history` reminder triggers automatically after 10 seconds, resetting the history.
-
-## Hands-On Dapr Virtual Actor
-
-### 0. Setup Code
-Use the [02_chat_actor](https://github.com/panaversity/learn-agentic-ai/tree/main/04_daca_agent_native_dev/05_agent_actors/02_chat_actor) from **Step 2**. Ensure **Step 2** is complete.
-
-Verify dependencies:
-```bash
-uv add dapr dapr-ext-fastapi
-```
-
-Start the application:
-```bash
-tilt up
-```
-
-### 1. Configure Dapr Components
-The **Step 2** components (`statestore.yaml`, `daca-pubsub.yaml`, `message-subscription.yaml`) are sufficient. Verify their presence in `components/` and ensure statestore have:
-
-**File**: `components/statestore.yaml`
-```yaml
-spec:
-    ...
-  - name: actorStateStore
-    value: "true"
-```
-
-### 2. Implement the ChatAgent with Reminders
-Update the **Step 2** `main.py` to add a reminder to the `ChatAgent`. The reminder clears the conversation history after 1 minute.
-
-**File**: `main.py`
-```python
 from collections.abc import Awaitable
 from datetime import timedelta
 import logging
@@ -85,7 +7,33 @@ from pydantic import BaseModel
 from dapr.ext.fastapi import DaprActor
 from dapr.actor import Actor, ActorInterface, ActorProxy, ActorId, Remindable, actormethod
 from dapr.clients import DaprClient
-from typing import Callable, Dict, Optional
+from typing import Callable
+
+# --- Step 4.3: Add Reentrancy Configuration ---
+from dapr.actor.runtime.config import ActorRuntimeConfig, ActorReentrancyConfig
+from dapr.actor.runtime.runtime import ActorRuntime
+
+# Configure Reentrancy (from Step 4.3)
+reentrancy_config = ActorReentrancyConfig(enabled=True)
+
+logging.info(f"Actor Runtime configured with Reentrancy: {reentrancy_config._enabled}")
+
+# Configure Actor Runtime with additional parameters
+runtime_config = ActorRuntimeConfig(
+    actor_idle_timeout=timedelta(seconds=20), # Example: Set idle timeout to 10 minutes
+    actor_scan_interval=timedelta(seconds=5), # Example: Scan for idle actors every 15 seconds
+    drain_ongoing_call_timeout=timedelta(seconds=5), # Example: Wait up to 90s for calls during draining
+    drain_rebalanced_actors=True, # Example: Keep draining enabled (default)
+    reentrancy=reentrancy_config, # Include reentrancy config from Step 4.3
+    # entitiesConfig=[] # Example: Per-entity config could go here if needed
+)
+ActorRuntime.set_actor_config(runtime_config)
+logging.info(f"Actor Runtime configured:")
+logging.info(f"  Idle Timeout: {runtime_config._actor_idle_timeout}")
+logging.info(f"  Scan Interval: {runtime_config._actor_scan_interval}")
+logging.info(f"  Drain Timeout: {runtime_config._drain_ongoing_call_timeout}")
+logging.info(f"  Drain Enabled: {runtime_config._drain_rebalanced_actors}")
+logging.info(f"  Reminder Partitions: {runtime_config._reminders_storage_partitions}")
 
 # Configure logging
 logging.basicConfig(
@@ -126,7 +74,7 @@ class ChatAgent(Actor, ChatAgentInterface, Remindable):
         self._history_key = f"history-{actor_id.id}"
         self._actor_id = actor_id
         # Map reminder names to handler methods
-        self._reminder_handlers: Dict[str, Callable[[bytes], Awaitable[None]]] = {
+        self._reminder_handlers: dict[str, Callable[[bytes], Awaitable[None]]] = {
             "ClearHistory": self.clear_history
         }
 
@@ -134,12 +82,11 @@ class ChatAgent(Actor, ChatAgentInterface, Remindable):
         """Initialize state and register reminder on actor activation."""
         logging.info(f"Activating actor for {self._history_key}")
         try:
-            history = await self._state_manager.get_state(self._history_key)
-            if history is None:
+            try:
+                await self._state_manager.get_state(self._history_key)
+            except Exception as e:
                 logging.info(f"State not found for {self._history_key}, initializing")
                 await self._state_manager.set_state(self._history_key, [])
-            else:
-                logging.info(f"State found for {self._history_key}: {history}")
 
             # Register reminder to clear history after 10 seconds
             logging.info(f"\n ->[REMINDER] Registering ClearHistory reminder for {self._history_key}")
@@ -233,6 +180,8 @@ class ChatAgent(Actor, ChatAgentInterface, Remindable):
 
     async def receive_reminder(self, name: str, state: bytes, due_time: timedelta, period: timedelta, ttl: timedelta | None = None) -> None:
         """Handle reminder callbacks from Dapr dynamically."""
+        logging.info(f"\n\n ->[REMINDER] Received reminder {name} for {self._history_key}")
+        logging.info(f"\n\n ->[REMINDER] State: {state.decode('utf-8') if state else 'empty'}")
         handler = self._reminder_handlers.get(name)
         if handler:
             await handler(state)
@@ -280,68 +229,3 @@ async def subscribe_message(data: dict):
     except json.JSONDecodeError as e:
         logging.error(f"Failed to decode event data: {e}")
         return {"status": "DROP"}
-```
-
-### 3. Test the App
-Open the API documentation at [http://localhost:8000/docs](http://localhost:8000/docs) to test endpoints interactively.
-
-Test the **Actor** route group:
-- **GET /healthz**: Verifies Dapr actor configuration (`200 OK` indicates health).
-- **GET /dapr/config**: Confirms `ChatAgent` is registered.
-
-Test the **default** route group:
-- **POST /chat/{actor_id}**: Sends a user message and receives a response.
-- **GET /chat/{actor_id}/history**: Retrieves the conversation history.
-- **POST /subscribe**: Handles `user-chat` topic events.
-
-Use `curl` commands to test:
-```bash
-curl -X POST http://localhost:8000/chat/user1 -H "Content-Type: application/json" -d '{"role": "user", "content": "Hi there"}'
-curl http://localhost:8000/chat/user1/history
-# Wait 10 seconds (or modify due_time to 30s for testing)
-curl http://localhost:8000/chat/user1/history
-```
-
-**Expected Output**:
-- First POST: `{"response": {"role": "assistant", "content": "Got your message: Hi there"}}`
-- First GET: `{"history": [{"role": "user", "content": "Hi there"}, {"role": "assistant", "content": "Got your message: Hi there"}]}`
-- GET after 10 seconds: `{"history": []}`
-
-### 4. Understand the Code
-Review the changes in `main.py`:
-- **Actor Interface**: Added `ClearHistory` method to `ChatAgentInterface`.
-- **Reminder Registration**: In `_on_activate`, `register_reminder` schedules `clear_history` to fire after 1 seconds.
-- **Clear History Method**: `clear_history` resets the history to an empty list in Redis.
-- **Existing Functionality**: Preserves `process_message`, `get_conversation_history`, and pub/sub from **Step 2**.
-
-The reminder triggers `clear_history` automatically, resetting the history even if the actor is deactivated, demonstrating durable scheduling.
-
-### 5. Observe the Dapr Dashboard
-Run:
-```bash
-dapr dashboard
-```
-Check the **Actors** tab for `ChatAgent` instances (e.g., `1` for `user1`). Verify logs for `Clearing history for history-user1` after 10 seconds.
-
-## Validation
-Verify the reminder functionality:
-1. **Message Processing**: POST to `/chat/user1` adds messages to the history.
-2. **History Retrieval**: GET `/chat/user1/history` shows the history with up to 5 entries.
-3. **Reminder Trigger**: Wait 10 seconds (or set `due_time="30s"` for testing) and confirm GET `/chat/user1/history` returns `[]`.
-
-## Key Takeaways
-- **Durable Reminders**: Reminders persist across actor deactivations, ideal for scheduled tasks like history cleanup.
-- **Lightweight Configuration**: Minimal changes (new method, reminder registration) add powerful functionality.
-- **State Management**: Reminders interact with the state store, ensuring reliable history reset.
-- **DACA Alignment**: Supports fault tolerance by maintaining scheduled tasks in a distributed system.
-
-## Next Steps
-- Proceed to **Step 4.2: Timers** to add a timer for periodic logging.
-- Experiment with different `due_time` values (e.g., `5m`) or repeating reminders (`period="1h"`).
-- Explore reminder TTL for expiring reminders after a set time.
-
-## Resources
-- [Dapr Actor Reminders](https://docs.dapr.io/developing-applications/building-blocks/actors/actors-overview/#reminders)
-- [Dapr Python SDK Actors](https://docs.dapr.io/developing-applications/sdks/python/python-actor/)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [Labs Starter Code](https://github.com/panaversity/learn-agentic-ai/tree/main/04_daca_agent_native_dev/05_agent_actors/00_lab_starter_code)
