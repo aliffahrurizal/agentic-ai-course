@@ -27,7 +27,7 @@ This tutorial lays the foundation setup for containerizing our agentic AI micros
 - **Containers**: Build/run images with `containerd` and `nerdctl`.
 - **Kubernetes**: Provides k3s, a low-RAM cluster (2-3 GB).
 - **Simplicity**: GUI + CLI for managing containers/pods.
-- **DACA Fit**: Prepares for Step 13’s Dapr in Kubernetes.
+- **DACA Fit**: Prepares for building Daca Agent Actors with Dapr and Kubernetes.
 
 ---
 
@@ -37,7 +37,7 @@ Let’s install Rancher Desktop to manage containers and Kubernetes, selecting `
 
 ### Step 2.1: System Requirements
 
-- **macOS**: Ventura (13) or higher, 8 GB RAM, 4 CPUs (your M2 meets this).
+- **macOS**: Ventura (13) or higher, 8 GB RAM, 4 CPUs.
 - **Windows**: Windows 10/11 (Home OK), WSL 2, 8 GB RAM, 4 CPUs.
 - **Linux**: .deb/.rpm/AppImage support, /dev/kvm access, 8 GB RAM, 4 CPUs.
 - Internet connection for initial image downloads.
@@ -142,7 +142,7 @@ lima-rancher-desktop   Ready    control-plane,master   14m   v1.32.3+k3s1
 
 **Note**: If `nerdctl` or `kubectl` commands aren’t found, restart your terminal or ensure PATH is updated (`$HOME/.rd/bin`).
 
-- If kubectl get nodes command fails then you will have to check and configure context to rancher desktop. I faced this issue as a user switching from Docker.
+- If kubectl get nodes command fails then you will have to check and configure context to rancher desktop. I faced this issue as a user switching from Docker. Run the following commands to set context and verify it.
 
 ```bash
 kubectl config current-context
