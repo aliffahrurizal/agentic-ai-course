@@ -1,6 +1,6 @@
 # Install [Rancher Desktop](https://docs.rancherdesktop.io/)
 
-This tutorial lays the foundation setup for containerizing our agentic AI microservices with **containers**, **Kubernetes**, and **Rancher Desktop**. We’ll setup, and explore Rancher Desktop simplifies both on your local machine using the `containerd` engine. 
+This tutorial lays the foundation setup for containerizing our agentic AI microservices with **containers**, **Kubernetes**, and **Rancher Desktop**. We’ll install Rancher Desktop and see how it simplifies `containerd` engine for containers and Kubernetes locally. 
 
 ---
 
@@ -142,7 +142,7 @@ lima-rancher-desktop   Ready    control-plane,master   14m   v1.32.3+k3s1
 
 **Note**: If `nerdctl` or `kubectl` commands aren’t found, restart your terminal or ensure PATH is updated (`$HOME/.rd/bin`).
 
-- If kubectl get nodes command fails then you will have to check and configure context to racher desktop. I faced this issue as a user switching from Docker.
+- If kubectl get nodes command fails then you will have to check and configure context to rancher desktop. I faced this issue as a user switching from Docker.
 
 ```bash
 kubectl config current-context
