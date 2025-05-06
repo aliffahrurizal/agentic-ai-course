@@ -1,17 +1,15 @@
 # AI Agents as Virtual Actors
 
-In this module, we will learn to build AI agents as actors following the Dapr Agentic Cloud Ascent (DACA) design pattern, leveraging Dapr Virtual Actors to create scalable, stateful, and concurrent agent systems.
+In this module, we will learn to build AI agents as actors following the Dapr Agentic Cloud Ascent (DACA) design pattern, leveraging Dapr Virtual Actors to create scalable, stateful, and concurrent agent systems. The steps progresses from foundational actor concepts to advanced production-ready features, equipping you to develop autonomous AI agents for cloud-native applications, such as those used in agentic AI startups.
 
 ## Overview of Dapr Actors in DACA
 
-Dapr Actors are lightweight, stateful entities based on the Actor Model (Hewitt, 1973), ideal for modeling AI agents in DACA. Each agent, implemented as a Dapr Virtual Actor, encapsulates its own state (e.g., task history, user context, knowledge graph) and behavior, communicating asynchronously via Agent2Agent (A2A) endpoints or Dapr pub/sub (e.g., RabbitMQ, Kafka). Virtual Actors enable:
+Dapr Actors are lightweight, stateful entities based on the Actor Model (Hewitt, 1973), ideal for modeling AI agents in DACA. Each agent, implemented as a Dapr Virtual Actor, encapsulates its own state (e.g., task history, user context, knowledge graph) and behavior, communicating asynchronously via Agent2Agent A2A) endpoints or Dapr pub/sub (e.g., RabbitMQ, Kafka). Virtual Actors enable:
 
-- Concurrent Task Execution: Agents process tasks independently, scaling to handle millions of users.
-- Dynamic Agent Creation: Parent agents spawn child agents for subtasks (e.g., a content moderation agent delegating post analysis).
-- Fault Isolation: Failures are contained within individual actors, enhancing system resilience.
-- Sate Persistence: Actor state is stored in Dapr-managed stores like Redis or CockroachDB, ensuring durability.
-
-For example, in a content moderation system, a parent actor delegates post analysis to child actors, each processing a post concurrently and coordinating via A2A messages, ensuring scalability across DACA’s deployment pipeline (e.g., Kubernetes, Azure Container Apps).
+- **Concurrent Task Execution**: Agents process tasks independently, scaling to handle millions of users.
+- **Dynamic Agent Creation**: Parent agents spawn child agents for subtasks (e.g., a content moderation agent delegating post analysis).
+- **Fault Isolation**: Failures are contained within individual actors, enhancing system resilience.
+- **State Persistence**: Actor state is stored in Dapr-managed stores like Redis or CockroachDB, ensuring durability.
 
 ## What Is the [Actor Model](https://www.geeksforgeeks.org/design-patterns-for-building-actor-based-systems/)?
 
@@ -61,6 +59,81 @@ In DACA, Dapr Virtual Actors are used alongside other Dapr building blocks (stat
 - **Advanced Features**: Reminders, timers, reentrancy, fault tolerance (Step 4).
 - **Multi-Agent System**: Base class, chat, and memory agents with AI (Step 5).
 - **Interoperability**: A2A integration for cross-framework agent collaboration (Step 6).
+
+
+## Learning Progression
+
+
+This module progresses through 16 steps to build basic DACA agents and prepare them for production. Each step includes hands-on labs with Dapr components, Kubernetes configurations, and Python code to reinforce concepts.
+
+1. **Hello Actors (`01_hello_actors/`)**:
+   - Learn to create and deploy a basic Dapr actor.
+   - Understand actor lifecycle and state persistence.
+   - **Lab**: Build a simple actor that stores and retrieves state using Dapr’s state store.
+
+2. **Chat Actor (`02_chat_actor/`)**:
+   - Develop a chat agent as an actor, handling user interactions.
+   - Integrate with Dapr pub/sub for message-driven communication.
+   - **Lab**: Create a chat actor that processes user messages and responds via pub/sub.
+
+3. **Actors Communication (`03_actors_communication/`)**:
+   - Explore actor-to-actor communication using Dapr’s service invocation.
+   - Learn message passing patterns for coordination.
+   - **Lab**: Implement two actors that exchange messages to complete a task.
+
+4. **Advanced Actor Configuration (`04_advanced_actor_config/`)**:
+   - Configure advanced actor features like timers, reminders, reentrancy, and fault tolerance.
+   - Understand how to handle long-running tasks and retries.
+   - **Lab**: Build an actor with a reminder to periodically update its state.
+
+5. **State Encryption and Serialization (`05_state_encryption_serialization/`)**:
+   - Secure actor state with encryption (`01_state_encryption/`).
+   - Serialize complex data structures for state persistence (`02_serialization/`).
+   - **Lab**: Encrypt a chat actor’s conversation history and serialize it for storage.
+
+6. **Event-Driven Actors (`06_event_driven_actors/`)**:
+   - Implement event-driven actors using pub/sub (`01_pubsub/`), service invocation (`02_service_invocation/`), and Dapr bindings (`03_dapr_bindings/`).
+   - Integrate actors with external systems (e.g., Kafka, PostgreSQL).
+   - **Lab**: Create an actor that subscribes to a topic and triggers actions via bindings.
+
+7. **Actors Observability (`07_actors_observability/`)**:
+   - Monitor and debug actor systems using Dapr’s logging and tracing (e.g., Zipkin, Prometheus).
+   - Understand metrics for performance and health.
+   - **Lab**: Deploy an actor system with observability and analyze its performance.
+
+8. **Multi-Actors (`08_multi_actors/`)**:
+   - Build complex multi-agent systems with:
+     - Reusable base actors (`01_base_actor/`).
+     - Fault-tolerant supervisor patterns (`02_supervisor_pattern/`).
+     - Task delegation via handoff (`03_handoff_pattern/`).
+     - Coordinated agency systems (`04_multi_agents_communication/`).
+   - **Lab**: Create an agency of actors for a customer support workflow.
+
+9. **A2A with DACA Actors (`09_a2a_with_daca_actors/`)**:
+   - Integrate actors into DACA workflows with:
+     - Basic Implementation og Google Agent to Agent protocol (`01_a2a_lab/`).
+   - **Lab**: Build DACA agentic teams that communicate using A2A.
+
+10. **Actor Testing and Debugging (`10_actor_testing_debugging/`)**:
+    - Write unit and integration tests for actors using pytest.
+    - Simulate failures and debug distributed systems.
+    - **Lab**: Test a chat actor system for reliability under failure conditions.
+
+11. **Actor Security (`11_actor_security/`)**:
+    - Secure actor state (`01_actor_state_security/`), communication (`02_actor_communication_security/`), and auditing (`03_actor_audit_logging/`).
+    - Apply encryption, mTLS, and logging for compliance.
+    - **Lab**: Secure a multi-actor system with encrypted state and audit logs.
+
+12. **Performance Optimization (`12_performance_optimization/`)**:
+    - Optimize actor concurrency, load balancing, and resource usage.
+    - **Lab**: Simulate high traffic on a multi-actor system and optimize for low latency.
+
+## Prerequisites
+
+- Basic Python programming knowledge.
+- Familiarity with Docker and Kubernetes basics.
+- Understanding of Dapr fundamentals (state management, pub/sub).
+- Completion of prior modules (e.g., `04_security_fundamentals/` for security basics).
 
 
 ### Reading and Learning Resources

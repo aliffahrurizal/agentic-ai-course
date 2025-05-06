@@ -1,4 +1,4 @@
-# Step 3: Actor-to-Actor Communication
+# Step 3: Actor-to-Actor Communication (Basic Introduction)
 
 This is the third step of building **AI Agents as Dapr Virtual Actors** in the **Dapr Agentic Cloud Ascent (DACA)** design pattern, as part of the [AI Agents as Virtual Actors learning path](#). 
 
@@ -8,6 +8,8 @@ In this step, you’ll create an advanced multi-agent system with three actors:
 3. a `MemoryAgentActor` (event-driven). 
 
 The `ChatAgent` delegates message processing to the `ResponseAgent`, which uses memory from the `MemoryAgentActor` to generate context-aware responses. The `MemoryAgentActor` updates memory based on `ConversationUpdated` events from the `user-chat` pub/sub topic. You’ll learn dynamic actor creation, actor proxies, fault isolation, and event-driven memory management, advancing your skills in building scalable, modular AI agents.
+
+Challenge: Here we will mock the ai workflow and as a challenge project you will integrate openai agents sdk as agentic engine.
 
 ## Overview
 
