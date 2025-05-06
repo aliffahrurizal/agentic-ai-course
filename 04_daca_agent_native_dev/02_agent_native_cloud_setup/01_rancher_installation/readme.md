@@ -31,18 +31,18 @@ This tutorial lays the foundation setup for containerizing our agentic AI micros
 
 ---
 
-## Step 5: [Install Rancher Desktop](https://rancherdesktop.io/)
+## Step 2: [Install Rancher Desktop](https://rancherdesktop.io/)
 
 Let’s install Rancher Desktop to manage containers and Kubernetes, selecting `containerd` as the container engine.
 
-### Step 5.1: System Requirements
+### Step 2.1: System Requirements
 
 - **macOS**: Ventura (13) or higher, 8 GB RAM, 4 CPUs (your M2 meets this).
 - **Windows**: Windows 10/11 (Home OK), WSL 2, 8 GB RAM, 4 CPUs.
 - **Linux**: .deb/.rpm/AppImage support, /dev/kvm access, 8 GB RAM, 4 CPUs.
 - Internet connection for initial image downloads.
 
-### Step 5.2: Download and Install
+### Step 2.2: Download and Install
 
 1. **Download**:
 
