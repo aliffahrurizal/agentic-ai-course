@@ -1329,27 +1329,6 @@ This integration aligns with DACA’s goals of modularity, scalability, resilien
 
 [Applying 12-Factor Agents Principles to the DACA Design Pattern for Reliable LLM-Based Multi-Agent Systems](https://github.com/humanlayer/12-factor-agents/blob/main/README.md)
 
-**Mapping DACA and the 12 Factors**
-
-I need to provide a summary that connects the 12 factors with DACA support. I’ll reference various parts of the DACA document and the 12-factor app principles. I'll need to cite relevant sections of the DACA doc and also maybe include resources on the 12-factor app. Ultimately, I’ll need at least ten citations, ensuring each point has a solid reference. So, I’ll dig into the available documents and organize everything into a clear structure.
-
-
-**Mapping DACA and 12-Factor Support**
-
-I’ll summarize and link the 12 factors of the app development methodology to DACA support. Each factor will be connected to relevant parts of the DACA document, with citations for every point. I’ll also consider additional resources for the 12-factor app model and make sure we have at least 10 citations. To do this, I'll gather material from our current sources and open relevant content to include all the necessary references. That should give us a complete picture.
-
-
-**Mapping 12-Factor to DACA Design**
-
-I’m heading into mapping each of the 12 factors to DACA design aspects. I’ve got a good list of citations for the 12-factor methodology, and now I need to evaluate how each factor correlates with DACA. The factors include things like owning your prompts, focusing on tool calls, and using small focused agents. I’ll go through each factor methodically and see how the DACA pattern aligns with or operationalizes them. That should help in structuring the mapping clearly.
-
-**Mapping DACA to 12-Factor Design**
-
-I need to produce a structured mapping of each 12-factor aspect to its DACA design equivalent. This will include a table that lists the factors, their DACA manifestations, and any additional notes. I’ll use at least 10 citations from various sources, such as the DACA documentation and the 12-factor app guidelines. I'll look at specific lines in the DACA docs for tool calls, stateless containers, workflows, and actor models, making sure I have all the references covered as I compile my citations.
-
-
-Thought for 2m 16s
-
 
 **In a nutshell:** DACA already “speaks” the 12-Factor Agents language. Its MCP-based tool calls, Dapr-centred state model, event-driven APIs, and human-in-the-loop hooks line up almost one-for-one with the twelve prescriptions, while its Kubernetes/Docker foundation embodies the original 12-Factor App ideals. The table and notes below show exactly where each factor shows up in the DACA guide—and where you may still need to add glue or guard-rails.
 
