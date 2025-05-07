@@ -67,7 +67,7 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
 - [Appendix V: A2A vs MCP](#appendix-v-a2a-vs-mcp)
 - [Appendix VI: How DACA Supports an Agent-Native Cloud](#appendix-vi-how-daca-supports-an-agent-native-cloud)
 - [Appendix VII: Kafka and A2A](#appendix-vii-kafka-and-a2a)
-- [Appendix VIII: Applying 12-Factor Agents Principles to the DACA Design Pattern for Reliable LLM-Based Multi-Agent Systems]()
+- [Appendix VIII: Applying 12-Factor Agents Principles to the DACA Design Pattern for Reliable LLM-Based Multi-Agent Systems](#appendix-viii-applying-12-factor-agents-principles-to-the-daca-design-pattern-for-reliable-llm-based-multi-agent-systems)
 
 
 ## Introduction
