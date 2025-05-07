@@ -288,22 +288,8 @@ nerdctl rm daca-agent
 - **Resilience**: Kubernetes restarts failed pods, supporting CockroachDB state management.
 
 Next, in we will cover kubernetes and helm basics to prepare for adding a Dapr sidecar to this agent app in Kubernetes, enabling state and pub/sub.
-
----
-
-## Step 6: Next Steps
-
-You’ve learned containers and Kubernetes with Rancher Desktop! Now install Lense - we will use it later
-- [Download Lens - IDE for Kubernetes](https://k8slens.dev/download)
-
-### Optional Exercises
-
-1. Deploy a Redis pod in Kubernetes (`redis:alpine`).
-2. Push `default/daca-agent` to Docker Hub (requires `nerdctl push`).
-3. Explore `kubectl describe pod` for debugging.
-
 ---
 
 ## Conclusion
 
-We’ve covered containerization (images, `Dockerfile`, containers) and Kubernetes (pods, Deployments, Services) using Rancher Desktop with the `containerd` engine. With hands-on DACA examples, you’re ready to containerize microservices with Dapr in Kubernetes, paving the way for scalable agentic AI.
+We’ve covered containerization (images, `Dockerfile`, containers) and Kubernetes (pods, Deployments, Services) using Rancher Desktop with the `containerd` engine. With hands-on DACA examples, you’re ready to containerize ai agents with Dapr in Kubernetes, paving the way for scalable AI Agents and Agentic Apps.

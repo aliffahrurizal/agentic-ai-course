@@ -1,0 +1,3 @@
+# Step 5: Multi-Agent System with Dapr Actors
+
+This is the fifth step of building AI Agents as Dapr Virtual Actors in the Dapr Agentic Cloud Ascent (DACA) design pattern. In this step, you’ll create a scalable multi-agent system with a base Agent class, ChatActor, and MemoryActor, featuring a `TriageAgent`, `PanaCloudAgent`, `AgenticAIExpert`, `SalesExpert`, and `MemoryAgent`. You’ll learn abstraction, multi-agent coordination, AI integration, and cloud-native deployment with Kubernetes, building on actor-to-actor communication.

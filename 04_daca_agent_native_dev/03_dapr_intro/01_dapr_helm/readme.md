@@ -1,22 +1,29 @@
-# Dapr FastAPI Hands On with Helm, Dapr State, Dapr Pub/Sub
+# Deploy [Dapr on a Kubernetes cluster with Helm](https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-deploy/#install-with-helm)
 
-Now let's get hand's on with dapr.
+Now let's get hand's on with dapr. This step sets up Dapr from scratch using Helm on Rancher Desktop, following a beginner-friendly flow:
 
-## Overview
-This tutorial sets up Dapr from scratch using Helm on Rancher Desktop, following a beginner-friendly flow:
+1. Deploy Dapr’s control plane and Dashboard with Helm.
+2. Verify Dapr and explore the CLI (briefly, focusing on the Kubernetes aspect).
+3. Deploy Redis and configure state/pub-sub components.
+4. Test Dapr APIs with `curl` via a test app.
+5. Verify state data in Redis.
+6. Explore the Dapr Dashboard.
 
-1. Install the Dapr CLI.
-2. Deploy Dapr’s control plane and Dashboard with Helm.
-3. Verify Dapr and explore the CLI.
-4. Deploy Redis and configure state/pub-sub components.
-5. Test Dapr APIs with `curl` via a test app.
-6. Verify state data in Redis.
-7. Explore the Dapr Dashboard.
-8. Build a FastAPI app with hot reloading, using Dapr’s state and pub/sub.
+## 1. Deploy Dapr Control Plane with Helm
+
+Dapr on Kubernetes is deployed via a set of control plane services that provide first-class integration for running your applications with Dapr. These services manage Dapr's runtime within the cluster. The Dapr Helm chart deploys these key services:
+
+* **dapr-operator**: Manages component updates and Kubernetes service endpoints for Dapr (like state stores, pub/subs, etc.).
+* **dapr-sidecar-injector**: Automatically injects the Dapr sidecar container into annotated application pods, setting environment variables like `DAPR_HTTP_PORT` and `DAPR_GRPC_PORT` for easy communication.
+* **dapr-placement**: Used specifically for Dapr Actors, it creates mapping tables that map actor instances to pods.
+* **dapr-sentry**: Manages mTLS authentication between Dapr sidecars for secure service-to-service communication and acts as a certificate authority.
+* **dapr-scheduler**: Provides distributed job scheduling capabilities for Dapr's Jobs API, Workflow API, and Actor Reminders.
+
+[![Dapr Kubernetes Diagram](./dapr-k8.png)](https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-overview/)
 
 ## 1, Deploy Dapr Control Plane with Helm
 
-Dapr’s **control plane** includes services (operator, placement, scheduler, sentry, sidecar injector) that manage Dapr’s runtime. We’ll deploy Dapr `1.15` in the `dapr-system` namespace.
+We’ll deploy Dapr `1.15` in the `dapr-system` namespace.
 
 1. **Add Dapr Helm Repo**:
    ```bash
@@ -31,6 +38,11 @@ Dapr’s **control plane** includes services (operator, placement, scheduler, se
    --namespace dapr-system \
    --create-namespace \
    --wait
+   ```
+
+   For Windows
+   ```bash
+    helm upgrade --install dapr dapr/dapr --version=1.15 --namespace dapr-system --create-namespace --wait
    ```
 
 3. **Verify Dapr Pods**:
@@ -64,12 +76,29 @@ The Dapr Dashboard provides a web UI to visualize components, apps, and subscrip
    ```
    - Expected: Includes `dapr-dashboard-...` with `1/1` readiness.
 
+   Output:
+
+   ```bash
+    NAME                                     READY   STATUS              RESTARTS      AGE
+    dapr-dashboard-5cb455db6f-wsjpm          0/1     ContainerCreating   0             23s
+    dapr-operator-5fbcb75589-gzvm7           1/1     Running             0             83s
+    dapr-placement-server-0                  1/1     Running             0             83s
+    dapr-scheduler-server-0                  1/1     Running             1 (43s ago)   83s
+    dapr-scheduler-server-1                  1/1     Running             1 (43s ago)   82s
+    dapr-scheduler-server-2                  1/1     Running             1 (43s ago)   82s
+    dapr-sentry-75b55cbb9-5j2zq              1/1     Running             0             83s
+    dapr-sidecar-injector-76545c8c59-2jvsn   1/1     Running             1 (39s ago)   83s
+
+   ```
+
+   Wait till all status are Running.
+
 3. **Port-Forward**:
   ```bash
   kubectl port-forward service/dapr-dashboard 8080:8080 -n dapr-system
   ```
 
-Open localhost:8080 and explore the dashboard. Right now it's empty.
+Open http://localhost:8080 and explore the dashboard. Right now it's empty.
 
 ## 3: Deploy Redis and Configure Dapr Components
 
@@ -89,23 +118,21 @@ We’ll deploy Redis as the backend for state and pub/sub, and configure Dapr co
 
 3. **Configure State Store**:
    - Create `redis-state.yaml`:
-     ```yaml
-     apiVersion: dapr.io/v1alpha1
-     kind: Component
-     metadata:
-       name: statestore
-       namespace: default
-     spec:
-       type: state.redis
-       version: v1
-       metadata:
-       - name: redisHost
-         value: redis-master.default.svc.cluster.local:6379
-       - name: redisPassword
-         value: ""
-       - name: actorStateStore
-         value: "true"
-     ```
+    ```yaml
+    apiVersion: dapr.io/v1alpha1
+    kind: Component
+    metadata:
+      name: statestore
+      namespace: default
+    spec:
+      type: state.redis
+      version: v1
+      metadata:
+      - name: redisHost
+        value: redis-master.default.svc.cluster.local:6379
+      - name: redisPassword
+        value: ""
+    ```
    - Apply:
      ```bash
      kubectl apply -f redis-state.yaml
@@ -136,15 +163,18 @@ We’ll deploy Redis as the backend for state and pub/sub, and configure Dapr co
 5. **Configure Subscription**:
    - Create `subscriptions.yaml`:
      ```yaml
-     apiVersion: dapr.io/v1alpha1
-     kind: Subscription
-     metadata:
-       name: message-subscription
-       namespace: default
-     spec:
-       pubsubname: pubsub
-       topic: message-updated
-       route: /subscribe
+    apiVersion: dapr.io/v2alpha1
+    kind: Subscription
+    metadata:
+      name: message-subscription
+      namespace: default
+    spec:
+      pubsubname: pubsub
+      topic: message-updated
+      routes:
+        rules:
+          - match: event.type == "update"
+            path: /subscribe
      ```
    - Apply:
      ```bash
@@ -167,9 +197,10 @@ Open http://localhost:8080/components and see the components there.
 ## 4: Test Dapr APIs
 
 ### What’s Happening?
-Dapr’s sidecar exposes HTTP APIs on port 3500 for state (saving/retrieving data in Redis) and pub/sub (publishing events). Since no app is deployed, we’ll create a temporary test app with a Dapr sidecar to test these APIs with `curl`. The test app uses Nginx as a placeholder (on port 8080), but we interact only with the sidecar (port 3500).
+Dapr's sidecar exposes HTTP APIs (typically on port 3500 by default) that applications use to interact with Dapr's building blocks. These APIs allow saving/retrieving data using a configured state store (like Redis) and publishing/subscribing to events using a configured pub/sub component. Since we haven't deployed our final application yet, we'll deploy a temporary test application with a Dapr sidecar attached to demonstrate how to interact with these APIs using `curl`. The test app uses a simple Nginx container as a placeholder (running on its default port 80), but our interaction will solely be with the Dapr sidecar (on its default port 3500).
 
-1. **Deploy Test App**:
+1.  **Deploy Test App**: Deploy a simple Nginx deployment with Dapr annotations to ensure a sidecar is injected.
+
    - Create `nginx-app.yaml`:
      ```yaml
      apiVersion: apps/v1
@@ -217,21 +248,21 @@ Dapr’s sidecar exposes HTTP APIs on port 3500 for state (saving/retrieving dat
      kubectl apply -f nginx-app.yaml
      ```
 
-2. **Verify Pod**:
+2.  **Verify Pod**: Check that the test application pod is running and has both the Nginx container and the Dapr sidecar container.
    ```bash
    kubectl get pods
    ```
    - Expected: `dapr-test-app-...` with `2/2` readiness (Nginx + sidecar).
    
 
-3. **Port-Forward to Sidecar**:
+3.  **Port-Forward to Sidecar**: Establish a local port-forward to the Dapr sidecar's HTTP API port (3500) on the test application pod. You'll need to find the specific pod name.
    ```bash
    kubectl get pods | grep dapr-test-app
    kubectl port-forward pod/dapr-test-app-<pod-suffix> 3500:3500 -n default
    ```
    - Example:
      ```bash
-     kubectl port-forward pod/dapr-test-app-79469c967b-stlgj 3500:3500 -n default
+     kubectl port-forward pod/dapr-test-app-79469c967b-bhvbm 3500:3500 -n default
      ```
    - Expected:
      ```
@@ -239,7 +270,7 @@ Dapr’s sidecar exposes HTTP APIs on port 3500 for state (saving/retrieving dat
      Forwarding from [::1]:3500 -> 3500
      ```
 
-4. **Test State Store**:
+4.  **Test State Store**: Use `curl` to interact with the state store component via the Dapr sidecar.
    - Save State:
      ```bash
      curl -X POST http://localhost:3500/v1.0/state/statestore \
@@ -247,7 +278,8 @@ Dapr’s sidecar exposes HTTP APIs on port 3500 for state (saving/retrieving dat
      -d '[{"key": "test-key", "value": {"user_id": "user123", "message": "Hello, Dapr!"}}]'
      ```
      - Expected: No output (200 OK).
-   - Retrieve State:
+
+    - Retrieve State: Send a GET request to retrieve the state for the `test-key` using the `statestore` component.
      ```bash
      curl http://localhost:3500/v1.0/state/statestore/test-key
      ```
@@ -256,7 +288,7 @@ Dapr’s sidecar exposes HTTP APIs on port 3500 for state (saving/retrieving dat
        {"user_id": "user123", "message": "Hello, Dapr!"}
        ```
 
-5. **Test Pub/Sub**:
+5.  **Test Pub/Sub**: Use `curl` to interact with the pub/sub component via the Dapr sidecar.
    ```bash
    curl -X POST http://localhost:3500/v1.0/publish/pubsub/message-updated \
    -H "Content-Type: application/json" \
@@ -264,14 +296,15 @@ Dapr’s sidecar exposes HTTP APIs on port 3500 for state (saving/retrieving dat
    ```
    - Expected: No output (200 OK).
 
-6. **Stop Port-Forwarding**:
+6.  **Stop Port-Forwarding**: Go back to the terminal where `kubectl port-forward` is running and press `Ctrl+C` to stop the forwarding.
    - Press `Ctrl+C`.
 
 ## 5: Verify Redis Data
-### What’s Happening?
-We saved a state key (`test-key`) in Redis via Dapr’s `statestore`. Let’s confirm the data is stored in Redis.
 
-1. **Run Redis Client Pod**:
+### What’s Happening?
+When we saved state using the Dapr sidecar and the `statestore` component, Dapr communicated with Redis to store the data. Dapr typically prefixes keys in the state store with the application's Dapr ID (`dapr-test-app` in this case). We'll connect directly to Redis to confirm the data is stored there under the expected key format.
+
+1.  **Run Redis Client Pod**: Deploy a temporary pod with a Redis client image to interact with the Redis service within the cluster.
    ```bash
    kubectl run redis-client --namespace default --restart='Never' --image docker.io/bitnami/redis:7.4.2-debian-12-r11 --command -- sleep infinity
    ```
@@ -284,12 +317,12 @@ We saved a state key (`test-key`) in Redis via Dapr’s `statestore`. Let’s co
     redis-client                     0/1     ContainerCreating   0          48s
    ```
 
-2. **Connect to Redis**:
+2.  **Connect to Redis**: Execute a shell inside the `redis-client` pod and run the `redis-cli` command to connect to the Redis master service.
    ```bash
    kubectl exec -it redis-client --namespace default -- redis-cli -h redis-master
    ```
 
-3. **Check Keys**:
+3.  **Check Keys**: Use the Redis `KEYS` command to see all keys currently stored.
    ```
    KEYS *
    ```
@@ -299,81 +332,85 @@ We saved a state key (`test-key`) in Redis via Dapr’s `statestore`. Let’s co
      2) "dapr-test-app||test-key"
      ```
 
-4. **Retrieve Value**:
-   ```
-   HGETALL dapr-test-app||test-key
-   ```
-   - Expected:
-     ```
-     1) "data"
-     2) "{\"user_id\":\"user123\",\"message\":\"Hello, Dapr!\"}"
-     3) "version"
-     4) "1"
-     ```
+4.  **Inspect the type of a key in Redis**: Before retrieving the value, check the data type of the state key.
+    ```bash
+    TYPE dapr-test-app||test-key
+    ```
+    - Expected:
+      ```
+      hash
+      ```
+      Dapr's default Redis state store implementation stores state as a Redis Hash, including the data, ETag (version), and potentially metadata.
+
+    Depending on the result of `TYPE`, you can then use the appropriate command to inspect it. Since it's a `hash`:
+
+    Retrieve the value again using `HGETALL` for Redis Hashes:
+    ```bash
+    HGETALL dapr-test-app||test-key
+    ```
+    - Expected output: The components of the Redis Hash representing the state.
+      ```json
+      1) "data"
+      2) "{\"user_id\":\"user123\",\"message\":\"Hello, Dapr!\"}" # The actual JSON data stored
+      3) "version"
+      4) "1" # The ETag/version managed by Dapr
+      ```
+    - Explanation: This confirms that Dapr successfully stored the state data in Redis under the expected key format (`<dapr-app-id>||<key>`) and structure.
+
+    You can also inspect the pub/sub stream key, which is a Redis Stream:
+    ```bash
+    TYPE message-updated
+    ```
+    - Expected:
+      ```
+      stream
+      ```
+    You can inspect the stream using `XRANGE`:
+    ```bash
+    XRANGE message-updated - +
+    ```
+    - Expected: Output showing messages in the stream (the message you published). The format will be detailed, including message IDs and the data payload.
 
 
-5. **Inspect the type of a key in Redis**:
-  ```bash
-  redis-master:6379> TYPE dapr-test-app||test-key
-  hash
-  ```
+5.  Exit Redis CLI and Cleanup:
+    ```bash
+    EXIT
+    ```
+    Delete the temporary Redis client pod:
+    ```bash
+    kubectl delete pod redis-client --namespace default
+    ```
 
-  Depending on the result, you can then use the appropriate command to inspect it:
-  - If it's a hash: HGETALL dapr-test-app||test-key
-  - If it's a list: LRANGE dapr-test-app||test-key 0 -1
-  - If it's a set: SMEMBERS dapr-test-app||test-key
-  - If it's a zset: ZRANGE dapr-test-app||test-key 0 -1 WITHSCORES
-  - XRANGE for stream: XRANGE message-updated - +
-
-  Retrieve the value again:
-
-  ```bash
-  HGETALL dapr-test-app||test-key
-  ```
-  Expected:
-  ```json
-  1) "data"
-  2) "{\"user_id\":\"user123\",\"message\":\"Hello, Dapr!\"}"
-  3) "version"
-  4) "1"
-  ```
-  - Explanation: Confirms Dapr stored the state in Redis correctly.
-
-5. Exit Redis CLI and Cleanup:
-
-  ```bash
-  EXIT
-  ```
-
-  ```bash
-  kubectl delete pod redis-client --namespace default
-  ```
-
-7. **Clean Up Test App**:
+6.  **Clean Up Test App**: Delete the test deployment and service.
    ```bash
    kubectl delete -f nginx-app.yaml
    ```
 
 ## DACA Context
-This setup supports DACA:
-- **Stateless Computing**: FastAPI app offloads state to Redis.
-- **Event-Driven Architecture**: Pub/sub enables reactive workflows.
-- **Cloud-First**: Helm ensures portability.
-- **Resilience**: Dapr’s sidecar handles retries.
+This setup supports DACA principles:
+- **Stateless Computing**: Applications (like the potential FastAPI app) offload state persistence to external stores like Redis, allowing them to be stateless and easily scaled.
+- **Event-Driven Architecture**: Dapr's pub/sub building block enables reactive workflows and decoupling of services via message topics.
+- **Cloud-First**: Using Kubernetes and Helm ensures the deployment is portable and aligns with cloud-native practices.
+- **Resilience**: Dapr’s sidecar can handle retries and other resilience patterns when interacting with components like state stores and pub/sub brokers.
 
 ## Clean Up
 
+To clean up all resources created in this tutorial:
+
 ```bash
-kubectl delete -f kubernetes/deployment.yaml
-kubectl delete -f kubernetes/service.yaml
-kubectl delete -f redis-state.yaml
-kubectl delete -f redis-pubsub.yaml
-kubectl delete -f subscriptions.yaml
-kubectl delete -f test-app.yaml
+# Delete application-specific resources (adjust file names if necessary)
+kubectl delete -f redis-state.yaml --ignore-not-found=true
+kubectl delete -f redis-pubsub.yaml --ignore-not-found=true
+kubectl delete -f subscriptions.yaml --ignore-not-found=true
+kubectl delete -f nginx-app.yaml --ignore-not-found=true # Ensure this matches your test app file
+
+# Uninstall Helm charts
 helm uninstall redis -n default
 helm uninstall dapr-dashboard -n dapr-system
 helm uninstall dapr -n dapr-system
-kubectl delete namespace dapr-system
+
+# Delete the dapr-system namespace
+kubectl delete namespace dapr-system --ignore-not-found=true
 ```
 
 ## Resources
