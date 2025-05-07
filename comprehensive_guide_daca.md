@@ -66,6 +66,8 @@ The Dapr Agentic Cloud Ascent (DACA) guide introduces a strategic design pattern
 - [Appendix IV: DACA with OpenAI Agents SDK vs. LangGraph](#appendix-iv-daca-with-openai-agents-sdk-vs-langgraph)
 - [Appendix V: A2A vs MCP](#appendix-v-a2a-vs-mcp)
 - [Appendix VI: How DACA Supports an Agent-Native Cloud](#appendix-vi-how-daca-supports-an-agent-native-cloud)
+- [Appendix VII: Kafka and A2A](#appendix-vii-kafka-and-a2a)
+- [Appendix VIII: Applying 12-Factor Agents Principles to the DACA Design Pattern for Reliable LLM-Based Multi-Agent Systems]()
 
 
 ## Introduction
@@ -1323,7 +1325,7 @@ This integration aligns with DACA’s goals of modularity, scalability, resilien
 
 
 
-## Appendix XI: Applying 12-Factor Agents Principles to the DACA Design Pattern for Reliable LLM-Based Multi-Agent Systems
+## Appendix VIII: Applying 12-Factor Agents Principles to the DACA Design Pattern for Reliable LLM-Based Multi-Agent Systems
 
 The **12-Factor Agents** methodology, outlined in the GitHub repository (https://github.com/humanlayer/12-factor-agents), extends the principles of the **12-Factor App** to building reliable, scalable, and maintainable **LLM-based applications and agents**. These principles are tailored to address the unique challenges of agentic AI systems, such as managing state, handling external tool interactions, ensuring observability, and maintaining robustness in dynamic environments. Below, we summarize the 12 principles, explain their relevance to building reliable LLM applications and agents, and describe how they can be applied to the **Dapr Agentic Cloud Ascent (DACA)** design pattern. I also integrate insights from the previous appendix on **Agent2Agent (A2A)** and **Apache Kafka** to show how these concepts align with DACA’s architecture.
 
