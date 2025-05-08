@@ -1,0 +1,16 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: student-pubsub
+  namespace: default
+spec:
+  type: pubsub.redis
+  version: v1
+  metadata:
+    - name: redisHost
+      value: redis-master.default.svc.cluster.local:6379
+    - name: redisPassword
+      value: ""
+
+# https://docs.dapr.io/operations/components/setup-pubsub/
+# https://docs.dapr.io/developing-applications/building-blocks/pubsub/howto-publish-subscribe/

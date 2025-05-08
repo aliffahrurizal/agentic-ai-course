@@ -12,4 +12,6 @@ https://docs.dapr.io/operations/security/
 
 https://docs.dapr.io/operations/hosting/kubernetes/kubernetes-production/#recommended-security-configuration
 
- https://docs.dapr.io/operations/configuration/api-allowlist/
+https://docs.dapr.io/operations/configuration/api-allowlist/
+
+https://docs.dapr.io/operations/components/component-scopes/

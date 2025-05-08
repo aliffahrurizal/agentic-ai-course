@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learning-analytics-app
+  namespace: default  # Explicit for clarity or Omit and specify via kubectl -n default
+spec:
+  replicas: 1 # Increase to 2-3 for production
+  selector:
+    matchLabels:
+      app: learning-analytics-app
+  template:
+    metadata:
+      labels:
+        app: learning-analytics-app
+      annotations: 
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "learning-analytics-app"
+        dapr.io/app-port: "8000"
+        dapr.io/log-level: "info"
+    spec:
+      containers:
+      - name: app
+        image: learning-analytics-app # CORRECTED: Match the Tiltfile ref
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: learning-analytics-app-service
+  namespace: default
+  labels:
+    app: learning-analytics-app
+spec: 
+  selector:
+    app: learning-analytics-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      appProtocol: http
+  type: ClusterIP

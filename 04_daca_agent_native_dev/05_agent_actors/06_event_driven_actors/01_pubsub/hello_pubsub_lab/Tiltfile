@@ -5,7 +5,7 @@ update_settings(k8s_upsert_timeout_secs=900) # Increase apply timeout for Helm d
 
 # 1. Build the FastAPI image using nerdctl
 nerdctl_build(
-    ref='daca-ai-app',
+    ref='pubsub-lab-app',
     context='.',
     dockerfile='Dockerfile',
     live_update=[
@@ -59,6 +59,6 @@ k8s_yaml(['./components/subscriptions.yaml'])
 k8s_yaml(['kubernetes/deployment.yaml', 'kubernetes/service.yaml'])
 
 k8s_resource(
-    'daca-ai-app',
+    'pubsub-app',
     port_forwards='8000:8000',
 )

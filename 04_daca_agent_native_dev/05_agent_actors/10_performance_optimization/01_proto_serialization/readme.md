@@ -69,6 +69,8 @@ But if your app is:
 
 ➡️ Then **no**, this step adds overhead you might skip for now.
 
+Note: Dapr uses both HTTP and GRPC Protocols. To [enable GRPC for communication](https://docs.dapr.io/operations/configuration/grpc/) you can following this config guide.
+
 ### Learning Objectives
 - Implement custom serialization with Protocol Buffers for actor state.
 - Optimize state storage and retrieval in Redis.

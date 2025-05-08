@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teacher-support-app
+  namespace: default  # Explicit for clarity or Omit and specify via kubectl -n default
+spec:
+  replicas: 1 # Increase to 2-3 for production
+  selector:
+    matchLabels:
+      app: teacher-support-app
+  template:
+    metadata:
+      labels:
+        app: teacher-support-app
+      annotations: 
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "teacher-support-app"
+        dapr.io/app-port: "8000"
+        dapr.io/log-level: "info"
+    spec:
+      containers:
+      - name: app
+        image: teacher-support-app # CORRECTED: Match the Tiltfile ref
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teacher-support-app-service
+  namespace: default
+  labels:
+    app: teacher-support-app
+spec: 
+  selector:
+    app: teacher-support-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      appProtocol: http
+  type: ClusterIP

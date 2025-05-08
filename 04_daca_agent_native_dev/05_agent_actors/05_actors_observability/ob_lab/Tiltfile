@@ -3,6 +3,7 @@ load('ext://nerdctl', 'nerdctl_build') # nerdctl extension -> Docker Build
 
 update_settings(k8s_upsert_timeout_secs=900) # Increase apply timeout for Helm deployments
 
+
 # 1. Build the FastAPI image using nerdctl
 nerdctl_build(
     ref='daca-ai-app',
@@ -22,7 +23,7 @@ helm_remote(
     release_name='dapr',
     namespace='dapr-system',
     create_namespace=True,
-    set=['global.mtls.enabled=false', 'global.ha.enabled=false', 'dapr_scheduler.ha=true', 'dapr_placement.ha=true']
+    set=['global.mtls.enabled=false']
 )
 
 helm_remote(
@@ -49,16 +50,25 @@ helm_remote(
     set=['auth.enabled=false']
 )
 
-k8s_yaml(['./components/statestore.yaml', './components/pubsub.yaml'])
+k8s_yaml(['./components/statestore.yaml', './components/pubsub.yaml', './components/observability.yaml'])
 
 k8s_yaml(['./components/subscriptions.yaml'])
 
 # Above Dapr setup is Completed
 
-
-k8s_yaml(['kubernetes/deployment.yaml', 'kubernetes/service.yaml'])
+k8s_yaml(['kubernetes/deployment.yaml', 'kubernetes/service.yaml', 'kubernetes/jaeger.yaml', 'kubernetes/prometheus.yaml'])
 
 k8s_resource(
     'daca-ai-app',
     port_forwards='8000:8000',
+)
+
+k8s_resource(
+    'prometheus',
+    port_forwards='9090:9090',
+)
+
+k8s_resource(
+    'jaeger',
+    port_forwards='16686:16686',
 )

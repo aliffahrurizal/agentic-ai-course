@@ -5,14 +5,22 @@ update_settings(k8s_upsert_timeout_secs=900) # Increase apply timeout for Helm d
 
 # 1. Build the FastAPI image using nerdctl
 nerdctl_build(
-    ref='daca-ai-app',
-    context='.',
-    dockerfile='Dockerfile',
+    ref='pubsub-lab-app',
+    context='./pubsub-app',
+    dockerfile='./pubsub-app/Dockerfile',
     live_update=[
-        sync('.', '/code'),
+        sync('./pubsub-app', '/code'),
     ]
 )
 
+nerdctl_build(
+    ref='con-two-app',
+    context='./con-two',
+    dockerfile='./con-two/Dockerfile',
+    live_update=[
+        sync('./con-two', '/code'),
+    ]
+)
 
 helm_remote(
     chart='dapr',
@@ -54,11 +62,16 @@ k8s_yaml(['./components/statestore.yaml', './components/pubsub.yaml'])
 k8s_yaml(['./components/subscriptions.yaml'])
 
 # Above Dapr setup is Completed
-
-
 k8s_yaml(['kubernetes/deployment.yaml', 'kubernetes/service.yaml'])
 
+k8s_yaml(['kubernetes/con-two.deploy.yaml'])
+
 k8s_resource(
-    'daca-ai-app',
+    'pubsub-app',
     port_forwards='8000:8000',
+)
+
+k8s_resource(
+    'con-two-app',
+    port_forwards='8001:8001',
 )

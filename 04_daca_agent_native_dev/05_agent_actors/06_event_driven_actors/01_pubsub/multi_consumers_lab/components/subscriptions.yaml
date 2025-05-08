@@ -1,0 +1,13 @@
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: agent-news-actor-subscription # Descriptive name for the K8s resource
+spec:
+  topic: agent-news # The topic our SubscriberActor will listen to
+  pubsubname: daca-pubsub # MUST MATCH the 'metadata.name' of your pub/sub component
+  routes:
+    default: /SubscriberActor/ReceiveAgentNews # Route to SubscriberActor's method
+  scopes:
+    - pubsub-app # IMPORTANT: App-ID of the Dapr application running the SubscriberActor
+    - con-two-app
+# https://docs.dapr.io/developing-applications/building-blocks/pubsub/howto-publish-subscribe/

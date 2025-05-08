@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pubsub-app
+  namespace: default  # Explicit for clarity
+  labels:
+    app: pubsub-app
+spec: 
+  selector:
+    app: pubsub-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      appProtocol: http
+  type: ClusterIP

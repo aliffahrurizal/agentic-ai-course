@@ -4,6 +4,7 @@ This tutorial provides a comprehensive guide to using Protocol Buffers (protobuf
 
 gRPC adoption has grown significantly since its 2015 release, driven by its high performance, HTTP/2 transport, and Protocol Buffers, making it ideal for microservices, cloud-native applications, and IoT. Major adopters include Google, Netflix, Uber, and financial/gaming sectors, using gRPC for low-latency communication, streaming, and cross-language support. Its integration with Kubernetes and service meshes boosts its cloud appeal. While REST remains dominant for public APIs, gRPC excels in internal services. Future growth is expected with improved tooling, web support, and cloud integrations, but it’s unlikely to replace REST entirely.
 
+Note: Dapr uses both HTTP and GRPC Protocols. To [enable GRPC for communication](https://docs.dapr.io/operations/configuration/grpc/) you can following this config guide.
 ---
 
 ## Prerequisites
