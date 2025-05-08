@@ -14,3 +14,7 @@ This module trains **Agentic AI Developers** to build planet-scale, multi-AI age
 
 ## Getting Started
 Follow core modules sequentially or skip based on expertise. Hands-on exercises (e.g., chat API, multi-agent system) build DACA agents. Explore `05_daca_advanced_experimental/` for depth. See module-specific `readme.md` files for details.
+
+## Service Invocation
+
+![](./Diagram1_Dapr.jpg)
