@@ -14,6 +14,8 @@ helm_remote(
     set=['global.mtls.enabled=false', 'global.ha.enabled=false', 'dapr_scheduler.ha=true', 'dapr_placement.ha=true']
 )
 
+
+
 helm_remote(
     chart='dapr-dashboard',
     repo_url='https://dapr.github.io/helm-charts/',
@@ -41,6 +43,12 @@ helm_remote(
 k8s_yaml(['./components/statestore.yaml', './components/pubsub.yaml'])
 
 k8s_yaml(['./components/subscriptions.yaml'])
+
+# New Encryption Secret
+k8s_yaml(['./kubernetes/encryption-secret.yaml'])
+
+# New Secret Store
+k8s_yaml(['./components/secretstore.yaml'])
 
 # Above Dapr setup is Completed
 

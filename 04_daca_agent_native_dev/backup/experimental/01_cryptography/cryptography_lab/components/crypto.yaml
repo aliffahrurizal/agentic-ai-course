@@ -1,0 +1,14 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: secretstore # <--- IMPORTANT: This name MUST match CRYPTO_COMPONENT_NAME in main.py
+  namespace: default # <--- Ensure this matches your application's namespace
+spec:
+  type: crypto.dapr.kubernetes.secrets # <--- This is the Kubernetes Secrets Crypto Provider type
+  version: v1
+  metadata:
+    - name: defaultNamespace
+      value: "default"
+      secretKeyRef:
+        name: encryption-key
+        key: key

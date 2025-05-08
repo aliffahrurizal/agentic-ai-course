@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message Message {
+  string role = 1;
+  string content = 2;
+}
+
+message ConversationHistory {
+  repeated Message messages = 1;
+}

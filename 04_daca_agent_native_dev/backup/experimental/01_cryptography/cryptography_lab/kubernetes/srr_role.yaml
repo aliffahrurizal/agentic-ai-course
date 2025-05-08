@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: secret-reader # This should match the existing Role name to update it
+  namespace: default
+  labels: # Preserving labels that might have been set
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/managed-by: tilt 
+    app.kubernetes.io/name: dapr
+    app.kubernetes.io/part-of: dapr
+    app.kubernetes.io/version: "1.15.4" # Use the Dapr version you are running
+rules:
+- apiGroups: [""] # Core API group
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch"] # Added "list" and "watch"

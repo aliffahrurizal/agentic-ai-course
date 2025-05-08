@@ -331,6 +331,9 @@ Verify the `ChatAgent` works as expected:
 - **Interaction Patterns**: Request/response via FastAPI and event-driven pub/sub provide flexible communication.
 - **Dapr Pub/Sub**: Using `DaprClient` to publish events to `user-chat` enables asynchronous, scalable messaging.
 
+# Challenge
+Here we have mocked the ai workflow. As a challenge project you will integrate openai agents sdk as agentic engine in this code. 
+
 ## Next Steps
 - Proceed to **Step 3: multi_actors** to integrate multiple actors for collaborative AI tasks.
 - Experiment with dynamic responses in `process_message` (e.g., add rule-based logic or a mock AI).

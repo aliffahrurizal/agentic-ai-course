@@ -9,8 +9,6 @@ In this step, you’ll create an advanced multi-agent system with three actors:
 
 The `ChatAgent` delegates message processing to the `ResponseAgent`, which uses memory from the `MemoryAgentActor` to generate context-aware responses. The `MemoryAgentActor` updates memory based on `ConversationUpdated` events from the `user-chat` pub/sub topic. You’ll learn dynamic actor creation, actor proxies, fault isolation, and event-driven memory management, advancing your skills in building scalable, modular AI agents.
 
-Challenge: Here we will mock the ai workflow and as a challenge project you will integrate openai agents sdk as agentic engine.
-
 ## Overview
 
 The **actors communication** step enhances the Step 2 `ChatAgent` by introducing actor-to-actor communication and memory management. You’ll implement:
@@ -517,6 +515,10 @@ Verify the multi-agent system works as expected:
 - **Fault Isolation**: Independent state and execution ensure resilience, aligning with DACA’s robustness goals.
 - **Pub/Sub and Memory**: Event-driven memory updates via `MemoryAgentActor` enhance context awareness.
 - **Multi-Agent System**: Collaboration between `ChatAgent`, `ResponseAgent`, and `MemoryAgentActor` models complex AI workflows.
+
+## Challenge: 
+
+Here we have mocked the ai workflow. As a challenge project you will integrate openai agents sdk as agentic engine in this code. Do it yourself and if you are stuck here's an [implementation of the challenge](https://github.com/mjunaidca/vagent_comm)
 
 ## Next Steps
 - Proceed to **Step 4: advanced_agents** to integrate an LLM (e.g., Gemini) into `ResponseAgent` for dynamic responses, using memory and history in a system prompt.

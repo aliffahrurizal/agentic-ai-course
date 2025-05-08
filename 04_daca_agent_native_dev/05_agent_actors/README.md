@@ -86,22 +86,17 @@ This module progresses through 16 steps to build basic DACA agents and prepare t
    - Understand how to handle long-running tasks and retries.
    - **Lab**: Build an actor with a reminder to periodically update its state.
 
-5. **State Encryption and Serialization (`05_state_encryption_serialization/`)**:
-   - Secure actor state with encryption (`01_state_encryption/`).
-   - Serialize complex data structures for state persistence (`02_serialization/`).
-   - **Lab**: Encrypt a chat actor’s conversation history and serialize it for storage.
+5. **Actors Observability (`05_actors_observability/`)**:
+   - Monitor and debug actor systems using Dapr’s logging and tracing (e.g., Zipkin, Prometheus).
+   - Understand metrics for performance and health.
+   - **Lab**: Deploy an actor system with observability and analyze its performance.
 
 6. **Event-Driven Actors (`06_event_driven_actors/`)**:
    - Implement event-driven actors using pub/sub (`01_pubsub/`), service invocation (`02_service_invocation/`), and Dapr bindings (`03_dapr_bindings/`).
    - Integrate actors with external systems (e.g., Kafka, PostgreSQL).
    - **Lab**: Create an actor that subscribes to a topic and triggers actions via bindings.
 
-7. **Actors Observability (`07_actors_observability/`)**:
-   - Monitor and debug actor systems using Dapr’s logging and tracing (e.g., Zipkin, Prometheus).
-   - Understand metrics for performance and health.
-   - **Lab**: Deploy an actor system with observability and analyze its performance.
-
-8. **Multi-Actors (`08_multi_actors/`)**:
+7. **Multi-Actors (`07_multi_actors/`)**:
    - Build complex multi-agent systems with:
      - Reusable base actors (`01_base_actor/`).
      - Fault-tolerant supervisor patterns (`02_supervisor_pattern/`).
@@ -109,22 +104,17 @@ This module progresses through 16 steps to build basic DACA agents and prepare t
      - Coordinated agency systems (`04_multi_agents_communication/`).
    - **Lab**: Create an agency of actors for a customer support workflow.
 
+08. **Actor Security (`08_actor_security/`)**:
+    - Secure actor state (`01_actor_state_security/`), communication (`02_actor_communication_security/`), and auditing (`03_actor_audit_logging/`).
+    - Apply encryption, mTLS, and logging for compliance.
+    - **Lab**: Secure a multi-actor system with encrypted state and audit logs.
+
 9. **A2A with DACA Actors (`09_a2a_with_daca_actors/`)**:
    - Integrate actors into DACA workflows with:
      - Basic Implementation og Google Agent to Agent protocol (`01_a2a_lab/`).
    - **Lab**: Build DACA agentic teams that communicate using A2A.
 
-10. **Actor Testing and Debugging (`10_actor_testing_debugging/`)**:
-    - Write unit and integration tests for actors using pytest.
-    - Simulate failures and debug distributed systems.
-    - **Lab**: Test a chat actor system for reliability under failure conditions.
-
-11. **Actor Security (`11_actor_security/`)**:
-    - Secure actor state (`01_actor_state_security/`), communication (`02_actor_communication_security/`), and auditing (`03_actor_audit_logging/`).
-    - Apply encryption, mTLS, and logging for compliance.
-    - **Lab**: Secure a multi-actor system with encrypted state and audit logs.
-
-12. **Performance Optimization (`12_performance_optimization/`)**:
+10. **Performance Optimization (`10_performance_optimization/`)**:
     - Optimize actor concurrency, load balancing, and resource usage.
     - **Lab**: Simulate high traffic on a multi-actor system and optimize for low latency.
 

@@ -1,8 +1,19 @@
 load('ext://helm_remote', 'helm_remote') # helm extension -> Dapr Helm Chart
 load('ext://nerdctl', 'nerdctl_build') # nerdctl extension -> Docker Build
 
-update_settings(k8s_upsert_timeout_secs=300) # Increase apply timeout for Helm deployments
+update_settings(k8s_upsert_timeout_secs=900) # Increase apply timeout for Helm deployments
 
+# 1. Build the FastAPI image using nerdctl
+nerdctl_build(
+    ref='daca-ai-app',
+    context='.',
+    dockerfile='Dockerfile',
+    live_update=[
+        sync('.', '/code'),
+    ]
+)
+
+# 2. Deploy Dapr
 helm_remote(
     chart='dapr',
     repo_url='https://dapr.github.io/helm-charts/',
@@ -42,19 +53,14 @@ k8s_yaml(['./components/statestore.yaml', './components/pubsub.yaml'])
 
 k8s_yaml(['./components/subscriptions.yaml'])
 
+k8s_yaml(['./kubernetes/encryption-secret.yaml'])
+
+k8s_yaml(['./components/crypto.yaml'])
+
+
 # Above Dapr setup is Completed
-
-# 1. Build the FastAPI image using nerdctl
-nerdctl_build(
-    ref='daca-ai-app',
-    context='.',
-    dockerfile='Dockerfile',
-    live_update=[
-        sync('.', '/code'),
-    ]
-)
-
 k8s_yaml(['kubernetes/deployment.yaml', 'kubernetes/service.yaml'])
+k8s_yaml(['kubernetes/srr_role.yaml'], allow_duplicates=True)
 
 k8s_resource(
     'daca-ai-app',

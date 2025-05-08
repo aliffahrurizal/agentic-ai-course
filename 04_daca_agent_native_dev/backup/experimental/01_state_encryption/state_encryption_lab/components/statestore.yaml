@@ -13,3 +13,7 @@ spec:
     value: ""
   - name: actorStateStore
     value: "true"
+  - name: primaryEncryptionKey
+    secretKeyRef:
+      name: encryption-key # This name must match the metadata.name of the Secret below
+      key: key            # This key must match the key name in the Secret's data section

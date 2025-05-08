@@ -344,6 +344,29 @@ wheels = [
 ]
 
 [[package]]
+name = "grpcio-tools"
+version = "1.71.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "grpcio" },
+    { name = "protobuf" },
+    { name = "setuptools" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/05/d2/c0866a48c355a6a4daa1f7e27e210c7fa561b1f3b7c0bce2671e89cfa31e/grpcio_tools-1.71.0.tar.gz", hash = "sha256:38dba8e0d5e0fb23a034e09644fdc6ed862be2371887eee54901999e8f6792a8", size = 5326008 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/84/a7/70dc7e9957bcbaccd4dcb6cc11215e0b918f546d55599221522fe0d073e0/grpcio_tools-1.71.0-cp313-cp313-linux_armv7l.whl", hash = "sha256:9a78d07d6c301a25ef5ede962920a522556a1dfee1ccc05795994ceb867f766c", size = 2384758 },
+    { url = "https://files.pythonhosted.org/packages/65/79/57320b28d0a0c5ec94095fd571a65292f8ed7e1c47e59ae4021e8a48d49b/grpcio_tools-1.71.0-cp313-cp313-macosx_10_14_universal2.whl", hash = "sha256:580ac88141c9815557e63c9c04f5b1cdb19b4db8d0cb792b573354bde1ee8b12", size = 5951661 },
+    { url = "https://files.pythonhosted.org/packages/80/3d/343df5ed7c5dd66fc7a19e4ef3e97ccc4f5d802122b04cd6492f0dcd79f5/grpcio_tools-1.71.0-cp313-cp313-manylinux_2_17_aarch64.whl", hash = "sha256:f7c678e68ece0ae908ecae1c4314a0c2c7f83e26e281738b9609860cc2c82d96", size = 2351571 },
+    { url = "https://files.pythonhosted.org/packages/56/2f/b9736e8c84e880c4237f5b880c6c799b4977c5cde190999bc7ab4b2ec445/grpcio_tools-1.71.0-cp313-cp313-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:56ecd6cc89b5e5eed1de5eb9cafce86c9c9043ee3840888cc464d16200290b53", size = 2744580 },
+    { url = "https://files.pythonhosted.org/packages/76/9b/bdb384967353da7bf64bac4232f4cf8ae43f19d0f2f640978d4d4197e667/grpcio_tools-1.71.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e52a041afc20ab2431d756b6295d727bd7adee813b21b06a3483f4a7a15ea15f", size = 2475978 },
+    { url = "https://files.pythonhosted.org/packages/26/71/1411487fd7862d347b98fda5e3beef611a71b2ac2faac62a965d9e2536b3/grpcio_tools-1.71.0-cp313-cp313-musllinux_1_1_aarch64.whl", hash = "sha256:2a1712f12102b60c8d92779b89d0504e0d6f3a59f2b933e5622b8583f5c02992", size = 2853314 },
+    { url = "https://files.pythonhosted.org/packages/03/06/59d0523eb1ba2f64edc72cb150152fa1b2e77061cae3ef3ecd3ef2a87f51/grpcio_tools-1.71.0-cp313-cp313-musllinux_1_1_i686.whl", hash = "sha256:41878cb7a75477e62fdd45e7e9155b3af1b7a5332844021e2511deaf99ac9e6c", size = 3303981 },
+    { url = "https://files.pythonhosted.org/packages/c2/71/fb9fb49f2b738ec1dfbbc8cdce0b26e5f9c5fc0edef72e453580620d6a36/grpcio_tools-1.71.0-cp313-cp313-musllinux_1_1_x86_64.whl", hash = "sha256:682e958b476049ccc14c71bedf3f979bced01f6e0c04852efc5887841a32ad6b", size = 2915876 },
+    { url = "https://files.pythonhosted.org/packages/bd/0f/0d49f6fe6fa2d09e9820dd9eeb30437e86002303076be2b6ada0fb52b8f2/grpcio_tools-1.71.0-cp313-cp313-win32.whl", hash = "sha256:0ccfb837152b7b858b9f26bb110b3ae8c46675d56130f6c2f03605c4f129be13", size = 948245 },
+    { url = "https://files.pythonhosted.org/packages/bb/14/ab131a39187bfea950280b2277a82d2033469fe8c86f73b10b19f53cc5ca/grpcio_tools-1.71.0-cp313-cp313-win_amd64.whl", hash = "sha256:ffff9bc5eacb34dd26b487194f7d44a3e64e752fc2cf049d798021bf25053b87", size = 1119649 },
+]
+
+[[package]]
 name = "h11"
 version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -360,7 +383,9 @@ dependencies = [
     { name = "dapr" },
     { name = "dapr-ext-fastapi" },
     { name = "fastapi", extra = ["standard"] },
+    { name = "grpcio-tools" },
     { name = "openai-agents" },
+    { name = "protobuf" },
 ]
 
 [package.metadata]
@@ -368,7 +393,9 @@ requires-dist = [
     { name = "dapr", specifier = ">=1.15.0" },
     { name = "dapr-ext-fastapi", specifier = ">=1.15.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
+    { name = "grpcio-tools", specifier = ">=1.71.0" },
     { name = "openai-agents", specifier = ">=0.0.14" },
+    { name = "protobuf", specifier = ">=5.29.4" },
 ]
 
 [[package]]
@@ -824,6 +851,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e1/33/18332e1359803ae6407a1e605a6bdb253a426ffe931555f1299f9e39eece/rich_toolkit-0.14.4.tar.gz", hash = "sha256:db256cf45165cae381c9bbf3b48a0fd4d99a07c80155cc655c80212a62e28fe1", size = 104487 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/44/48/c6d43d4c56c45c0171c771b2b73deeec493efb57795b651319201e7c4638/rich_toolkit-0.14.4-py3-none-any.whl", hash = "sha256:cc71ebee83eaa122d8e42882408bc5a4bf0240bbf1e368811ee56d249b3d742a", size = 24258 },
+]
+
+[[package]]
+name = "setuptools"
+version = "80.3.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/70/dc/3976b322de9d2e87ed0007cf04cc7553969b6c7b3f48a565d0333748fbcd/setuptools-80.3.1.tar.gz", hash = "sha256:31e2c58dbb67c99c289f51c16d899afedae292b978f8051efaf6262d8212f927", size = 1315082 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/53/7e/5d8af3317ddbf9519b687bd1c39d8737fde07d97f54df65553faca5cffb1/setuptools-80.3.1-py3-none-any.whl", hash = "sha256:ea8e00d7992054c4c592aeb892f6ad51fe1b4d90cc6947cc45c45717c40ec537", size = 1201172 },
 ]
 
 [[package]]
