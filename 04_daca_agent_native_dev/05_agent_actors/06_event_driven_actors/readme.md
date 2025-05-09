@@ -43,22 +43,14 @@ This module will guide you through hands-on labs in the following sub-steps, eac
       - Ensure reliable request/reply interactions within an event-driven sequence.
     - **Lab Focus**: Actors invoking methods on other actors or services, potentially as a reaction to an initial event.
 
-3.  **`03_jobs/` - Scheduled & Background Tasks with Dapr Jobs:**
-
-    - **Concept**: Explore how to use Dapr Jobs to schedule and manage long-running or periodic tasks that AI agents might need to perform (e.g., data processing, report generation, model retraining triggers). This offloads work from the primary agent logic.
-    - **Agent Abilities**:
-      - Schedule recurring tasks.
-      - Initiate and monitor background jobs.
-      - Perform maintenance or batch operations without blocking core agent functions.
-    - **Lab Focus**: Defining and running Dapr Jobs that can be initiated or monitored by AI actors. (Note: Actors' internal timers/reminders for self-scheduling were covered in `04_advanced_actor_config` and complement this).
-
-4.  **`04_dapr_bindings/` - Connecting to the Outside World:**
+4.  **`03_dapr_bindings/` - Connecting to the Outside World:**
     - **Concept**: Dapr bindings allow actors to be triggered by events from external systems (input bindings) or to trigger external systems (output bindings). This is crucial for integrating AI agents with databases, message queues, cloud services, and other enterprise systems.
     - **Agent Abilities**:
       - React to changes in external data sources (e.g., a new record in a database, a new file in storage).
       - Send commands or data to external systems (e.g., writing to a message queue, updating an external API).
       - **Note on Data Storage**: While bindings facilitate interaction _with_ data systems, Dapr's **State Management** building block (covered previously) is the primary way actors persist their own internal state. Bindings are about event-driven _integration_ with these external systems.
     - **Lab Focus**: Implementing actors that use input bindings to react to external events and output bindings to interact with external services.
+
 
 ## Towards Value-Driven Agents: Key Takeaways
 
