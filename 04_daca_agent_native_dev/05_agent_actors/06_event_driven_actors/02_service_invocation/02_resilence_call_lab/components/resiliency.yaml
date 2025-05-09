@@ -1,0 +1,24 @@
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: myresiliency # Can be any name
+scopes:
+  - caller-app # Apply this policy to the caller-app when it makes outbound calls
+  - callee-app # Apply this policy if callee-app makes calls to other services
+spec:
+  policies:
+    retries:
+      # Example: A simple constant backoff retry policy
+      myRetryPolicy: # Name of the policy
+        policy: constant
+        duration: 5s # Wait 5 seconds between retries
+        maxRetries: 3 # Attempt up to 3 retries
+
+  targets:
+    apps:
+      # Apply myRetryPolicy to calls made from ANY app to callee-app
+      # More specific: apply when caller-app calls callee-app
+      callee-app: # Target appID being called
+        retry: myRetryPolicy
+        # You can also define timeouts and circuit breakers here
+        timeout: 50s
