@@ -1,0 +1,14 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: external-api
+spec:
+  type: bindings.http
+  version: v1
+  metadata:
+  - name: url
+    value: "https://httpbin.org/post"
+  - name: method
+    value: "POST"
+  - name: direction
+    value: output

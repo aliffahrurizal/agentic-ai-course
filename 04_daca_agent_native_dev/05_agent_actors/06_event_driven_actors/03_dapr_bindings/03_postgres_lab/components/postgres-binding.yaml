@@ -1,0 +1,12 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: reports-db
+spec:
+  type: bindings.postgresql
+  version: v1
+  metadata:
+  - name: connectionString
+    value: "host=localhost user=postgres password=example port=5432 database=reports_db sslmode=disable"
+  - name: direction
+    value: output
