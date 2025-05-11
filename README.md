@@ -70,7 +70,7 @@ Kubernetes with Dapr can theoretically handle 10 million concurrent agents in an
 </p>
 
 
-## The Dapr Agentic Cloud Ascent (DACA) Design Pattern Addresses 10 Million Concurrent Users Challenge 
+## The Dapr Agentic Cloud Ascent (DACA) Design Pattern Addresses 10 Million AI Agents Challenge 
 
 Let's understand and learn about "Dapr Agentic Cloud Ascent (DACA)", our winning design pattern for developing and deploying planet scale multi-agent systems.
 
