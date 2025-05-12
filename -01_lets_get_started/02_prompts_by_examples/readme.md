@@ -1,5 +1,7 @@
 # Prompt Practice Examples for Non-Native English Speakers
 
+[GPT-4.1 Prompting Guide](https://cookbook.openai.com/examples/gpt4-1_prompting_guide)
+
 ### Key Points
 - Writing effective LLM prompts is a skill that can be learned with practice, especially for non-native English speakers.
 - It seems likely that starting with simple, clear prompts and gradually increasing complexity helps build expertise.
