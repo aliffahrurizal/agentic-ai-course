@@ -1,4 +1,4 @@
-#
+# Best Practices for Performance Optimizations
 
 https://docs.dapr.io/concepts/dapr-services/placement/
 

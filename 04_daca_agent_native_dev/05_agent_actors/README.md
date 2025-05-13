@@ -96,27 +96,12 @@ This module progresses through 16 steps to build basic DACA agents and prepare t
    - Integrate actors with external systems (e.g., Kafka, PostgreSQL).
    - **Lab**: Create an actor that subscribes to a topic and triggers actions via bindings.
 
-7. **Multi-Actors (`07_multi_actors/`)**:
-   - Build complex multi-agent systems with:
-     - Reusable base actors (`01_base_actor/`).
-     - Fault-tolerant supervisor patterns (`02_supervisor_pattern/`).
-     - Task delegation via handoff (`03_handoff_pattern/`).
-     - Coordinated agency systems (`04_multi_agents_communication/`).
-   - **Lab**: Create an agency of actors for a customer support workflow.
+7. **Multi-Actors (`07_daca_actor_runtime/`)**:
 
-08. **Actor Security (`08_actor_security/`)**:
+8. **Actor Security (`08_actor_security/`)**:
     - Secure actor state (`01_actor_state_security/`), communication (`02_actor_communication_security/`), and auditing (`03_actor_audit_logging/`).
     - Apply encryption, mTLS, and logging for compliance.
     - **Lab**: Secure a multi-actor system with encrypted state and audit logs.
-
-9. **A2A with DACA Actors (`09_a2a_with_daca_actors/`)**:
-   - Integrate actors into DACA workflows with:
-     - Basic Implementation og Google Agent to Agent protocol (`01_a2a_lab/`).
-   - **Lab**: Build DACA agentic teams that communicate using A2A.
-
-10. **Performance Optimization (`10_performance_optimization/`)**:
-    - Optimize actor concurrency, load balancing, and resource usage.
-    - **Lab**: Simulate high traffic on a multi-actor system and optimize for low latency.
 
 ## Prerequisites
 
