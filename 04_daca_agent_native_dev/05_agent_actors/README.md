@@ -97,6 +97,7 @@ This module progresses through 16 steps to build basic DACA agents and prepare t
    - **Lab**: Create an actor that subscribes to a topic and triggers actions via bindings.
 
 7. **Multi-Actors (`07_daca_actor_runtime/`)**:
+   - Self Challenges to apply your learnings and create a DACA Actor implementing DACA Actor Agent Characteristics.
 
 8. **Actor Security (`08_actor_security/`)**:
     - Secure actor state (`01_actor_state_security/`), communication (`02_actor_communication_security/`), and auditing (`03_actor_audit_logging/`).

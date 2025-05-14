@@ -67,7 +67,7 @@ class ChatAgent(Actor, ChatAgentInterface):
             logging.debug(f"\n ->[TIMER] Registering LogMessageCount timer for {self._history_key}")
             await self.register_timer(
                 name="LogMessageCount",
-                callback=self._timer_handlers["LogMessageCount"],
+                callback=self._timer_handlers["LogMess ageCount"],
                 due_time=timedelta(seconds=5),
                 period=timedelta(seconds=5),
                 state=None

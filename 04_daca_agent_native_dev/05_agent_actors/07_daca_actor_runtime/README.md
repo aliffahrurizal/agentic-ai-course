@@ -1,8 +1,8 @@
-# Step 7: DACA Actor Runtime
+# Step 7: Self Challenge: DACA Actor Runtime 
 
 Take a deep breath and transform your knowledge into actionable intelligence. In this step, we design and implement the core of our agentic infrastructure: the `BaseActor`, the heart of the **DACA Actor Runtime**. This runtime delivers a plug-and-play foundation for cloud-native AI agents by leveraging Dapr Virtual Actors for scalability, resilience, and event-driven intelligence.
 
-🎯 **End Goal**: A 🔌 Plug-and-Play runtime compatible with any agent type, from LLMs (OpenAI, LangGraph) to workflows (Temporal, Dapr Workflows).
+🎯 **End Goal**: A 🔌 Plug-and-Play agent runtime compatible with any agent type, from agent frameworks (OpenAI Agents SDK, LangGraph) to workflows (Temporal, Dapr Workflows).
 
 🔁 **Analogy**: The `BaseActor` is a Dapr Virtual Actor—a fully featured AI agent runtime equipped with:
 
@@ -19,9 +19,14 @@ Take a deep breath and transform your knowledge into actionable intelligence. In
 
 - `01_actor_foundation`: Set up the base project
 - `02_base_agent_actor`: Define the foundational `BaseActor`
-- `03_bg_handoff`: Implement background handoffs, addressing gaps in frameworks like LangGraph and CrewAI.
 
 By the end, we’ll have a runtime for agentic applications aligned with the **Dapr Agentic Cloud Ascent (DACA)** pattern, ready to power diverse AI agents.
+
+Actor Model -> Virtual Actor Model -> Dapr Virtual Actors -> Daca Actors
+
+Did you know?
+1. You can Dapr SDKs are interacting with Runtime mostly via GRPC. You can write in one language and invoked by actor/service written in another language. -> This means you don't have to care about programming language.
+2. Conceptually Actor is doing processing, have storage and communicate. 
 
 ## Core Capabilities
 

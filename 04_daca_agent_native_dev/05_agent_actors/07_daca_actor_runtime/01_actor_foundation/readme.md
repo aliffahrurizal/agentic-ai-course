@@ -1,4 +1,6 @@
-# M1: BaseActor Initial Code Implementation Guide
+# M1: DACA AgentCore Initial Code Implementation Guide
+
+This guide implements the foundational `HelloAgent` for the **DACA Actor Runtime**, a cloud-native, plug-and-play construct for AI agents using Dapr Virtual Actors. The agent, temporarily called an “Ambient Agent” for this lab, aligns with the Dapr Agentic Cloud Ascent (DACA) pattern.
 
 ## Clone and Run the Code
 
@@ -16,6 +18,7 @@ Now in Browser Open:
 You can take it and move to next step or implement it as a challenge from scratch.
 
 ## Rebuild From Scratch
+
 - Setup Project Structure
 ```bash
 mkdir daca-ambient-agent

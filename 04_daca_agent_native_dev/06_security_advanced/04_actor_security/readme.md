@@ -1,8 +1,4 @@
-#
-
-https://docs.dapr.io/developing-applications/building-blocks/cryptography/cryptography-overview/
-
-https://docs.dapr.io/developing-applications/building-blocks/cryptography/howto-cryptography/
+# Actors Security
 
 https://docs.dapr.io/concepts/resiliency-concept/
 
