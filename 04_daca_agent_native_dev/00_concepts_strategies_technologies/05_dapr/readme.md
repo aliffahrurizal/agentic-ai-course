@@ -63,7 +63,7 @@ In essence, Helm provides the packaging and deployment mechanism for both the Da
 The image reflects the Dapr Actor architecture:
 
 - **Pods (dotted cluster box)** – each shows **two containers**:  
-  **App ** &rarr; **Dapr side-car ** with its hosted **Actor instances (A1, A2, …)** inside.
+  **App** &rarr; **Dapr side-car** with its hosted **Actor instances (A1, A2, …)** inside.
 - **Placement Service** directs traffic and stores actor maps in the **State Store**.
 - The **Service (SVC)** still fronts the pods, while the **HPA arrow** reminds you those pods can scale and Dapr will rebalance actors automatically.
 
