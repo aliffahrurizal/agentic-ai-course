@@ -4,7 +4,7 @@ In today’s AI-driven world, a key question is: which large language model (LLM
 
 Next, I dig into which LLM minimizes agenda-driven filtering—a tougher but crucial factor. By “filtering,” I mean things like censorship, skewed responses, or pushing a particular perspective, often shaped by the goals of the model’s creators. I tackle this by examining the philosophy behind each LLM’s development and any clues about how they perform in practice. I’m after a model that doesn’t shy away from hard questions or polish its answers too much. The best way to decide? Throw a bold, tricky prompt at them and see which one holds its ground.
 
-That’s my approach. What do you think?
+That’s my approach.
 
 
 ---
