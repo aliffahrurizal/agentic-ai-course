@@ -14,7 +14,7 @@ Major AI companies like **Google (Gemini API)**, **Anthropic (Claude API)**, and
    OpenAI’s Chat Completion API is simple, intuitive, and well-documented, making it easy for developers to integrate generative AI into various applications.
 
 2. **Ecosystem and Tools**  
-   A rich ecosystem of open-source libraries (e.g., LangChain, AutoGen, CrewAI, OpenAI Python Client) has developed around OpenAI’s APIs, further encouraging standardization.
+   The rich ecosystem of open-source libraries (e.g., LangChain, AutoGen, CrewAI, OpenAI Python Client) has developed around OpenAI’s APIs, further encouraging standardization.
 
 3. **Ease of Switching Providers**  
    With compatible APIs, developers can seamlessly switch between AI providers like OpenAI, Anthropic, Google, and DeepSeek without significant code modifications, reducing vendor lock-in.
