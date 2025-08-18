@@ -7,7 +7,7 @@ This module provides a future-proofed, pedagogically ordered learning path throu
 - 01 AI Agents First Module
 - Modern Python ([including Asyncio](https://docs.python.org/3/library/asyncio.html))
 
-## Why This Structure?
+## Why This Structure is needed?
 
 - **Agentic AI systems** require robust, interoperable, and efficient communication at every layer.
 - **Multi-modal agents** (processing text, audio, video, sensor data, etc.) need protocols that support diverse, high-throughput, and low-latency data flows.
