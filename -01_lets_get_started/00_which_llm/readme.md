@@ -11,7 +11,7 @@ That’s my approach.
 
 ## Which LLM Should Drive Your AI Agents?
 
-The critical follow-up question is: which large language model (LLM) is best suited to power AI agents? My selection process hinges on seven key factors: reasoning ability, tool-calling proficiency, accuracy, cost efficiency, context size, structured output, availability and maturity of robust LLM APIs and SDKs, and response speed.
+The critical follow-up question is: which large language model (LLM) is best suited to power AI agents? My selection process hinges on seven key factors: reasoning ability, tool-calling proficiency, accuracy, cost efficiency, context size, structured output, availability and maturity of robust LLM APIs and SDKs.
 
 I’ll approach this with a comparable perspective, mixing practical observations with the latest trends in the AI landscape.
 
