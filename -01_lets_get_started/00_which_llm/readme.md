@@ -47,7 +47,7 @@ Here’s how some top LLMs measure up, based on their established strengths, rec
 - **Context Size**: Impressive—200k tokens, one of the largest available, making it a powerhouse for agents needing to process extensive context like research or logs.
 - **Structured Output**: Good—supports structured formats like JSON, though less polished than ChatGPT’s native function-calling system; improving with updates.
 - **APIs/SDKs**: Solid—offers a robust API with tool-calling support and SDKs in Python and TypeScript, though not as feature-rich or widely adopted as OpenAI’s yet. Also provides APIs compatible with OpenAI Chat Completion APIs.
-- **Speed/Latency**: Moderate—300–600ms for typical queries, slightly slower than ChatGPT due to its focus on reasoning depth over raw speed.
+- **Speed/Latency**: Moderate—200–600ms for typical queries, slightly slower than ChatGPT due to its focus on reasoning depth over raw speed.
 - **Takeaway**: Excellent for reasoning-focused agents with big context needs, decent output/APIs, and acceptable speed for non-real-time tasks.
 
 #### 3. xAI’s Grok
